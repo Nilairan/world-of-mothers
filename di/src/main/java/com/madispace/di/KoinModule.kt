@@ -6,6 +6,8 @@ import com.github.terrakok.cicerone.Router
 import com.madispace.di.routing.LocalCiceroneHolder
 import com.madispace.domain.usecases.GetCatalogModelUseCase
 import com.madispace.domain.usecases.GetCatalogModelUseCaseImpl
+import com.madispace.domain.usecases.GetFavoritesProductUseCase
+import com.madispace.domain.usecases.GetFavoritesProductUseCaseImpl
 import org.koin.dsl.module
 
 /**
@@ -21,4 +23,5 @@ val navigationModule = module {
 
 val useCasesModule = module {
     single<GetCatalogModelUseCase> { GetCatalogModelUseCaseImpl() }
+    single<GetFavoritesProductUseCase> { GetFavoritesProductUseCaseImpl() }
 }
