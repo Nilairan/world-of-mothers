@@ -10,4 +10,9 @@ java {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    /**
+     * RxJava
+     */
+    implementation "io.reactivex.rxjava3:rxjava:$rxjava_version"
 }

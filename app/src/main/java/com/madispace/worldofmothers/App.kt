@@ -2,6 +2,7 @@ package com.madispace.worldofmothers
 
 import android.app.Application
 import com.madispace.di.navigationModule
+import com.madispace.di.useCasesModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -18,9 +19,10 @@ class App : Application() {
             androidLogger()
             androidContext(this@App)
             modules(
-                listOf(
-                    navigationModule
-                )
+                    listOf(
+                            navigationModule,
+                            useCasesModule
+                    )
             )
         }
     }

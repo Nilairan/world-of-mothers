@@ -3,4 +3,7 @@
     <string name="catalog">Каталог</string>
     <string name="favorites">Избранное</string>
     <string name="profile">Профиль</string>
+    <string name="select">Применить</string>
+    <string name="cost_from_hint">от</string>
+    <string name="cost_to_hint">до</string>
 </resources>
