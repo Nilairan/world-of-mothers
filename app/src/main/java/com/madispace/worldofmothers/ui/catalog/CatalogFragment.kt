@@ -50,8 +50,8 @@ class CatalogFragment : ObserveFragment() {
         binding.searchItem.filterImage.setOnClickListener { binding.root.openDrawer(Gravity.RIGHT) }
         val items = listOf("По популярности", "Новые", "По убыванию", "По возрастанию")
         val adapter = ArrayAdapter(requireContext(), R.layout.item_autocomplite, items)
-        binding.filterSheet.filterAutoComplete.setAdapter(adapter)
         binding.filterSheet.filterAutoComplete.setText(items[0])
+        binding.filterSheet.filterAutoComplete.setAdapter(adapter)
     }
 
     override fun initObservers() {

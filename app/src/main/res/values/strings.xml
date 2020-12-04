@@ -6,4 +6,14 @@
     <string name="select">Применить</string>
     <string name="cost_from_hint">от</string>
     <string name="cost_to_hint">до</string>
+    <string name="pass">Пароль</string>
+    <string name="e_mail">E-mail</string>
+    <string name="sign_in">Войти</string>
+    <string name="repeat_pass">Не помню пароль</string>
+    <string name="register">Регистрация</string>
+    <string name="your_name">Ваше имя</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="pass_repeat">Повториле пароль</string>
+    <string name="exist_account">У меня есть аккаунт</string>
+    <string name="submit_register">Зарегистрироваться</string>
 </resources>
