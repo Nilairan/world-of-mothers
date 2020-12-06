@@ -10,8 +10,7 @@ import com.madispace.domain.usecases.GetCatalogModelUseCase
 import com.madispace.domain.usecases.GetCatalogModelUseCaseImpl
 import com.madispace.domain.usecases.GetFavoritesProductUseCase
 import com.madispace.domain.usecases.GetFavoritesProductUseCaseImpl
-import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCase
-import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCaseImpl
+import com.madispace.domain.usecases.profile.*
 import org.koin.dsl.module
 
 /**
@@ -29,6 +28,8 @@ val useCasesModule = module {
     single<GetCatalogModelUseCase> { GetCatalogModelUseCaseImpl() }
     single<GetFavoritesProductUseCase> { GetFavoritesProductUseCaseImpl() }
     single<IsAuthorizedUserUseCase> { IsAuthorizedUserUseCaseImpl(get()) }
+    single<RegisterUserUseCase> { RegisterUserUseCaseImpl(get()) }
+    single<GetUserProductUseCase> { GetUserProductUseCaseImpl() }
 }
 
 val repositoryModule = module {

@@ -16,4 +16,23 @@
     <string name="pass_repeat">Повториле пароль</string>
     <string name="exist_account">У меня есть аккаунт</string>
     <string name="submit_register">Зарегистрироваться</string>
+    <string name="city">Город</string>
+    <string name="metro">Метро</string>
+    <string name="address">Адрес</string>
+    <string name="save">Сохранить</string>
+    <string name="change_profile">Редактировать профиль</string>
+    <string name="add_product">Добавить товар</string>
+    <string name="name">Название</string>
+    <string name="state">Состояние</string>
+    <string name="material">Материал</string>
+    <string name="size">Размер</string>
+    <string name="age">Возраст</string>
+    <string name="category">Категория</string>
+    <string name="cost">Цена</string>
+    <string name="description">Описание</string>
+    <string name="photo">Фото</string>
+    <string name="true_delivery">Есть доставка</string>
+    <string name="add_product_title">Добавление товара</string>
+    <string name="seller">Продавец</string>
+    <string name="call_to_seller">Связаться с продавцом</string>
 </resources>

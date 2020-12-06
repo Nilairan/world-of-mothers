@@ -2,11 +2,10 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="170dp"
     android:layout_height="190dp"
-    android:elevation="5dp"
+    app:cardElevation="4dp"
+    android:layout_marginStart="8dp"
     android:layout_marginTop="12dp"
     app:cardCornerRadius="16dp"
-    app:strokeColor="#EFEFEF"
-    app:strokeWidth="1dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout

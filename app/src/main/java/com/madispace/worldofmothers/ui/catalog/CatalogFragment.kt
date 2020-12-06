@@ -15,6 +15,7 @@ import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.SimpleObserver
 import com.madispace.worldofmothers.databinding.FragmentCatalogBinding
+import com.madispace.worldofmothers.routing.Screens
 import com.madispace.worldofmothers.ui.catalog.items.CategoryItem
 import com.madispace.worldofmothers.ui.catalog.items.ProductItem
 import com.xwray.groupie.GroupAdapter
@@ -62,7 +63,7 @@ class CatalogFragment : ObserveFragment() {
         viewModel.uiModelLiveData.observe(viewLifecycleOwner, object : SimpleObserver<CatalogModel>() {
             override fun onSuccess(data: CatalogModel) {
                 categoryListAdapter.addAll(data.categories.map { CategoryItem(it) {} })
-                productListAdapter.addAll(data.productsShort.map { ProductItem(it) })
+                productListAdapter.addAll(data.productsShort.map { ProductItem(it) { router.navigateTo(Screens.ProductScreen()) } })
             }
 
             override fun onLoading(loading: Boolean) {
