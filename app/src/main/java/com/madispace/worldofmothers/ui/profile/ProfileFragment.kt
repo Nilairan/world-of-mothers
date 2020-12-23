@@ -56,7 +56,6 @@ class ProfileFragment : ObserveFragment(), RouterProvider {
             override fun onSuccess(data: Boolean) {
                 if (data) {
                     binding.root.visibility = View.VISIBLE
-
                 } else {
                     router.navigateTo(Screens.SignInScreen())
                 }
