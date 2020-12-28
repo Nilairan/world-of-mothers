@@ -1,6 +1,8 @@
 package com.madispace.domain.usecases.auth
 
+import com.madispace.domain.exeptions.CustomFunctionException
 import com.madispace.domain.exeptions.EmailValidException
+import com.madispace.domain.exeptions.NotImplementCustomFunction
 import com.madispace.domain.exeptions.PassValidException
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -18,7 +20,12 @@ class ValidData private constructor(
         private val validMap: HashSet<ValidField> = hashSetOf()
 
         fun addField(field: String, rule: Rule): Builder {
-            validMap.add(ValidField(field, rule))
+            validMap.add(ValidField(field = field, rule = rule, function = null))
+            return this
+        }
+
+        fun addField(field: String, function: () -> Boolean): Builder {
+            validMap.add(ValidField(field = field, rule = CustomRule, function = function))
             return this
         }
 
@@ -35,18 +42,21 @@ class ValidData private constructor(
 }
 
 data class ValidField(
-    val field: String,
-    val rule: Rule
+        val field: String,
+        val rule: Rule,
+        var function: (() -> Boolean)?
 )
 
 sealed class Rule
 class EmailRule(val regex: String = ValidData.DEFAULT_EMAIL_REGEX) : Rule()
 class PassRule(val minSize: Int = ValidData.DEFAULT_MIN_PASS_SIZE) : Rule()
+object CustomRule : Rule()
 
 interface ValidUseCase {
     /**
      * @throws EmailValidException for not valid email
      * @throws PassValidException for not valid password
+     * @throws NotImplementCustomFunction on custom function null or throw exception
      */
     operator fun invoke(fields: ValidData): Single<Boolean>
 }
@@ -68,6 +78,20 @@ class ValidUseCaseImpl : ValidUseCase {
                             isValid = item.field.length >= item.rule.minSize
                             if (isValid.not()) {
                                 throw PassValidException()
+                            }
+                        }
+                        is CustomRule -> {
+                            item.function?.let {
+                                try {
+                                    isValid = it.invoke()
+                                    if (isValid.not()) {
+                                        throw CustomFunctionException(item.field)
+                                    }
+                                } catch (e: Exception) {
+                                    throw NotImplementCustomFunction()
+                                }
+                            } ?: run {
+                                throw NotImplementCustomFunction()
                             }
                         }
                     }

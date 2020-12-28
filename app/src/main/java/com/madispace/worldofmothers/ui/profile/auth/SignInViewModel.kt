@@ -8,6 +8,7 @@ import com.madispace.domain.usecases.auth.*
 import com.madispace.worldofmothers.common.BaseViewModel
 import com.madispace.worldofmothers.common.Event
 import com.madispace.worldofmothers.common.Success
+import com.madispace.worldofmothers.ui.common.*
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.koin.core.component.inject
 
@@ -66,9 +67,3 @@ class SignInViewModel : BaseViewModel() {
             )
     }
 }
-
-sealed class UiModel
-object EmailInvalid : UiModel()
-object PassInvalid : UiModel()
-object FiledValid : UiModel()
-object Default : UiModel()

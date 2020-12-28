@@ -5,11 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.jakewharton.rxbinding4.widget.textChanges
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
+import com.madispace.worldofmothers.common.SimpleObserver
 import com.madispace.worldofmothers.common.debounceClicks
 import com.madispace.worldofmothers.databinding.FragmentSignUpBinding
 import com.madispace.worldofmothers.routing.Screens
+import com.madispace.worldofmothers.ui.common.*
+import io.reactivex.rxjava3.kotlin.subscribeBy
 
 /**
  * @author Ivan Kholodov - nilairan@gmail.com
@@ -29,6 +33,11 @@ class SignUpFragment : ObserveFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.existAccountButton.debounceClicks().subscribe { onBackPressed() }
+        binding.nameEditText.textChanges().subscribeBy { viewModel.name = it.toString() }
+        binding.phoneEditText.textChanges().subscribeBy { viewModel.phone = it.toString() }
+        binding.emailEditText.textChanges().subscribeBy { viewModel.email = it.toString() }
+        binding.passEditText.textChanges().subscribeBy { viewModel.pass = it.toString() }
+        binding.repeatPassEditText.textChanges().subscribeBy { viewModel.repeatPass = it.toString() }
         binding.loginButton.debounceClicks().subscribe {
             viewModel.auth()
             router.replaceScreen(Screens.ProfileScreen())
@@ -41,6 +50,24 @@ class SignUpFragment : ObserveFragment() {
     }
 
     override fun initObservers() {
+        viewModel.validUiModel.observe(viewLifecycleOwner, object : SimpleObserver<UiModel>() {
+            override fun onSuccess(data: UiModel) {
+                when (data) {
+                    is FiledValid -> {
+                        binding.loginButton.isEnabled = true
+                    }
+                    is EmailInvalid -> {
+                        binding.loginButton.isEnabled = false
+                    }
+                    is PassInvalid -> {
+                        binding.loginButton.isEnabled = false
+                    }
+                    is Default -> {
+                        binding.loginButton.isEnabled = false
+                    }
+                }
+            }
+        })
     }
 
     companion object {
