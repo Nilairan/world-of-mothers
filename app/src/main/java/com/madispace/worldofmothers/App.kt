@@ -1,6 +1,7 @@
 package com.madispace.worldofmothers
 
 import android.app.Application
+import com.madispace.di.apiModule
 import com.madispace.di.navigationModule
 import com.madispace.di.repositoryModule
 import com.madispace.di.useCasesModule
@@ -20,11 +21,12 @@ class App : Application() {
             androidLogger()
             androidContext(this@App)
             modules(
-                    listOf(
-                            navigationModule,
-                            useCasesModule,
-                            repositoryModule
-                    )
+                listOf(
+                    navigationModule,
+                    useCasesModule,
+                    repositoryModule,
+                    apiModule
+                )
             )
         }
     }

@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.madispace.domain.models.ProductShort
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.SimpleObserver
-import com.madispace.worldofmothers.common.debounceClicks
 import com.madispace.worldofmothers.common.getContext
 import com.madispace.worldofmothers.databinding.FragmentProfileBinding
 import com.madispace.worldofmothers.routing.RouterProvider
@@ -22,10 +20,9 @@ import com.xwray.groupie.GroupieViewHolder
  * @author Ivan Kholodov - nilairan@gmail.com
  * @date 11/30/20
  */
-class ProfileFragment : ObserveFragment(), RouterProvider {
+class ProfileFragment : ObserveFragment<ProfileViewModel>(ProfileViewModel::class), RouterProvider {
 
     private lateinit var binding: FragmentProfileBinding
-    private val viewModel: ProfileViewModel by viewModels()
     private val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,13 +31,13 @@ class ProfileFragment : ObserveFragment(), RouterProvider {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         binding.root.visibility = View.GONE
-        binding.editProfile.debounceClicks().subscribe { router.navigateTo(Screens.ChangeProfileScreen()) }
+//        binding.editProfile.debounceClicks().subscribe { router.navigateTo(Screens.ChangeProfileScreen()) }
         return binding.root
     }
 

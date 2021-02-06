@@ -4,27 +4,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import com.jakewharton.rxbinding4.widget.textChanges
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.SimpleObserver
-import com.madispace.worldofmothers.common.debounceClicks
 import com.madispace.worldofmothers.databinding.FragmentSignUpBinding
 import com.madispace.worldofmothers.routing.Screens
 import com.madispace.worldofmothers.ui.common.*
-import io.reactivex.rxjava3.kotlin.subscribeBy
 
 /**
  * @author Ivan Kholodov - nilairan@gmail.com
  * @date 12/4/20
  */
-class SignUpFragment : ObserveFragment() {
+class SignUpFragment : ObserveFragment<SignUpViewModel>(SignUpViewModel::class) {
 
     private lateinit var binding: FragmentSignUpBinding
-    private val viewModel: SignUpViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentSignUpBinding.inflate(inflater, container, false)
         binding.appBar.toolbarName.text = getString(R.string.register)
         return binding.root
@@ -32,16 +31,16 @@ class SignUpFragment : ObserveFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.existAccountButton.debounceClicks().subscribe { onBackPressed() }
-        binding.nameEditText.textChanges().subscribeBy { viewModel.name = it.toString() }
-        binding.phoneEditText.textChanges().subscribeBy { viewModel.phone = it.toString() }
-        binding.emailEditText.textChanges().subscribeBy { viewModel.email = it.toString() }
-        binding.passEditText.textChanges().subscribeBy { viewModel.pass = it.toString() }
-        binding.repeatPassEditText.textChanges().subscribeBy { viewModel.repeatPass = it.toString() }
-        binding.loginButton.debounceClicks().subscribe {
-            viewModel.auth()
-            router.replaceScreen(Screens.ProfileScreen())
-        }
+//        binding.existAccountButton.debounceClicks().subscribe { onBackPressed() }
+//        binding.nameEditText.textChanges().subscribeBy { viewModel.name = it.toString() }
+//        binding.phoneEditText.textChanges().subscribeBy { viewModel.phone = it.toString() }
+//        binding.emailEditText.textChanges().subscribeBy { viewModel.email = it.toString() }
+//        binding.passEditText.textChanges().subscribeBy { viewModel.pass = it.toString() }
+//        binding.repeatPassEditText.textChanges().subscribeBy { viewModel.repeatPass = it.toString() }
+//        binding.loginButton.debounceClicks().subscribe {
+//            viewModel.auth()
+//            router.replaceScreen(Screens.ProfileScreen())
+//        }
     }
 
     override fun onBackPressed(): Boolean {

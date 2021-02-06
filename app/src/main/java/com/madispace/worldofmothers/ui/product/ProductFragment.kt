@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.madispace.domain.models.ProductShort
-import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.databinding.FragmentProductBinding
 import com.madispace.worldofmothers.ui.catalog.items.ProductItem
 import com.xwray.groupie.GroupAdapter
@@ -17,11 +17,15 @@ import com.xwray.groupie.GroupieViewHolder
  * @author Ivan Kholodov - nilairan@gmail.com
  * @date 12/6/20
  */
-class ProductFragment : ObserveFragment() {
+class ProductFragment : Fragment() {
 
     private lateinit var binding: FragmentProductBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentProductBinding.inflate(inflater, container, false)
         binding.appBar.toolbarName.text = "Товар"
         return binding.root
@@ -49,8 +53,6 @@ class ProductFragment : ObserveFragment() {
         binding.recommendedProductList.adapter = GroupAdapter<GroupieViewHolder>().apply { addAll(productShortList.map { ProductItem(it) {} }) }
     }
 
-    override fun initObservers() {
-    }
 
     companion object {
         fun newInstance() = ProductFragment()

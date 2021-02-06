@@ -1,12 +1,10 @@
 package com.madispace.domain.usecases.auth
 
-import com.madispace.domain.exeptions.CustomFunctionException
 import com.madispace.domain.exeptions.EmailValidException
 import com.madispace.domain.exeptions.NotImplementCustomFunction
 import com.madispace.domain.exeptions.PassValidException
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.regex.Pattern
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /**
  * @author Ivan Kholodov - nilairan@gmail.com
@@ -58,46 +56,47 @@ interface ValidUseCase {
      * @throws PassValidException for not valid password
      * @throws NotImplementCustomFunction on custom function null or throw exception
      */
-    operator fun invoke(fields: ValidData): Single<Boolean>
+    operator fun invoke(fields: ValidData): Flow<Boolean>
 }
 
 class ValidUseCaseImpl : ValidUseCase {
-    override fun invoke(fields: ValidData): Single<Boolean> {
-        var isValid = true
-        return Single.just(true)
-            .map {
-                fields.validMap.forEach { item ->
-                    when (item.rule) {
-                        is EmailRule -> {
-                            isValid = Pattern.compile(item.rule.regex).matcher(item.field).matches()
-                            if (isValid.not()) {
-                                throw EmailValidException()
-                            }
-                        }
-                        is PassRule -> {
-                            isValid = item.field.length >= item.rule.minSize
-                            if (isValid.not()) {
-                                throw PassValidException()
-                            }
-                        }
-                        is CustomRule -> {
-                            item.function?.let {
-                                try {
-                                    isValid = it.invoke()
-                                    if (isValid.not()) {
-                                        throw CustomFunctionException(item.field)
-                                    }
-                                } catch (e: Exception) {
-                                    throw NotImplementCustomFunction()
-                                }
-                            } ?: run {
-                                throw NotImplementCustomFunction()
-                            }
-                        }
-                    }
-                }
-                return@map isValid
-            }
-            .subscribeOn(Schedulers.newThread())
+    override fun invoke(fields: ValidData): Flow<Boolean> {
+//        var isValid = true
+//        return Single.just(true)
+//            .map {
+//                fields.validMap.forEach { item ->
+//                    when (item.rule) {
+//                        is EmailRule -> {
+//                            isValid = Pattern.compile(item.rule.regex).matcher(item.field).matches()
+//                            if (isValid.not()) {
+//                                throw EmailValidException()
+//                            }
+//                        }
+//                        is PassRule -> {
+//                            isValid = item.field.length >= item.rule.minSize
+//                            if (isValid.not()) {
+//                                throw PassValidException()
+//                            }
+//                        }
+//                        is CustomRule -> {
+//                            item.function?.let {
+//                                try {
+//                                    isValid = it.invoke()
+//                                    if (isValid.not()) {
+//                                        throw CustomFunctionException(item.field)
+//                                    }
+//                                } catch (e: Exception) {
+//                                    throw NotImplementCustomFunction()
+//                                }
+//                            } ?: run {
+//                                throw NotImplementCustomFunction()
+//                            }
+//                        }
+//                    }
+//                }
+//                return@map isValid
+//            }
+//            .subscribeOn(Schedulers.newThread())
+        return flow<Boolean> { emit(true) }
     }
 }

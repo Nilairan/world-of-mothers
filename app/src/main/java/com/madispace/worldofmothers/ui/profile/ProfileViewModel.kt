@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import com.madispace.domain.models.ProductShort
 import com.madispace.domain.usecases.profile.GetUserProductUseCase
 import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCase
-import com.madispace.worldofmothers.common.*
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
+import com.madispace.worldofmothers.common.BaseViewModel
+import com.madispace.worldofmothers.common.Event
+import com.madispace.worldofmothers.common.Success
 import org.koin.core.component.inject
 
 /**
@@ -35,13 +35,13 @@ class ProfileViewModel : BaseViewModel() {
     }
 
     private fun getProduct() {
-        getUserProductUseCase.invoke()
-                .doOnSubscribe { _userProductLiveData.postValue(Loading()) }
-                .subscribeBy(
-                        onNext = { _userProductLiveData.postValue(Success(it)) },
-                        onError = { _userProductLiveData.postValue(Error()) }
-                )
-                .addTo(compositeDisposable)
+//        getUserProductUseCase.invoke()
+//                .doOnSubscribe { _userProductLiveData.postValue(Loading()) }
+//                .subscribeBy(
+//                        onNext = { _userProductLiveData.postValue(Success(it)) },
+//                        onError = { _userProductLiveData.postValue(Error()) }
+//                )
+//                .addTo(compositeDisposable)
     }
 
 }

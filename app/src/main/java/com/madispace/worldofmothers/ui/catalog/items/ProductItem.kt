@@ -3,7 +3,7 @@ package com.madispace.worldofmothers.ui.catalog.items
 import android.view.View
 import com.madispace.domain.models.ProductShort
 import com.madispace.worldofmothers.R
-import com.madispace.worldofmothers.common.debounceClicks
+import com.madispace.worldofmothers.common.loadPhoto
 import com.madispace.worldofmothers.databinding.ItemProductBinding
 import com.xwray.groupie.viewbinding.BindableItem
 
@@ -19,7 +19,8 @@ class ProductItem(
     override fun bind(viewBinding: ItemProductBinding, position: Int) {
         viewBinding.productName.text = product.name
         viewBinding.priceText.text = product.price.toString()
-        viewBinding.root.debounceClicks().subscribe { clickToProduct() }
+        viewBinding.root.setOnClickListener { clickToProduct() }
+        viewBinding.productLogo.loadPhoto(product.imageUrl)
     }
 
     override fun getLayout(): Int {

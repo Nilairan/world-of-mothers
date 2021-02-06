@@ -1,66 +1,64 @@
-package com.madispace.domain.usecases
+package com.madispace.domain.usecases.catalog
 
 import com.madispace.domain.models.Category
-import com.madispace.domain.models.ProductShort
 import com.madispace.domain.models.ui.CatalogModel
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
+import com.madispace.domain.repository.ProductListRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.zip
 
 /**
  * @author Ivan Kholodov - nilairan@gmail.com
  * @date 12/2/20
  */
-interface GetCatalogModelUseCase {
-    operator fun invoke(): Observable<CatalogModel>
+enum class SearchType {
+    DEFAULT,
+    PAGINATION
 }
 
-class GetCatalogModelUseCaseImpl : GetCatalogModelUseCase {
+data class SearchModel(
+    var page: Int = 1,
+    var searchValue: String = "",
+    var type: SearchType = SearchType.DEFAULT
+)
 
-    override fun invoke(): Observable<CatalogModel> {
-        val categoryList: ArrayList<Category> = arrayListOf()
-        categoryList.apply {
-            add(Category("Для малышей", ""))
-            add(Category("Дети до 3-х лет", ""))
-            add(Category("Дети до 7-ми лет", ""))
-            add(Category("Дети до 10-ми лет", ""))
-            add(Category("Дети до 11-ми лет", ""))
-            add(Category("Дети до 12-ми лет", ""))
-            add(Category("Дети до 13-ми лет", ""))
-            add(Category("Дети до 15-ми лет", ""))
-            add(Category("Дети до 18-ми лет", ""))
+interface GetCatalogModelUseCase {
+    operator fun invoke(searchModel: SearchModel): Flow<CatalogModel>
+}
+
+class GetCatalogModelUseCaseImpl constructor(
+    private val productListRepository: ProductListRepository
+) : GetCatalogModelUseCase {
+
+    override fun invoke(searchModel: SearchModel): Flow<CatalogModel> {
+        return when (searchModel.type) {
+            SearchType.DEFAULT -> {
+                val categoryFlow = flow {
+                    val categoryList: ArrayList<Category> = arrayListOf()
+                    categoryList.apply {
+                        add(Category("Для малышей", ""))
+                        add(Category("Дети до 3-х лет", ""))
+                        add(Category("Дети до 7-ми лет", ""))
+                        add(Category("Дети до 10-ми лет", ""))
+                        add(Category("Дети до 11-ми лет", ""))
+                        add(Category("Дети до 12-ми лет", ""))
+                        add(Category("Дети до 13-ми лет", ""))
+                        add(Category("Дети до 15-ми лет", ""))
+                        add(Category("Дети до 18-ми лет", ""))
+                    }
+                    emit(categoryList)
+                }
+                productListRepository.getAllProductList(searchModel.page)
+                    .zip(categoryFlow) { product, category ->
+                        CatalogModel(category, product)
+                    }
+            }
+            SearchType.PAGINATION -> {
+                productListRepository.getAllProductList(searchModel.page)
+                    .map { CatalogModel(emptyList(), it) }
+            }
         }
-        val productShortList: ArrayList<ProductShort> = arrayListOf()
-        productShortList.apply {
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 240.0))
-            add(ProductShort(1, "Соска силиконовая", "", 250.0))
-            add(ProductShort(1, "Соска силиконовая", "", 260.0))
-            add(ProductShort(1, "Соска силиконовая", "", 270.0))
-            add(ProductShort(1, "Соска силиконовая", "", 210.0))
-            add(ProductShort(1, "Соска силиконовая", "", 220.0))
-            add(ProductShort(1, "Соска силиконовая", "", 290.0))
-            add(ProductShort(1, "Соска силиконовая", "", 2320.0))
-            add(ProductShort(1, "Соска силиконовая", "", 2430.0))
-            add(ProductShort(1, "Соска силиконовая", "", 2230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 2340.0))
-            add(ProductShort(1, "Соска силиконовая", "", 130.0))
-            add(ProductShort(1, "Соска силиконовая", "", 2230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-            add(ProductShort(1, "Соска силиконовая", "", 230.0))
-        }
-        return Observable.just(CatalogModel(categoryList, productShortList))
-                .subscribeOn(Schedulers.io())
-                .delay(1300, TimeUnit.MILLISECONDS)
+
     }
 }

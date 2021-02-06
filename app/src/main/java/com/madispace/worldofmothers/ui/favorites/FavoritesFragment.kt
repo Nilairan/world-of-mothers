@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.madispace.domain.models.ProductShort
 import com.madispace.worldofmothers.common.ObserveFragment
@@ -18,16 +17,10 @@ import com.xwray.groupie.GroupieViewHolder
  * @author Ivan Kholodov - nilairan@gmail.com
  * @date 11/30/20
  */
-class FavoritesFragment : ObserveFragment() {
+class FavoritesFragment : ObserveFragment<FavoritesViewModel>(FavoritesViewModel::class) {
 
     private lateinit var binding: FragmentFavoritesBinding
-    private val viewModel: FavoritesViewModel by viewModels()
     private val adapter = GroupAdapter<GroupieViewHolder>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        viewModel.addLifecycleObserver(lifecycle)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
