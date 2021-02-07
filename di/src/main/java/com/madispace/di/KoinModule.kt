@@ -6,10 +6,10 @@ import com.github.terrakok.cicerone.Router
 import com.madispace.core.network.ApiFactory
 import com.madispace.core.network.product.ProductDataSource
 import com.madispace.core.network.product.ProductDataSourceImpl
-import com.madispace.core.repository.ProductListRepositoryImpl
+import com.madispace.core.repository.ProductRepositoryImpl
 import com.madispace.core.repository.UserRepositoryImpl
 import com.madispace.di.routing.LocalCiceroneHolder
-import com.madispace.domain.repository.ProductListRepository
+import com.madispace.domain.repository.ProductRepository
 import com.madispace.domain.repository.UserRepository
 import com.madispace.domain.usecases.GetFavoritesProductUseCase
 import com.madispace.domain.usecases.GetFavoritesProductUseCaseImpl
@@ -19,6 +19,8 @@ import com.madispace.domain.usecases.auth.ValidUseCase
 import com.madispace.domain.usecases.auth.ValidUseCaseImpl
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCaseImpl
+import com.madispace.domain.usecases.product.GetProductModelUseCase
+import com.madispace.domain.usecases.product.GetProductModelUseCaseImpl
 import com.madispace.domain.usecases.profile.*
 import org.koin.dsl.module
 
@@ -41,6 +43,7 @@ val useCasesModule = module {
     single<GetUserProductUseCase> { GetUserProductUseCaseImpl() }
     single<ValidUseCase> { ValidUseCaseImpl() }
     single<AuthUseCase> { AuthUseCaseImpl(get()) }
+    single<GetProductModelUseCase> { GetProductModelUseCaseImpl(get()) }
 }
 
 val apiModule = module {
@@ -49,6 +52,6 @@ val apiModule = module {
 }
 
 val repositoryModule = module {
-    single<ProductListRepository> { ProductListRepositoryImpl(get()) }
+    single<ProductRepository> { ProductRepositoryImpl(get()) }
     single<UserRepository> { UserRepositoryImpl() }
 }

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import com.madispace.domain.models.ProductShort
+import com.madispace.domain.models.product.ProductShort
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.SimpleObserver
 import com.madispace.worldofmothers.databinding.FragmentFavoritesBinding

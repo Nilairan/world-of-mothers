@@ -1,7 +1,7 @@
 package com.madispace.worldofmothers.ui.catalog.items
 
 import android.view.View
-import com.madispace.domain.models.Category
+import com.madispace.domain.models.category.Category
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.databinding.ItemCategoryBinding
 import com.xwray.groupie.viewbinding.BindableItem
@@ -11,8 +11,8 @@ import com.xwray.groupie.viewbinding.BindableItem
  * @date 12/2/20
  */
 class CategoryItem(
-        private val category: Category,
-        private val clickListener: () -> Unit
+    private val category: Category,
+    private val clickListener: () -> Unit
 ) : BindableItem<ItemCategoryBinding>() {
     override fun bind(viewBinding: ItemCategoryBinding, position: Int) {
         viewBinding.categoryName.text = category.name

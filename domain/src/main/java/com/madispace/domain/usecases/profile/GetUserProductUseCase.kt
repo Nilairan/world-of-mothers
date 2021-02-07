@@ -1,6 +1,6 @@
 package com.madispace.domain.usecases.profile
 
-import com.madispace.domain.models.ProductShort
+import com.madispace.domain.models.product.ProductShort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

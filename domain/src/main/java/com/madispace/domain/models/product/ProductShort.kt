@@ -1,4 +1,4 @@
-package com.madispace.domain.models
+package com.madispace.domain.models.product
 
 /**
  * @author Ivan Kholodov - nilairan@gmail.com

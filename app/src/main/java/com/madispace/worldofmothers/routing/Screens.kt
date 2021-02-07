@@ -34,5 +34,5 @@ object Screens {
 
     fun NewProductScreen() = FragmentScreen { NewProductFragment.newInstance() }
 
-    fun ProductScreen() = FragmentScreen { ProductFragment.newInstance() }
+    fun ProductScreen(productId: Int) = FragmentScreen { ProductFragment.newInstance(productId) }
 }

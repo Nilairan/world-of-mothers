@@ -1,13 +1,13 @@
 package com.madispace.core.dto
 
 import com.google.gson.annotations.SerializedName
-import com.madispace.domain.models.ProductShort
+import com.madispace.domain.models.product.Product
 
 /**
  * @author Ivan Kholodov - nilairan@gmail.com
  * @date 2/2/21
  */
-data class Product(
+data class DTOProduct(
     val id: Int,
     @SerializedName("user_id") val userId: Int,
     @SerializedName("category_id") val categoryId: Int,
@@ -20,12 +20,19 @@ data class Product(
     val address: String,
     val img: String
 ) {
-    fun mapToShort(): ProductShort {
-        return ProductShort(
-            id = id,
-            name = name,
-            imageUrl = img,
-            price = price
+    fun mapToModel(): Product {
+        return Product(
+            id,
+            userId,
+            categoryId,
+            name,
+            price,
+            info,
+            material,
+            size,
+            status,
+            address,
+            img
         )
     }
 }

@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import com.madispace.domain.models.ProductShort
+import com.madispace.domain.models.product.ProductShort
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.SimpleObserver
 import com.madispace.worldofmothers.common.getContext
 import com.madispace.worldofmothers.databinding.FragmentProfileBinding
 import com.madispace.worldofmothers.routing.RouterProvider
 import com.madispace.worldofmothers.routing.Screens
-import com.madispace.worldofmothers.ui.catalog.items.ProductItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 
@@ -58,16 +57,18 @@ class ProfileFragment : ObserveFragment<ProfileViewModel>(ProfileViewModel::clas
                 }
             }
         })
-        viewModel.userProductLiveData.observe(viewLifecycleOwner, object : SimpleObserver<List<ProductShort>>() {
-            override fun onSuccess(data: List<ProductShort>) {
-                adapter.clear()
-                adapter.addAll(data.map { ProductItem(it) { router.navigateTo(Screens.ProductScreen()) } })
-            }
+        viewModel.userProductLiveData.observe(
+            viewLifecycleOwner,
+            object : SimpleObserver<List<ProductShort>>() {
+                override fun onSuccess(data: List<ProductShort>) {
+                    adapter.clear()
+//                adapter.addAll(data.map { ProductItem(it) { router.navigateTo(Screens.ProductScreen()) } })
+                }
 
-            override fun onLoading(loading: Boolean) {
-                binding.progressCircular.visibility = if (loading) View.VISIBLE else View.GONE
-            }
-        })
+                override fun onLoading(loading: Boolean) {
+                    binding.progressCircular.visibility = if (loading) View.VISIBLE else View.GONE
+                }
+            })
     }
 
     companion object {

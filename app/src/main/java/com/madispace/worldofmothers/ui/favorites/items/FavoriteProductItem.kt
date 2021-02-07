@@ -1,7 +1,7 @@
 package com.madispace.worldofmothers.ui.favorites.items
 
 import android.view.View
-import com.madispace.domain.models.ProductShort
+import com.madispace.domain.models.product.ProductShort
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.databinding.ItemProductFavoriteBinding
 import com.xwray.groupie.viewbinding.BindableItem

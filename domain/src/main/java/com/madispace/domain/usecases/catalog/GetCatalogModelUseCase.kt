@@ -1,8 +1,8 @@
 package com.madispace.domain.usecases.catalog
 
-import com.madispace.domain.models.Category
+import com.madispace.domain.models.category.Category
 import com.madispace.domain.models.ui.CatalogModel
-import com.madispace.domain.repository.ProductListRepository
+import com.madispace.domain.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -28,7 +28,7 @@ interface GetCatalogModelUseCase {
 }
 
 class GetCatalogModelUseCaseImpl constructor(
-    private val productListRepository: ProductListRepository
+    private val productRepository: ProductRepository
 ) : GetCatalogModelUseCase {
 
     override fun invoke(searchModel: SearchModel): Flow<CatalogModel> {
@@ -49,14 +49,14 @@ class GetCatalogModelUseCaseImpl constructor(
                     }
                     emit(categoryList)
                 }
-                productListRepository.getAllProductList(searchModel.page)
+                productRepository.getAllProductList(searchModel.page)
                     .zip(categoryFlow) { product, category ->
-                        CatalogModel(category, product)
+                        CatalogModel(category, product.map { it.mapToShort() })
                     }
             }
             SearchType.PAGINATION -> {
-                productListRepository.getAllProductList(searchModel.page)
-                    .map { CatalogModel(emptyList(), it) }
+                productRepository.getAllProductList(searchModel.page)
+                    .map { CatalogModel(emptyList(), it.map { it.mapToShort() }) }
             }
         }
 

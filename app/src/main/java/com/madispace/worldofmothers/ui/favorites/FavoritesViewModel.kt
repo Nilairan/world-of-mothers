@@ -2,7 +2,7 @@ package com.madispace.worldofmothers.ui.favorites
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.madispace.domain.models.ProductShort
+import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.usecases.GetFavoritesProductUseCase
 import com.madispace.worldofmothers.common.BaseViewModel
 import com.madispace.worldofmothers.common.Event

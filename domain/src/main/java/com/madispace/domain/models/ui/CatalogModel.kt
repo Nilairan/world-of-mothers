@@ -1,7 +1,7 @@
 package com.madispace.domain.models.ui
 
-import com.madispace.domain.models.Category
-import com.madispace.domain.models.ProductShort
+import com.madispace.domain.models.category.Category
+import com.madispace.domain.models.product.ProductShort
 
 /**
  * @author Ivan Kholodov - nilairan@gmail.com

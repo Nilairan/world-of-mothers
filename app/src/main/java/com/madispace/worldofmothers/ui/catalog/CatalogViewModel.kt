@@ -1,8 +1,8 @@
 package com.madispace.worldofmothers.ui.catalog
 
 import androidx.lifecycle.viewModelScope
-import com.madispace.domain.models.Category
-import com.madispace.domain.models.ProductShort
+import com.madispace.domain.models.category.Category
+import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
 import com.madispace.domain.usecases.catalog.SearchModel
 import com.madispace.domain.usecases.catalog.SearchType

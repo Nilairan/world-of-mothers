@@ -2,7 +2,7 @@ package com.madispace.worldofmothers.ui.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.madispace.domain.models.ProductShort
+import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.usecases.profile.GetUserProductUseCase
 import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCase
 import com.madispace.worldofmothers.common.BaseViewModel

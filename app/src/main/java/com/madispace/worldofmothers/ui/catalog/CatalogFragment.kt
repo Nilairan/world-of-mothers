@@ -80,14 +80,10 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(CatalogViewModel::clas
                 is CatalogViewModel.CatalogState.HideLoading -> progressCircular.visibility =
                     View.GONE
                 is CatalogViewModel.CatalogState.ShowCategory -> categoryListAdapter.addAll(state.category.map {
-                    CategoryItem(
-                        it
-                    ) { /* TODO click to category */ }
+                    CategoryItem(it) { /* TODO click to category */ }
                 })
                 is CatalogViewModel.CatalogState.ShowProduct -> productListAdapter.addAll(state.products.map {
-                    ProductItem(
-                        it
-                    ) { router.navigateTo(Screens.ProductScreen()) }
+                    ProductItem(it) { router.navigateTo(Screens.ProductScreen(it.id)) }
                 })
             }
         }

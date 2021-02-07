@@ -35,4 +35,6 @@
     <string name="add_product_title">Добавление товара</string>
     <string name="seller">Продавец</string>
     <string name="call_to_seller">Связаться с продавцом</string>
+    <string name="product">Товар</string>
+    <string name="price">%s ₽</string>
 </resources>
