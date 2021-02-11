@@ -68,9 +68,11 @@ class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::clas
             when (state) {
                 is ProductViewModel.ProductState.ShowLoading -> {
                     progressBar.root.visibility = View.VISIBLE
+                    fab.visibility = View.GONE
                 }
                 is ProductViewModel.ProductState.HideLoading -> {
                     progressBar.root.visibility = View.GONE
+                    fab.visibility = View.VISIBLE
                 }
                 is ProductViewModel.ProductState.ShowProduct -> {
                     bindProduct(state.product)

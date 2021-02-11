@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.madispace.domain.models.product.ProductShort
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.PagingScrollListener
@@ -44,6 +46,15 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(CatalogViewModel::clas
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.swipeRefreshLayout.setColorSchemeColors(
+            ContextCompat.getColor(
+                binding.getContext(),
+                R.color.green
+            )
+        )
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.obtainEvent(CatalogViewModel.CatalogEvent.Refresh)
+        }
         binding.searchItem.filterImage.setOnClickListener { binding.root.openDrawer(Gravity.RIGHT) }
         val items = listOf("По популярности", "Новые", "По убыванию", "По возрастанию")
         val adapter = ArrayAdapter(requireContext(), R.layout.item_autocomplite, items)
@@ -83,17 +94,27 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(CatalogViewModel::clas
                     CategoryItem(it) { /* TODO click to category */ }
                 })
                 is CatalogViewModel.CatalogState.ShowProduct -> productListAdapter.addAll(state.products.map {
-                    ProductItem(it) { router.navigateTo(Screens.ProductScreen(it.id)) }
+                    createProductItem(it)
                 })
+                is CatalogViewModel.CatalogState.ShowRefreshProduct -> {
+                    productListAdapter.clear()
+                    productListAdapter.addAll(state.products.map { createProductItem(it) })
+                }
+                is CatalogViewModel.CatalogState.StopRefresh -> swipeRefreshLayout.isRefreshing =
+                    false
             }
         }
+    }
+
+    private fun createProductItem(product: ProductShort): ProductItem {
+        return ProductItem(product) { router.navigateTo(Screens.ProductScreen(product.id)) }
     }
 
     private fun bindViewAction(action: CatalogViewModel.CatalogAction) {
         when (action) {
             is CatalogViewModel.CatalogAction.ShowErrorMessage -> Toast.makeText(
                 binding.getContext(),
-                "Check",
+                "Error",
                 Toast.LENGTH_LONG
             ).show()
         }

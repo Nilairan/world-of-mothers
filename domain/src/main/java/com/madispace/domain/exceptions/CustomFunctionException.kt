@@ -1,4 +1,4 @@
-package com.madispace.domain.exeptions
+package com.madispace.domain.exceptions
 
 /**
  * @author Ivan Kholodov - nilairan@gmail.com

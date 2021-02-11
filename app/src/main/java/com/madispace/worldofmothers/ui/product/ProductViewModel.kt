@@ -6,6 +6,7 @@ import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.models.user.User
 import com.madispace.domain.usecases.product.GetProductModelUseCase
 import com.madispace.worldofmothers.common.BaseMviViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
@@ -30,7 +31,7 @@ class ProductViewModel :
     }
 
     private fun getProductModel(productId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             getProductModelUseCase.invoke(productId = productId)
                 .onStart { viewState = ProductState.ShowLoading }
                 .catch {

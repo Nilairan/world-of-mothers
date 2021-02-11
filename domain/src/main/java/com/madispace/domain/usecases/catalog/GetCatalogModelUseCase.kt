@@ -14,7 +14,8 @@ import kotlinx.coroutines.flow.zip
  */
 enum class SearchType {
     DEFAULT,
-    PAGINATION
+    PAGINATION,
+    REFRESH
 }
 
 data class SearchModel(
@@ -54,7 +55,7 @@ class GetCatalogModelUseCaseImpl constructor(
                         CatalogModel(category, product.map { it.mapToShort() })
                     }
             }
-            SearchType.PAGINATION -> {
+            SearchType.PAGINATION, SearchType.REFRESH -> {
                 productRepository.getAllProductList(searchModel.page)
                     .map { CatalogModel(emptyList(), it.map { it.mapToShort() }) }
             }

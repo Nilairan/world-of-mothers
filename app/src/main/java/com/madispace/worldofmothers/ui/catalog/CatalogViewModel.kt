@@ -1,6 +1,7 @@
 package com.madispace.worldofmothers.ui.catalog
 
 import androidx.lifecycle.viewModelScope
+import com.madispace.domain.exceptions.PageNotFoundException
 import com.madispace.domain.models.category.Category
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
@@ -22,6 +23,7 @@ class CatalogViewModel :
 
     private val getCatalogModelUseCase: GetCatalogModelUseCase by inject()
     private var page = 1
+    private var isAllPageLoaded = false
 
     override fun onCreate() {
         obtainEvent(CatalogEvent.Default)
@@ -34,12 +36,14 @@ class CatalogViewModel :
                 getCatalogModel()
             }
             is CatalogEvent.LoadNextProductPage -> {
+                if (isAllPageLoaded) return
                 page++
                 viewState = CatalogState.ShowLoading
                 getNextProductPage()
             }
             is CatalogEvent.Refresh -> {
-
+                page = 1
+                onRefresh()
             }
         }
     }
@@ -50,7 +54,6 @@ class CatalogViewModel :
                 .onStart { viewState = CatalogState.ShowLoading }
                 .catch {
                     viewState = CatalogState.HideLoading
-                    viewAction = CatalogAction.ShowErrorMessage
                 }
                 .collect {
                     viewState = CatalogState.HideLoading
@@ -66,13 +69,30 @@ class CatalogViewModel :
         viewModelScope.launch {
             getCatalogModelUseCase.invoke(SearchModel(page = page, type = SearchType.PAGINATION))
                 .catch {
-                    page--
                     viewState = CatalogState.HideLoading
-                    viewAction = CatalogAction.ShowErrorMessage
+                    when (it) {
+                        is PageNotFoundException -> isAllPageLoaded = true
+                        else -> {
+                            page--
+                            viewAction = CatalogAction.ShowErrorMessage
+                        }
+                    }
                 }
                 .collect {
                     viewState = CatalogState.HideLoading
+                    viewState = CatalogState.StopRefresh
                     viewState = CatalogState.ShowProduct(it.productsShort)
+                }
+        }
+    }
+
+    private fun onRefresh() {
+        viewModelScope.launch {
+            getCatalogModelUseCase.invoke(SearchModel(page = page, type = SearchType.REFRESH))
+                .catch { viewState = CatalogState.StopRefresh }
+                .collect {
+                    viewState = CatalogState.StopRefresh
+                    viewState = CatalogState.ShowRefreshProduct(it.productsShort)
                 }
         }
     }
@@ -80,6 +100,8 @@ class CatalogViewModel :
     sealed class CatalogState {
         object ShowLoading : CatalogState()
         object HideLoading : CatalogState()
+        object StopRefresh : CatalogState()
+        data class ShowRefreshProduct(val products: List<ProductShort>) : CatalogState()
         data class ShowCategory(val category: List<Category>) : CatalogState()
         data class ShowProduct(val products: List<ProductShort>) : CatalogState()
     }

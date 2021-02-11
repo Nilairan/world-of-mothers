@@ -1,8 +1,8 @@
 package com.madispace.domain.usecases.auth
 
-import com.madispace.domain.exeptions.EmailValidException
-import com.madispace.domain.exeptions.NotImplementCustomFunction
-import com.madispace.domain.exeptions.PassValidException
+import com.madispace.domain.exceptions.EmailValidException
+import com.madispace.domain.exceptions.NotImplementCustomFunction
+import com.madispace.domain.exceptions.PassValidException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
