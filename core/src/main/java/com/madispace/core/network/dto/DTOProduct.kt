@@ -1,4 +1,4 @@
-package com.madispace.core.dto
+package com.madispace.core.network.dto
 
 import com.google.gson.annotations.SerializedName
 import com.madispace.domain.models.product.Product

@@ -11,5 +11,6 @@ import com.madispace.domain.models.user.User
 data class ProductModel(
     val product: Product,
     val seller: User,
+    val isFavoriteProduct: Boolean,
     val additionallyProduct: List<ProductShort>
 )

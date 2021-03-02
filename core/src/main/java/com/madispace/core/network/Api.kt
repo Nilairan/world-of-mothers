@@ -1,7 +1,7 @@
 package com.madispace.core.network
 
 import com.madispace.core.common.PaginationResponse
-import com.madispace.core.dto.DTOProduct
+import com.madispace.core.network.dto.DTOProduct
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

@@ -1,10 +1,7 @@
 package com.madispace.worldofmothers
 
 import android.app.Application
-import com.madispace.di.apiModule
-import com.madispace.di.navigationModule
-import com.madispace.di.repositoryModule
-import com.madispace.di.useCasesModule
+import com.madispace.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -25,7 +22,8 @@ class App : Application() {
                     navigationModule,
                     useCasesModule,
                     repositoryModule,
-                    apiModule
+                    apiModule,
+                    databaseModule
                 )
             )
         }

@@ -5,16 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.madispace.domain.models.product.Product
 import com.madispace.domain.models.user.User
 import com.madispace.worldofmothers.R
-import com.madispace.worldofmothers.common.ObserveFragment
-import com.madispace.worldofmothers.common.args
-import com.madispace.worldofmothers.common.getPrice
-import com.madispace.worldofmothers.common.loadPhoto
+import com.madispace.worldofmothers.common.*
 import com.madispace.worldofmothers.databinding.FragmentProductBinding
 import com.madispace.worldofmothers.routing.Screens
 import com.madispace.worldofmothers.ui.catalog.items.ProductItem
@@ -55,6 +53,9 @@ class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::clas
         binding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+        binding.fab.setOnClickListener {
+            viewModel.obtainEvent(ProductViewModel.ProductEvent.OnFavoriteClick)
+        }
     }
 
     override fun initObservers() {
@@ -87,6 +88,22 @@ class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::clas
                                 ProductItem(it) { router.replaceScreen(Screens.ProductScreen(it.id)) }
                             })
                         }
+                }
+                is ProductViewModel.ProductState.EnableFavorite -> {
+                    fab.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            getContext(),
+                            R.drawable.ic_like
+                        )
+                    )
+                }
+                is ProductViewModel.ProductState.DisableFavorite -> {
+                    fab.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            getContext(),
+                            R.drawable.ic_favorite_24
+                        )
+                    )
                 }
             }
         }

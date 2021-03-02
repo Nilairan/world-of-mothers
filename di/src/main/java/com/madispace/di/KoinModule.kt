@@ -3,6 +3,7 @@ package com.madispace.di
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Cicerone.Companion.create
 import com.github.terrakok.cicerone.Router
+import com.madispace.core.database.AppDatabase
 import com.madispace.core.network.ApiFactory
 import com.madispace.core.network.product.ProductDataSource
 import com.madispace.core.network.product.ProductDataSourceImpl
@@ -19,6 +20,8 @@ import com.madispace.domain.usecases.auth.ValidUseCase
 import com.madispace.domain.usecases.auth.ValidUseCaseImpl
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCaseImpl
+import com.madispace.domain.usecases.product.FavoriteProductUseCase
+import com.madispace.domain.usecases.product.FavoriteProductUseCaseImpl
 import com.madispace.domain.usecases.product.GetProductModelUseCase
 import com.madispace.domain.usecases.product.GetProductModelUseCaseImpl
 import com.madispace.domain.usecases.profile.*
@@ -44,14 +47,20 @@ val useCasesModule = module {
     single<ValidUseCase> { ValidUseCaseImpl() }
     single<AuthUseCase> { AuthUseCaseImpl(get()) }
     single<GetProductModelUseCase> { GetProductModelUseCaseImpl(get()) }
+    single<FavoriteProductUseCase> { FavoriteProductUseCaseImpl(get()) }
 }
 
 val apiModule = module {
     single { ApiFactory().getApi() }
-    single<ProductDataSource> { ProductDataSourceImpl(get()) }
+    single<ProductDataSource> { ProductDataSourceImpl(get(), get()) }
 }
 
 val repositoryModule = module {
     single<ProductRepository> { ProductRepositoryImpl(get()) }
     single<UserRepository> { UserRepositoryImpl() }
+}
+
+val databaseModule = module {
+    single { AppDatabase.getInstance(get()) }
+    single { get<AppDatabase>().productDao }
 }

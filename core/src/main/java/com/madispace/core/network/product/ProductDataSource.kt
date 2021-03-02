@@ -1,7 +1,9 @@
 package com.madispace.core.network.product
 
-import com.madispace.core.dto.DTOProduct
+import com.madispace.core.database.dao.ProductDao
+import com.madispace.core.database.entities.ProductEntity
 import com.madispace.core.network.Api
+import com.madispace.core.network.dto.DTOProduct
 import com.madispace.domain.exceptions.PageNotFoundException
 
 /**
@@ -12,10 +14,14 @@ interface ProductDataSource {
     @Throws(PageNotFoundException::class)
     suspend fun getAllProductList(page: Int): List<DTOProduct>
     suspend fun getProductById(id: Int): DTOProduct
+    suspend fun setFavoriteProduct(product: ProductEntity)
+    suspend fun removeFavoriteProduct(id: Int)
+    suspend fun getFavoriteProduct(id: Int): ProductEntity?
 }
 
 class ProductDataSourceImpl constructor(
-    private val api: Api
+    private val api: Api,
+    private val productDao: ProductDao
 ) : ProductDataSource {
 
     private var maxCountPage = 1
@@ -31,6 +37,18 @@ class ProductDataSourceImpl constructor(
 
     override suspend fun getProductById(id: Int): DTOProduct {
         return api.getProductById(id = id)
+    }
+
+    override suspend fun setFavoriteProduct(product: ProductEntity) {
+        productDao.insertProduct(product)
+    }
+
+    override suspend fun removeFavoriteProduct(id: Int) {
+        productDao.removeById(id)
+    }
+
+    override suspend fun getFavoriteProduct(id: Int): ProductEntity? {
+        return productDao.getById(id)
     }
 
 }
