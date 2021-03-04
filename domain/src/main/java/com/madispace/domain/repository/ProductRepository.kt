@@ -10,4 +10,5 @@ interface ProductRepository {
     fun setFavoriteProduct(product: Product): Flow<Boolean>
     fun removeFavoriteProduct(id: Int): Flow<Boolean>
     fun getFavoriteProduct(id: Int): Flow<Product?>
+    fun getFavoriteProductList(): Flow<List<Product>>
 }

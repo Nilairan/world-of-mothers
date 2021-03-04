@@ -36,7 +36,7 @@ val navigationModule = module {
 
 val useCasesModule = module {
     single<GetCatalogModelUseCase> { GetCatalogModelUseCaseImpl(get()) }
-    single<GetFavoritesProductUseCase> { GetFavoritesProductUseCaseImpl() }
+    single<GetFavoritesProductUseCase> { GetFavoritesProductUseCaseImpl(get()) }
     single<IsAuthorizedUserUseCase> { IsAuthorizedUserUseCaseImpl(get()) }
     single<RegisterUserUseCase> { RegisterUserUseCaseImpl(get()) }
     single<GetUserProductUseCase> { GetUserProductUseCaseImpl() }

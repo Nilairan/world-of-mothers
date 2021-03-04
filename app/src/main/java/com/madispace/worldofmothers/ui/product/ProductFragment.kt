@@ -89,7 +89,7 @@ class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::clas
                     fab.setImageDrawable(
                         ContextCompat.getDrawable(
                             getContext(),
-                            R.drawable.ic_like
+                            R.drawable.ic_like_green
                         )
                     )
                 }

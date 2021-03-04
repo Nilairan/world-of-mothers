@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 
 class ProductRepositoryImpl constructor(
     private val productDataSource: ProductDataSource
@@ -52,5 +53,9 @@ class ProductRepositoryImpl constructor(
         return flow {
             emit(ProductMapper.map(productDataSource.getFavoriteProduct(id)))
         }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getFavoriteProductList(): Flow<List<Product>> {
+        return productDataSource.getFavoriteProductList().map { it.map { ProductMapper.map(it)!! } }
     }
 }

@@ -37,4 +37,6 @@
     <string name="call_to_seller">Связаться с продавцом</string>
     <string name="product">Товар</string>
     <string name="price">%s ₽</string>
+    <string name="favorite_empty_text">Добавляйте товары в избранное, чтобы посмотреть или купить их позже</string>
+    <string name="favorite_empty_title">В избранном пусто</string>
 </resources>

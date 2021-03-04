@@ -62,7 +62,7 @@
                 android:paddingBottom="20dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:background="#EFEFEF" />
+                android:background="@color/background_gray" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

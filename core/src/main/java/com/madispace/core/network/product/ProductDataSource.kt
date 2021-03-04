@@ -5,6 +5,7 @@ import com.madispace.core.database.entities.ProductEntity
 import com.madispace.core.network.Api
 import com.madispace.core.network.dto.DTOProduct
 import com.madispace.domain.exceptions.PageNotFoundException
+import kotlinx.coroutines.flow.Flow
 
 interface ProductDataSource {
     @Throws(PageNotFoundException::class)
@@ -13,6 +14,7 @@ interface ProductDataSource {
     suspend fun setFavoriteProduct(product: ProductEntity)
     suspend fun removeFavoriteProduct(id: Int)
     suspend fun getFavoriteProduct(id: Int): ProductEntity?
+    fun getFavoriteProductList(): Flow<List<ProductEntity>>
 }
 
 class ProductDataSourceImpl constructor(
@@ -47,4 +49,7 @@ class ProductDataSourceImpl constructor(
         return productDao.getById(id)
     }
 
+    override fun getFavoriteProductList(): Flow<List<ProductEntity>> {
+        return productDao.getList()
+    }
 }

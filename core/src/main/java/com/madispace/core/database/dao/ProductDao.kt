@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.madispace.core.database.entities.ProductEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductDao {
@@ -17,4 +18,7 @@ interface ProductDao {
 
     @Query("DELETE FROM Product WHERE id = :id")
     suspend fun removeById(id: Int)
+
+    @Query("SELECT * FROM Product")
+    fun getList(): Flow<List<ProductEntity>>
 }

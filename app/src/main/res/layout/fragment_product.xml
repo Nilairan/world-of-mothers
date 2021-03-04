@@ -339,10 +339,10 @@
         app:layout_anchor="@id/appBar"
         app:layout_anchorGravity="bottom|end"
         android:backgroundTint="@color/white"
-        app:rippleColor="@color/white"
-        app:backgroundTint="@color/white"
+        app:tint="@color/green"
+        app:borderWidth="0dp"
         app:fabSize="mini"
-        app:srcCompat="@drawable/ic_favorite_24" />
+        android:src="@drawable/ic_like_green" />
 
     <include
         android:id="@+id/progressBar"
