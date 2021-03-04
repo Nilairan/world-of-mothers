@@ -3,10 +3,6 @@ package com.madispace.worldofmothers.common
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 2/6/21
- */
 class PagingScrollListener(
     private val layoutManager: LinearLayoutManager,
     private val isLoading: () -> Boolean,

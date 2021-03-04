@@ -9,10 +9,6 @@ import com.madispace.worldofmothers.common.Event
 import com.madispace.worldofmothers.ui.common.UiModel
 import org.koin.core.component.inject
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/6/20
- */
 class SignUpViewModel : BaseViewModel() {
     private val registerUserUseCase: RegisterUserUseCase by inject()
     private val validUseCase: ValidUseCase by inject()

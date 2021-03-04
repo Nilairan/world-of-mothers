@@ -4,10 +4,6 @@ import com.madispace.domain.models.product.ProductShort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/6/20
- */
 interface GetUserProductUseCase {
     operator fun invoke(): Flow<List<ProductShort>>
 }

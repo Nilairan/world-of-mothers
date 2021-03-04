@@ -11,10 +11,6 @@ import com.madispace.worldofmothers.databinding.FragmentSignUpBinding
 import com.madispace.worldofmothers.routing.Screens
 import com.madispace.worldofmothers.ui.common.*
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/4/20
- */
 class SignUpFragment : ObserveFragment<SignUpViewModel>(SignUpViewModel::class) {
 
     private lateinit var binding: FragmentSignUpBinding

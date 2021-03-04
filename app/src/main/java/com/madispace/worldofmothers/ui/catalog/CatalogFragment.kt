@@ -25,10 +25,6 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.flow.collect
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 11/30/20
- */
 class CatalogFragment : ObserveFragment<CatalogViewModel>(CatalogViewModel::class) {
 
     private lateinit var binding: FragmentCatalogBinding

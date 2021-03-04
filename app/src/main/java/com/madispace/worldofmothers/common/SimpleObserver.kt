@@ -2,10 +2,6 @@ package com.madispace.worldofmothers.common
 
 import androidx.lifecycle.Observer
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/2/20
- */
 abstract class SimpleObserver<T> : Observer<Event<T>> {
 
     override fun onChanged(item: Event<T>) {

@@ -22,10 +22,6 @@ import com.madispace.worldofmothers.ui.profile.ProfileFragment
 import org.koin.android.ext.android.inject
 import kotlin.reflect.jvm.jvmName
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 11/30/20
- */
 class TabContainerFragment : Fragment(), RouterProvider, BackButtonListener {
 
     private lateinit var binding: FragmentTabContainerBinding

@@ -27,10 +27,6 @@ import com.madispace.domain.usecases.product.GetProductModelUseCaseImpl
 import com.madispace.domain.usecases.profile.*
 import org.koin.dsl.module
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 11/26/20
- */
 val navigationModule = module {
     val cicerone: Cicerone<Router> = create()
     single { cicerone.router }

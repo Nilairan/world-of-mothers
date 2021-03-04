@@ -8,10 +8,6 @@ import com.github.terrakok.cicerone.Router
 import com.madispace.worldofmothers.routing.RouterProvider
 import kotlin.reflect.KClass
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/2/20
- */
 abstract class ObserveFragment<VM : BaseViewModel>(private val viewModelClass: KClass<VM>) :
     Fragment(), RouterProvider, BackButtonListener {
 

@@ -10,10 +10,6 @@ import com.madispace.worldofmothers.common.Event
 import com.madispace.worldofmothers.common.Success
 import org.koin.core.component.inject
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/4/20
- */
 class ProfileViewModel : BaseViewModel() {
 
     private val isAuthorizedUserUseCase: IsAuthorizedUserUseCase by inject()

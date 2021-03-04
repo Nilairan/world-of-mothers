@@ -7,10 +7,6 @@ import com.bumptech.glide.Glide
 import java.text.NumberFormat
 import java.util.*
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/2/20
- */
 fun ViewBinding.getContext(): Context {
     return this.root.context
 }

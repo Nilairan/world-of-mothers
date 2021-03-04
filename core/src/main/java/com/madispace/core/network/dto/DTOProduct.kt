@@ -3,10 +3,6 @@ package com.madispace.core.network.dto
 import com.google.gson.annotations.SerializedName
 import com.madispace.domain.models.product.Product
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 2/2/21
- */
 data class DTOProduct(
     val id: Int,
     @SerializedName("user_id") val userId: Int,

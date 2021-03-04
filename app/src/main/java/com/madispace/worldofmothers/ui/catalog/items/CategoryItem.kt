@@ -6,10 +6,6 @@ import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.databinding.ItemCategoryBinding
 import com.xwray.groupie.viewbinding.BindableItem
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/2/20
- */
 class CategoryItem(
     private val category: Category,
     private val clickListener: () -> Unit

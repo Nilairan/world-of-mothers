@@ -9,10 +9,6 @@ import com.madispace.worldofmothers.common.loadPhoto
 import com.madispace.worldofmothers.databinding.ItemProductBinding
 import com.xwray.groupie.viewbinding.BindableItem
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/2/20
- */
 class ProductItem(
     private val product: ProductShort,
     private val clickToProduct: () -> Unit

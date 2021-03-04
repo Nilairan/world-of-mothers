@@ -15,10 +15,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 2/7/21
- */
 class ProductViewModel :
     BaseMviViewModel<ProductViewModel.ProductState, ProductViewModel.ProductAction, ProductViewModel.ProductEvent>() {
 

@@ -8,10 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.zip
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 2/7/21
- */
 interface GetProductModelUseCase {
     operator fun invoke(productId: Int): Flow<ProductModel>
 }

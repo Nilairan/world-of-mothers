@@ -3,10 +3,6 @@ package com.madispace.worldofmothers.common
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 2/3/21
- */
 abstract class BaseMviViewModel<STATE, ACTION, EVENT> : BaseViewModel() {
 
     private val TAG = BaseMviViewModel::class.java.simpleName

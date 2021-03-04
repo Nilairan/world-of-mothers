@@ -6,10 +6,6 @@ import com.madispace.domain.exceptions.PassValidException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/23/20
- */
 class ValidData private constructor(
     val validMap: Set<ValidField>
 ) {

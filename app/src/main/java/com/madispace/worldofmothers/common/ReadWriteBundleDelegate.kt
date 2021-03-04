@@ -9,10 +9,6 @@ import java.io.Serializable
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 2/7/21
- */
 class ReadWriteBundleDelegate<R, T>(
     private val getValueBlock: (R, KProperty<*>) -> T,
     private val setValueBlock: (R, KProperty<*>, T) -> Unit

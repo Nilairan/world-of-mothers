@@ -11,10 +11,6 @@ import com.madispace.worldofmothers.ui.common.Default
 import com.madispace.worldofmothers.ui.common.UiModel
 import org.koin.core.component.inject
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/23/20
- */
 class SignInViewModel : BaseViewModel() {
 
     private val validUseCase: ValidUseCase by inject()

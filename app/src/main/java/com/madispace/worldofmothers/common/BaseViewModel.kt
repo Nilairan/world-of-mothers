@@ -6,10 +6,6 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ViewModel
 import org.koin.core.component.KoinComponent
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/1/20
- */
 abstract class BaseViewModel : ViewModel(), LifecycleObserver, KoinComponent {
 
     fun addLifecycleObserver(lifecycle: Lifecycle) {

@@ -15,10 +15,6 @@ import com.madispace.worldofmothers.routing.Screens
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 11/30/20
- */
 class ProfileFragment : ObserveFragment<ProfileViewModel>(ProfileViewModel::class), RouterProvider {
 
     private lateinit var binding: FragmentProfileBinding

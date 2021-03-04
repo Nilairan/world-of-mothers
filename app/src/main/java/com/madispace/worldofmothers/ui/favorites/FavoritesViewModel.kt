@@ -8,10 +8,6 @@ import com.madispace.worldofmothers.common.BaseViewModel
 import com.madispace.worldofmothers.common.Event
 import org.koin.core.component.inject
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/3/20
- */
 class FavoritesViewModel : BaseViewModel() {
 
     private val getFavoritesProductUseCase: GetFavoritesProductUseCase by inject()

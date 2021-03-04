@@ -13,10 +13,6 @@ import com.madispace.worldofmothers.ui.favorites.items.FavoriteProductItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 11/30/20
- */
 class FavoritesFragment : ObserveFragment<FavoritesViewModel>(FavoritesViewModel::class) {
 
     private lateinit var binding: FragmentFavoritesBinding

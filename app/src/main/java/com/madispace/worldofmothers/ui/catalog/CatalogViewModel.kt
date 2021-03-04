@@ -14,10 +14,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/1/20
- */
 class CatalogViewModel :
     BaseMviViewModel<CatalogViewModel.CatalogState, CatalogViewModel.CatalogAction, CatalogViewModel.CatalogEvent>() {
 

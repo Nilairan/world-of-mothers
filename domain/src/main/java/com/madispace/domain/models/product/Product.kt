@@ -1,9 +1,5 @@
 package com.madispace.domain.models.product
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 2/7/21
- */
 data class Product(
     val id: Int,
     val userId: Int,

@@ -11,10 +11,6 @@ import com.madispace.worldofmothers.ui.profile.auth.SignUpFragment
 import com.madispace.worldofmothers.ui.profile.change.ChangeProfileFragment
 import com.madispace.worldofmothers.ui.profile.product.NewProductFragment
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 11/26/20
- */
 object Screens {
 
     fun TabContainer(tabName: String) =

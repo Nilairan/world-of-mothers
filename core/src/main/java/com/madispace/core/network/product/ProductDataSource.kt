@@ -6,10 +6,6 @@ import com.madispace.core.network.Api
 import com.madispace.core.network.dto.DTOProduct
 import com.madispace.domain.exceptions.PageNotFoundException
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 2/2/21
- */
 interface ProductDataSource {
     @Throws(PageNotFoundException::class)
     suspend fun getAllProductList(page: Int): List<DTOProduct>

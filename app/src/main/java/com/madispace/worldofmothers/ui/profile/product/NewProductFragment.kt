@@ -8,10 +8,6 @@ import androidx.fragment.app.Fragment
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.databinding.FragmentNewProductBinding
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 12/6/20
- */
 class NewProductFragment : Fragment() {
 
     private lateinit var binding: FragmentNewProductBinding

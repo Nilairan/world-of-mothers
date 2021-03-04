@@ -10,10 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 2/2/21
- */
 class ProductRepositoryImpl constructor(
     private val productDataSource: ProductDataSource
 ) : ProductRepository {

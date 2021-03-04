@@ -6,10 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-/**
- * @author Ivan Kholodov - nilairan@gmail.com
- * @date 2/2/21
- */
 interface Api {
 
     @GET("${ApiFactory.VERSION}/items")
