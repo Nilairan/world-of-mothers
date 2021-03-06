@@ -10,7 +10,7 @@ import com.madispace.worldofmothers.common.SimpleObserver
 import com.madispace.worldofmothers.databinding.FragmentSignInBinding
 import com.madispace.worldofmothers.ui.common.*
 
-class SignInFragment : ObserveFragment<SignInViewModel>(SignInViewModel::class) {
+class SignInFragment : ObserveFragment<SignInViewModel>(SignInViewModel::class.java) {
 
     private lateinit var binding: FragmentSignInBinding
 

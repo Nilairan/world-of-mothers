@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import org.koin.core.component.inject
 
-class CatalogViewModel :
-    BaseMviViewModel<CatalogViewModel.CatalogState, CatalogViewModel.CatalogAction, CatalogViewModel.CatalogEvent>() {
+class CatalogViewModel(
+    private val getCatalogModelUseCase: GetCatalogModelUseCase
+) : BaseMviViewModel<CatalogViewModel.CatalogState,
+        CatalogViewModel.CatalogAction, CatalogViewModel.CatalogEvent>() {
 
-    private val getCatalogModelUseCase: GetCatalogModelUseCase by inject()
     private var page = 1
     private var isAllPageLoaded = false
 

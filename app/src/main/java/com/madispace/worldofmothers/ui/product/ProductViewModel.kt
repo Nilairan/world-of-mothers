@@ -13,13 +13,13 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import org.koin.core.component.inject
 
-class ProductViewModel :
-    BaseMviViewModel<ProductViewModel.ProductState, ProductViewModel.ProductAction, ProductViewModel.ProductEvent>() {
+class ProductViewModel(
+    private val getProductModelUseCase: GetProductModelUseCase,
+    private val favoriteProductUseCase: FavoriteProductUseCase
+) : BaseMviViewModel<ProductViewModel.ProductState,
+        ProductViewModel.ProductAction, ProductViewModel.ProductEvent>() {
 
-    private val getProductModelUseCase: GetProductModelUseCase by inject()
-    private val favoriteProductUseCase: FavoriteProductUseCase by inject()
     private var isFavoriteProduct: Boolean = false
     private lateinit var product: Product
 

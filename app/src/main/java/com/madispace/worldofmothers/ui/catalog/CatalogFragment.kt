@@ -25,7 +25,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.flow.collect
 
-class CatalogFragment : ObserveFragment<CatalogViewModel>(CatalogViewModel::class) {
+class CatalogFragment : ObserveFragment<CatalogViewModel>(CatalogViewModel::class.java) {
 
     private lateinit var binding: FragmentCatalogBinding
     private val categoryListAdapter = GroupAdapter<GroupieViewHolder>()

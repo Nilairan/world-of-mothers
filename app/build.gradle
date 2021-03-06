@@ -50,11 +50,12 @@ dependencies {
     implementation project(path: ':di')
 
     /**
-     * DI
+     * Koin
      */
     implementation "org.koin:koin-core:$koin_version"
     implementation "org.koin:koin-core-ext:$koin_version"
     implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
     testImplementation "org.koin:koin-test:$koin_version"
 
     /**

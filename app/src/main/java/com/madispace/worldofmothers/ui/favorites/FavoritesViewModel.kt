@@ -11,13 +11,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import org.koin.core.component.inject
 
-class FavoritesViewModel :
-    BaseMviViewModel<FavoritesViewModel.FavoriteState, FavoritesViewModel.FavoriteAction, FavoritesViewModel.FavoriteEvent>() {
-
-    private val getFavoritesProductUseCase: GetFavoritesProductUseCase by inject()
-    private val favoriteProductUseCase: FavoriteProductUseCase by inject()
+class FavoritesViewModel(
+    private val getFavoritesProductUseCase: GetFavoritesProductUseCase,
+    private val favoriteProductUseCase: FavoriteProductUseCase
+) : BaseMviViewModel<FavoritesViewModel.FavoriteState,
+        FavoritesViewModel.FavoriteAction, FavoritesViewModel.FavoriteEvent>() {
 
     override fun onCreate() {
         obtainEvent(FavoriteEvent.LoadProduct)

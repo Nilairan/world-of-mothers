@@ -21,7 +21,7 @@ import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::class) {
+class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::class.java) {
 
     private lateinit var binding: FragmentProductBinding
     private var productId: Int by args()

@@ -9,12 +9,11 @@ import com.madispace.worldofmothers.common.Event
 import com.madispace.worldofmothers.common.Success
 import com.madispace.worldofmothers.ui.common.Default
 import com.madispace.worldofmothers.ui.common.UiModel
-import org.koin.core.component.inject
 
-class SignInViewModel : BaseViewModel() {
-
-    private val validUseCase: ValidUseCase by inject()
-    private val authUseCase: AuthUseCase by inject()
+class SignInViewModel(
+    private val validUseCase: ValidUseCase,
+    private val authUseCase: AuthUseCase
+) : BaseViewModel() {
 
     private val _validUiModel = MutableLiveData<Event<UiModel>>()
     val validUiModel: LiveData<Event<UiModel>> = _validUiModel

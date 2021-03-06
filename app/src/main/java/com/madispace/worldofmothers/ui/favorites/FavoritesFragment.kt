@@ -15,15 +15,15 @@ import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class FavoritesFragment : ObserveFragment<FavoritesViewModel>(FavoritesViewModel::class) {
+class FavoritesFragment : ObserveFragment<FavoritesViewModel>(FavoritesViewModel::class.java) {
 
     private lateinit var binding: FragmentFavoritesBinding
     private val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
         return binding.root

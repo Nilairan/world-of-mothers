@@ -8,12 +8,11 @@ import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCase
 import com.madispace.worldofmothers.common.BaseViewModel
 import com.madispace.worldofmothers.common.Event
 import com.madispace.worldofmothers.common.Success
-import org.koin.core.component.inject
 
-class ProfileViewModel : BaseViewModel() {
-
-    private val isAuthorizedUserUseCase: IsAuthorizedUserUseCase by inject()
-    private val getUserProductUseCase: GetUserProductUseCase by inject()
+class ProfileViewModel(
+    private val isAuthorizedUserUseCase: IsAuthorizedUserUseCase,
+    private val getUserProductUseCase: GetUserProductUseCase
+) : BaseViewModel() {
 
     private val _isAuthorizedUserLiveData = MutableLiveData<Event<Boolean>>()
     val isAuthorizedUserLiveData: LiveData<Event<Boolean>> = _isAuthorizedUserLiveData

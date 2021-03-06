@@ -3,19 +3,14 @@ package com.madispace.worldofmothers.common
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.createViewModelLazy
 import com.github.terrakok.cicerone.Router
 import com.madispace.worldofmothers.routing.RouterProvider
-import kotlin.reflect.KClass
+import org.koin.android.viewmodel.compat.ViewModelCompat.viewModel
 
-abstract class ObserveFragment<VM : BaseViewModel>(private val viewModelClass: KClass<VM>) :
+abstract class ObserveFragment<VM : BaseViewModel>(viewModelClass: Class<VM>) :
     Fragment(), RouterProvider, BackButtonListener {
 
-    val viewModel: VM by lazy { getViewModel().value }
-
-    private fun getViewModel(): Lazy<VM> {
-        return createViewModelLazy(viewModelClass, { viewModelStore }, null)
-    }
+    val viewModel: VM by viewModel(this, viewModelClass)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

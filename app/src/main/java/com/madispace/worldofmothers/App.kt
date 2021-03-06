@@ -2,9 +2,17 @@ package com.madispace.worldofmothers
 
 import android.app.Application
 import com.madispace.di.*
+import com.madispace.worldofmothers.ui.catalog.CatalogViewModel
+import com.madispace.worldofmothers.ui.favorites.FavoritesViewModel
+import com.madispace.worldofmothers.ui.product.ProductViewModel
+import com.madispace.worldofmothers.ui.profile.ProfileViewModel
+import com.madispace.worldofmothers.ui.profile.auth.SignInViewModel
+import com.madispace.worldofmothers.ui.profile.auth.SignUpViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
 class App : Application() {
 
@@ -19,9 +27,19 @@ class App : Application() {
                     useCasesModule,
                     repositoryModule,
                     apiModule,
-                    databaseModule
+                    databaseModule,
+                    viewModelModule
                 )
             )
         }
+    }
+
+    private val viewModelModule = module {
+        viewModel { CatalogViewModel(get()) }
+        viewModel { FavoritesViewModel(get(), get()) }
+        viewModel { ProductViewModel(get(), get()) }
+        viewModel { ProfileViewModel(get(), get()) }
+        viewModel { SignInViewModel(get(), get()) }
+        viewModel { SignUpViewModel(get(), get()) }
     }
 }

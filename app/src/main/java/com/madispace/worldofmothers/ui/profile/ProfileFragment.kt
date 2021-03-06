@@ -15,7 +15,8 @@ import com.madispace.worldofmothers.routing.Screens
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 
-class ProfileFragment : ObserveFragment<ProfileViewModel>(ProfileViewModel::class), RouterProvider {
+class ProfileFragment : ObserveFragment<ProfileViewModel>(ProfileViewModel::class.java),
+    RouterProvider {
 
     private lateinit var binding: FragmentProfileBinding
     private val adapter = GroupAdapter<GroupieViewHolder>()
