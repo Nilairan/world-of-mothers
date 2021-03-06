@@ -2,7 +2,9 @@ package com.madispace.worldofmothers.ui.favorites
 
 import androidx.lifecycle.viewModelScope
 import com.madispace.domain.models.product.ProductShort
-import com.madispace.domain.usecases.GetFavoritesProductUseCase
+import com.madispace.domain.usecases.product.FavoriteProductEvent
+import com.madispace.domain.usecases.product.FavoriteProductUseCase
+import com.madispace.domain.usecases.product.GetFavoritesProductUseCase
 import com.madispace.worldofmothers.common.BaseMviViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -15,6 +17,7 @@ class FavoritesViewModel :
     BaseMviViewModel<FavoritesViewModel.FavoriteState, FavoritesViewModel.FavoriteAction, FavoritesViewModel.FavoriteEvent>() {
 
     private val getFavoritesProductUseCase: GetFavoritesProductUseCase by inject()
+    private val favoriteProductUseCase: FavoriteProductUseCase by inject()
 
     override fun onCreate() {
         obtainEvent(FavoriteEvent.LoadProduct)
@@ -23,6 +26,7 @@ class FavoritesViewModel :
     override fun obtainEvent(viewEvent: FavoriteEvent) {
         when (viewEvent) {
             is FavoriteEvent.LoadProduct -> loadFavoriteProduct()
+            is FavoriteEvent.RemoveProduct -> removeProduct(productId = viewEvent.id)
         }
     }
 
@@ -45,6 +49,13 @@ class FavoritesViewModel :
         }
     }
 
+    private fun removeProduct(productId: Int) {
+        viewModelScope.launch(Dispatchers.Main) {
+            favoriteProductUseCase.invoke(FavoriteProductEvent.Remove(productId))
+                .collect()
+        }
+    }
+
     sealed class FavoriteState {
         object ShowLoading : FavoriteState()
         object HideLoading : FavoriteState()
@@ -56,5 +67,6 @@ class FavoritesViewModel :
 
     sealed class FavoriteEvent {
         object LoadProduct : FavoriteEvent()
+        data class RemoveProduct(val id: Int) : FavoriteEvent()
     }
 }

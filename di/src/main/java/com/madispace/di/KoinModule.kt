@@ -12,18 +12,13 @@ import com.madispace.core.repository.UserRepositoryImpl
 import com.madispace.di.routing.LocalCiceroneHolder
 import com.madispace.domain.repository.ProductRepository
 import com.madispace.domain.repository.UserRepository
-import com.madispace.domain.usecases.GetFavoritesProductUseCase
-import com.madispace.domain.usecases.GetFavoritesProductUseCaseImpl
 import com.madispace.domain.usecases.auth.AuthUseCase
 import com.madispace.domain.usecases.auth.AuthUseCaseImpl
 import com.madispace.domain.usecases.auth.ValidUseCase
 import com.madispace.domain.usecases.auth.ValidUseCaseImpl
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCaseImpl
-import com.madispace.domain.usecases.product.FavoriteProductUseCase
-import com.madispace.domain.usecases.product.FavoriteProductUseCaseImpl
-import com.madispace.domain.usecases.product.GetProductModelUseCase
-import com.madispace.domain.usecases.product.GetProductModelUseCaseImpl
+import com.madispace.domain.usecases.product.*
 import com.madispace.domain.usecases.profile.*
 import org.koin.dsl.module
 

@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.databinding.FragmentFavoritesBinding
+import com.madispace.worldofmothers.routing.Screens
 import com.madispace.worldofmothers.ui.favorites.items.FavoriteProductItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -48,7 +49,17 @@ class FavoritesFragment : ObserveFragment<FavoritesViewModel>(FavoritesViewModel
                 is FavoritesViewModel.FavoriteState.ShowFavoriteProduct -> {
                     adapter.clear()
                     emptyContainer.visibility = View.GONE
-                    adapter.addAll(state.products.map { FavoriteProductItem(it) })
+                    adapter.addAll(state.products.map {
+                        FavoriteProductItem(it, { productId ->
+                            router.navigateTo(Screens.ProductScreen(productId))
+                        }, { productId ->
+                            viewModel.obtainEvent(
+                                FavoritesViewModel.FavoriteEvent.RemoveProduct(
+                                    productId
+                                )
+                            )
+                        })
+                    })
                 }
                 is FavoritesViewModel.FavoriteState.EmptyFavoriteList -> {
                     adapter.clear()

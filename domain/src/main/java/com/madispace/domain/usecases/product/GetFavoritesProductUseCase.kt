@@ -1,4 +1,4 @@
-package com.madispace.domain.usecases
+package com.madispace.domain.usecases.product
 
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.repository.ProductRepository
