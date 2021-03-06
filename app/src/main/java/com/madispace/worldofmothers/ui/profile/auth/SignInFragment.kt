@@ -8,6 +8,7 @@ import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.SimpleObserver
 import com.madispace.worldofmothers.databinding.FragmentSignInBinding
+import com.madispace.worldofmothers.routing.Screens
 import com.madispace.worldofmothers.ui.common.*
 
 class SignInFragment : ObserveFragment<SignInViewModel>(SignInViewModel::class.java) {
@@ -26,8 +27,7 @@ class SignInFragment : ObserveFragment<SignInViewModel>(SignInViewModel::class.j
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        binding.registerButton.debounceClicks()
-//            .subscribe { router.replaceScreen(Screens.SignUpScreen()) }
+        binding.registerButton.setOnClickListener { router.replaceScreen(Screens.SignUpScreen()) }
 //        binding.loginEditText.textChanges().subscribeBy { viewModel.email = it.toString() }
 //        binding.passEditText.textChanges().subscribeBy { viewModel.pass = it.toString() }
 //        binding.loginButton.debounceClicks().subscribeBy {
@@ -65,6 +65,6 @@ class SignInFragment : ObserveFragment<SignInViewModel>(SignInViewModel::class.j
 
     override fun onBackPressed(): Boolean {
         router.exit()
-        return true
+        return false
     }
 }

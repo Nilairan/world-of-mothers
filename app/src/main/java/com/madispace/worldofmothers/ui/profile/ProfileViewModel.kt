@@ -1,31 +1,30 @@
 package com.madispace.worldofmothers.ui.profile
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.usecases.profile.GetUserProductUseCase
 import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCase
-import com.madispace.worldofmothers.common.BaseViewModel
-import com.madispace.worldofmothers.common.Event
-import com.madispace.worldofmothers.common.Success
+import com.madispace.worldofmothers.common.BaseMviViewModel
 
 class ProfileViewModel(
-    private val isAuthorizedUserUseCase: IsAuthorizedUserUseCase,
-    private val getUserProductUseCase: GetUserProductUseCase
-) : BaseViewModel() {
-
-    private val _isAuthorizedUserLiveData = MutableLiveData<Event<Boolean>>()
-    val isAuthorizedUserLiveData: LiveData<Event<Boolean>> = _isAuthorizedUserLiveData
-
-    private val _userProductLiveData = MutableLiveData<Event<List<ProductShort>>>()
-    val userProductLiveData: LiveData<Event<List<ProductShort>>> = _userProductLiveData
+        private val isAuthorizedUserUseCase: IsAuthorizedUserUseCase,
+        private val getUserProductUseCase: GetUserProductUseCase
+) : BaseMviViewModel<ProfileViewModel.ProfileState,
+        ProfileViewModel.ProfileAction, ProfileViewModel.ProfileEvent>() {
 
     override fun onCreate() {
+        obtainEvent(ProfileEvent.IsAuthUser)
+    }
+
+    override fun obtainEvent(viewEvent: ProfileEvent) {
+        when (viewEvent) {
+            is ProfileEvent.IsAuthUser -> isAuthUser()
+        }
+    }
+
+    private fun isAuthUser() {
         if (isAuthorizedUserUseCase.invoke()) {
-            _isAuthorizedUserLiveData.postValue(Success(true))
             getProduct()
         } else {
-            _isAuthorizedUserLiveData.postValue(Success(false))
+            viewState = ProfileState.OpenSignInScreen
         }
     }
 
@@ -37,6 +36,19 @@ class ProfileViewModel(
 //                        onError = { _userProductLiveData.postValue(Error()) }
 //                )
 //                .addTo(compositeDisposable)
+    }
+
+    sealed class ProfileState {
+        object OpenSignInScreen : ProfileState()
+    }
+
+
+    sealed class ProfileAction {
+    }
+
+
+    sealed class ProfileEvent {
+        object IsAuthUser : ProfileEvent()
     }
 
 }

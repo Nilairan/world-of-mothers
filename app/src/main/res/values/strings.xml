@@ -39,4 +39,9 @@
     <string name="price">%s ₽</string>
     <string name="favorite_empty_text">Добавляйте товары в избранное, чтобы посмотреть или купить их позже</string>
     <string name="favorite_empty_title">В избранном пусто</string>
+    <string name="name_not_valid">Имя не должно быть пустым</string>
+    <string name="email_not_valid">Проверьте правильность написания email адреса</string>
+    <string name="phone_not_valid">Проверьте правильность написания телефонного номера</string>
+    <string name="pass_not_valid">Пароль должен содержать минимум 8 знаков</string>
+    <string name="repeate_pess_not_valid">Введенные вами пароли не совпадают</string>
 </resources>

@@ -1,10 +1,15 @@
 package com.madispace.domain.usecases.auth
 
+import android.util.Patterns
 import com.madispace.domain.exceptions.EmailValidException
 import com.madispace.domain.exceptions.NotImplementCustomFunction
 import com.madispace.domain.exceptions.PassValidException
+import com.madispace.domain.exceptions.PhoneValidException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import java.util.regex.Pattern
 
 class ValidData private constructor(
     val validMap: Set<ValidField>
@@ -13,13 +18,31 @@ class ValidData private constructor(
     class Builder {
         private val validMap: HashSet<ValidField> = hashSetOf()
 
-        fun addField(field: String, rule: Rule): Builder {
-            validMap.add(ValidField(field = field, rule = rule, function = null))
+        fun addField(
+                field: String,
+                rule: Rule,
+                errorBlock: () -> Unit
+        ): Builder {
+            validMap.add(ValidField(
+                    field = field,
+                    rule = rule,
+                    errorBlock = errorBlock,
+                    validateBlock = null
+            ))
             return this
         }
 
-        fun addField(field: String, function: () -> Boolean): Builder {
-            validMap.add(ValidField(field = field, rule = CustomRule, function = function))
+        fun addField(
+                field: String,
+                errorBlock: () -> Unit,
+                validateBlock: () -> Boolean
+        ): Builder {
+            validMap.add(ValidField(
+                    field = field,
+                    rule = CustomRule,
+                    errorBlock = errorBlock,
+                    validateBlock = validateBlock
+            ))
             return this
         }
 
@@ -29,27 +52,29 @@ class ValidData private constructor(
     }
 
     companion object {
-        const val DEFAULT_EMAIL_REGEX =
-            "(?:[a-z0-9!#\$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#\$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
-        const val DEFAULT_MIN_PASS_SIZE = 6
+        const val DEFAULT_MIN_PASS_SIZE = 8
+        const val DEFAULT_MIN_PHONE_SIZE = 10
     }
 }
 
 data class ValidField(
         val field: String,
         val rule: Rule,
-        var function: (() -> Boolean)?
+        val errorBlock: () -> Unit,
+        val validateBlock: (() -> Boolean)?
 )
 
 sealed class Rule
-class EmailRule(val regex: String = ValidData.DEFAULT_EMAIL_REGEX) : Rule()
+class EmailRule(val regex: String = Patterns.EMAIL_ADDRESS.pattern()) : Rule()
 class PassRule(val minSize: Int = ValidData.DEFAULT_MIN_PASS_SIZE) : Rule()
+class PhoneRule(val minSize: Int = ValidData.DEFAULT_MIN_PHONE_SIZE) : Rule()
 object CustomRule : Rule()
 
 interface ValidUseCase {
     /**
      * @throws EmailValidException for not valid email
      * @throws PassValidException for not valid password
+     * @throws PhoneValidException for not valid email
      * @throws NotImplementCustomFunction on custom function null or throw exception
      */
     operator fun invoke(fields: ValidData): Flow<Boolean>
@@ -57,42 +82,45 @@ interface ValidUseCase {
 
 class ValidUseCaseImpl : ValidUseCase {
     override fun invoke(fields: ValidData): Flow<Boolean> {
-//        var isValid = true
-//        return Single.just(true)
-//            .map {
-//                fields.validMap.forEach { item ->
-//                    when (item.rule) {
-//                        is EmailRule -> {
-//                            isValid = Pattern.compile(item.rule.regex).matcher(item.field).matches()
-//                            if (isValid.not()) {
-//                                throw EmailValidException()
-//                            }
-//                        }
-//                        is PassRule -> {
-//                            isValid = item.field.length >= item.rule.minSize
-//                            if (isValid.not()) {
-//                                throw PassValidException()
-//                            }
-//                        }
-//                        is CustomRule -> {
-//                            item.function?.let {
-//                                try {
-//                                    isValid = it.invoke()
-//                                    if (isValid.not()) {
-//                                        throw CustomFunctionException(item.field)
-//                                    }
-//                                } catch (e: Exception) {
-//                                    throw NotImplementCustomFunction()
-//                                }
-//                            } ?: run {
-//                                throw NotImplementCustomFunction()
-//                            }
-//                        }
-//                    }
-//                }
-//                return@map isValid
-//            }
-//            .subscribeOn(Schedulers.newThread())
-        return flow<Boolean> { emit(true) }
+        return flow {
+            var isValid = true
+            fields.validMap.forEach { field ->
+                when (field.rule) {
+                    is EmailRule -> {
+                        val validateEmail = Pattern.compile(field.rule.regex).matcher(field.field).matches()
+                        if (validateEmail.not()) {
+                            isValid = false
+                            field.errorBlock.invoke()
+                        }
+                    }
+                    is PassRule -> {
+                        val validatePass = field.field.length >= field.rule.minSize
+                        if (validatePass.not()) {
+                            isValid = false
+                            field.errorBlock.invoke()
+                        }
+                    }
+                    is PhoneRule -> {
+                        val validatePhone = field.field.length >= field.rule.minSize
+                        if (validatePhone.not()) {
+                            isValid = false
+                            field.errorBlock.invoke()
+                        }
+                    }
+                    is CustomRule -> {
+                        field.validateBlock?.let {
+                            val validateCustom = it.invoke()
+                            if (validateCustom.not()) {
+                                isValid = false
+                                field.errorBlock.invoke()
+                            }
+                        } ?: run {
+                            throw NotImplementCustomFunction()
+                        }
+                    }
+                }
+            }
+            emit(isValid)
+        }.flowOn(Dispatchers.IO)
     }
 }

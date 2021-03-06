@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity(), RouterProvider, BottomNavigationView.O
                 && (fragment as BackButtonListener).onBackPressed()) {
             return
         } else {
-            router.exit()
+            finish()
         }
     }
 }

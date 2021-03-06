@@ -76,7 +76,7 @@ class TabContainerFragment : Fragment(), RouterProvider, BackButtonListener {
             true
         } else {
             (activity as RouterProvider?)!!.router.exit()
-            true
+            false
         }
     }
 
