@@ -5,10 +5,8 @@ import com.madispace.domain.exceptions.EmailValidException
 import com.madispace.domain.exceptions.NotImplementCustomFunction
 import com.madispace.domain.exceptions.PassValidException
 import com.madispace.domain.exceptions.PhoneValidException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import java.util.regex.Pattern
 
 class ValidData private constructor(
@@ -121,6 +119,6 @@ class ValidUseCaseImpl : ValidUseCase {
                 }
             }
             emit(isValid)
-        }.flowOn(Dispatchers.IO)
+        }
     }
 }

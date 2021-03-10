@@ -4,9 +4,11 @@ import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Cicerone.Companion.create
 import com.github.terrakok.cicerone.Router
 import com.madispace.core.database.AppDatabase
-import com.madispace.core.network.ApiFactory
+import com.madispace.core.network.common.ApiFactory
 import com.madispace.core.network.product.ProductDataSource
 import com.madispace.core.network.product.ProductDataSourceImpl
+import com.madispace.core.network.user.UserDataSource
+import com.madispace.core.network.user.UserDataSourceImpl
 import com.madispace.core.repository.ProductRepositoryImpl
 import com.madispace.core.repository.UserRepositoryImpl
 import com.madispace.di.routing.LocalCiceroneHolder
@@ -44,11 +46,12 @@ val useCasesModule = module {
 val apiModule = module {
     single { ApiFactory().getApi() }
     single<ProductDataSource> { ProductDataSourceImpl(get(), get()) }
+    single<UserDataSource> { UserDataSourceImpl(get()) }
 }
 
 val repositoryModule = module {
     single<ProductRepository> { ProductRepositoryImpl(get()) }
-    single<UserRepository> { UserRepositoryImpl() }
+    single<UserRepository> { UserRepositoryImpl(get()) }
 }
 
 val databaseModule = module {

@@ -1,4 +1,4 @@
-package com.madispace.core.network
+package com.madispace.core.network.common
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

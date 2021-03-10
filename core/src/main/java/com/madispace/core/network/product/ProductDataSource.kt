@@ -2,7 +2,7 @@ package com.madispace.core.network.product
 
 import com.madispace.core.database.dao.ProductDao
 import com.madispace.core.database.entities.ProductEntity
-import com.madispace.core.network.Api
+import com.madispace.core.network.common.Api
 import com.madispace.core.network.dto.DTOProduct
 import com.madispace.domain.exceptions.PageNotFoundException
 import kotlinx.coroutines.flow.Flow

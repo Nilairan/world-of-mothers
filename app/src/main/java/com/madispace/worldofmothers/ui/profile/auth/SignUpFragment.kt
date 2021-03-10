@@ -8,9 +8,9 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
+import com.madispace.worldofmothers.common.addPhoneMaskTextListener
 import com.madispace.worldofmothers.databinding.FragmentSignUpBinding
 import com.madispace.worldofmothers.routing.Screens
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -38,7 +38,7 @@ class SignUpFragment : ObserveFragment<SignUpViewModel>(SignUpViewModel::class.j
     }
 
     override fun initObservers() {
-        lifecycleScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch {
             viewModel.viewActions().collect { action -> action?.let { bindAction(it) } }
             viewModel.viewStates().collect { action -> action?.let { bindStates(it) } }
         }
@@ -48,22 +48,33 @@ class SignUpFragment : ObserveFragment<SignUpViewModel>(SignUpViewModel::class.j
         with(binding) {
             when (action) {
                 is SignUpViewModel.SignUpAction.NameNotValid -> nameLayout.error =
-                        getString(R.string.name_not_valid)
+                    getString(R.string.field_not_valid)
+                is SignUpViewModel.SignUpAction.SurnameNotValid -> surnameLayout.error =
+                    getString(R.string.field_not_valid)
                 is SignUpViewModel.SignUpAction.EmailNotValid -> emailLayout.error =
-                        getString(R.string.email_not_valid)
+                    getString(R.string.email_not_valid)
                 is SignUpViewModel.SignUpAction.PhoneNotValid -> phoneLayout.error =
-                        getString(R.string.phone_not_valid)
+                    getString(R.string.phone_not_valid)
                 is SignUpViewModel.SignUpAction.PasswordNotValid -> passLayout.error =
-                        getString(R.string.pass_not_valid)
+                    getString(R.string.pass_not_valid)
                 is SignUpViewModel.SignUpAction.RepeatPasswordNotValid -> repeatPassLayout.error =
-                        getString(R.string.repeate_pess_not_valid)
+                    getString(R.string.repeate_pess_not_valid)
+                is SignUpViewModel.SignUpAction.SuccessRegisterUser -> router.replaceScreen(Screens.ProfileScreen())
             }
         }
     }
 
     private fun bindStates(event: SignUpViewModel.SignUpState) {
-        when (event) {
-            is SignUpViewModel.SignUpState.NoValidFields -> {
+        with(binding) {
+            when (event) {
+                is SignUpViewModel.SignUpState.NoValidFields -> {
+                }
+                is SignUpViewModel.SignUpState.ShowLoading -> {
+                    progressBar.root.visibility = View.VISIBLE
+                }
+                is SignUpViewModel.SignUpState.HideLoading -> {
+                    progressBar.root.visibility = View.GONE
+                }
             }
         }
     }
@@ -71,24 +82,43 @@ class SignUpFragment : ObserveFragment<SignUpViewModel>(SignUpViewModel::class.j
     private fun observeEditText() {
         with(binding) {
             nameLayout.editText?.doAfterTextChanged { name ->
+                nameLayout.error = null
+                nameLayout.isErrorEnabled = false
                 viewModel.obtainEvent(SignUpViewModel.SignUpEvent.SetName(
-                        value = name?.let { it.toString() } ?: ""))
+                    value = name?.let { it.toString() } ?: ""))
             }
-            phoneLayout.editText?.doAfterTextChanged { phone ->
-                viewModel.obtainEvent(SignUpViewModel.SignUpEvent.SetPhone(
-                        value = phone?.let { it.toString() } ?: ""))
+            surnameLayout.editText?.doAfterTextChanged { name ->
+                surnameLayout.error = null
+                surnameLayout.isErrorEnabled = false
+                viewModel.obtainEvent(SignUpViewModel.SignUpEvent.SetSurname(
+                    value = name?.let { it.toString() } ?: ""))
+            }
+            phoneLayout.editText?.addPhoneMaskTextListener { phone ->
+                phoneLayout.error = null
+                phoneLayout.isErrorEnabled = false
+                viewModel.obtainEvent(
+                    SignUpViewModel.SignUpEvent.SetPhone(
+                        value = phone
+                    )
+                )
             }
             emailLayout.editText?.doAfterTextChanged { email ->
+                emailLayout.error = null
+                emailLayout.isErrorEnabled = false
                 viewModel.obtainEvent(SignUpViewModel.SignUpEvent.SetEmail(
-                        value = email?.let { it.toString() } ?: ""))
+                    value = email?.let { it.toString() } ?: ""))
             }
             passLayout.editText?.doAfterTextChanged { pass ->
+                passLayout.error = null
+                passLayout.isErrorEnabled = false
                 viewModel.obtainEvent(SignUpViewModel.SignUpEvent.SetPassword(
-                        value = pass?.let { it.toString() } ?: ""))
+                    value = pass?.let { it.toString() } ?: ""))
             }
             repeatPassLayout.editText?.doAfterTextChanged { repeatPass ->
+                repeatPassLayout.error = null
+                repeatPassLayout.isErrorEnabled = false
                 viewModel.obtainEvent(SignUpViewModel.SignUpEvent.SetRepeatPassword(
-                        value = repeatPass?.let { it.toString() } ?: ""))
+                    value = repeatPass?.let { it.toString() } ?: ""))
             }
         }
     }
