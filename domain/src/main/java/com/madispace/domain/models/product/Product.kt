@@ -2,7 +2,6 @@ package com.madispace.domain.models.product
 
 data class Product(
     val id: Int,
-    val userId: Int,
     val categoryId: Int,
     val name: String,
     val price: Double,
@@ -11,13 +10,14 @@ data class Product(
     val size: String,
     val status: String,
     val address: String,
-    val img: String
+    val gallery: List<String>,
+    val user: Seller
 ) {
     fun mapToShort(): ProductShort {
         return ProductShort(
             id = id,
             name = name,
-            imageUrl = img,
+            imageUrl = gallery.first(),
             price = price
         )
     }

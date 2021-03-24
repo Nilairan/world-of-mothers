@@ -49,6 +49,7 @@ class CatalogViewModel(
             getCatalogModelUseCase(SearchModel())
                 .onStart { viewState = CatalogState.ShowLoading }
                 .catch {
+                    it.printStackTrace()
                     viewState = CatalogState.HideLoading
                 }
                 .collect {

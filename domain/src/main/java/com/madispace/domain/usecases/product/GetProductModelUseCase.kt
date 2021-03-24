@@ -1,6 +1,7 @@
 package com.madispace.domain.usecases.product
 
 import com.madispace.domain.models.product.Product
+import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.models.ui.ProductModel
 import com.madispace.domain.models.user.User
 import com.madispace.domain.repository.ProductRepository
@@ -19,15 +20,15 @@ class GetProductModelUseCaseImpl(
     override fun invoke(productId: Int): Flow<ProductModel> {
         return productRepository.getProductById(productId)
             .zip(productRepository.getAllProductList(page = 1)) { product, list -> product to list }
-            .zip(getSeller()) { pair: Pair<Product, List<Product>>, seller: User ->
+            .zip(getSeller()) { pair: Pair<Product, List<ProductShort>>, seller: User ->
                 pair to seller
             }
-            .zip(productRepository.getFavoriteProduct(productId)) { pair: Pair<Pair<Product, List<Product>>, User>, product: Product? ->
+            .zip(productRepository.getFavoriteProduct(productId)) { pair: Pair<Pair<Product, List<ProductShort>>, User>, product: Product? ->
                 ProductModel(
                     product = pair.first.first,
                     seller = pair.second,
                     isFavoriteProduct = product != null,
-                    additionallyProduct = pair.first.second.map { it.mapToShort() }
+                    additionallyProduct = pair.first.second
                 )
             }
     }

@@ -1,14 +1,15 @@
 package com.madispace.core.database.entities
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.madispace.core.common.Mapper
 import com.madispace.domain.models.product.Product
+import com.madispace.domain.models.product.Seller
 
 @Entity(tableName = "Product")
 data class ProductEntity(
     @PrimaryKey val id: Int,
-    val userId: Int,
     val categoryId: Int,
     val name: String,
     val price: Double,
@@ -17,14 +18,14 @@ data class ProductEntity(
     val size: String,
     val status: String,
     val address: String,
-    val img: String
+    val gallery: List<String>,
+    @Embedded val user: SellerEntity
 )
 
 object ProductEntityMapper : Mapper<Product, ProductEntity> {
     override fun map(item: Product): ProductEntity {
         return ProductEntity(
             id = item.id,
-            userId = item.userId,
             categoryId = item.categoryId,
             name = item.name,
             price = item.price,
@@ -33,7 +34,15 @@ object ProductEntityMapper : Mapper<Product, ProductEntity> {
             size = item.size,
             status = item.status,
             address = item.address,
-            img = item.img
+            gallery = item.gallery,
+            user = SellerEntity(
+                username = item.user.username,
+                firstName = item.user.firstName,
+                surname = item.user.surname,
+                tel = item.user.tel,
+                image = item.user.image,
+                itemsCount = item.user.itemsCount
+            )
         )
     }
 }
@@ -43,7 +52,6 @@ object ProductMapper : Mapper<ProductEntity?, Product?> {
         return item?.let {
             Product(
                 id = item.id,
-                userId = item.userId,
                 categoryId = item.categoryId,
                 name = item.name,
                 price = item.price,
@@ -52,7 +60,15 @@ object ProductMapper : Mapper<ProductEntity?, Product?> {
                 size = item.size,
                 status = item.status,
                 address = item.address,
-                img = item.img
+                gallery = item.gallery,
+                user = Seller(
+                    username = item.user.username,
+                    firstName = item.user.firstName,
+                    surname = item.user.surname,
+                    tel = item.user.tel,
+                    image = item.user.image,
+                    itemsCount = item.user.itemsCount
+                )
             )
         } ?: run {
             null

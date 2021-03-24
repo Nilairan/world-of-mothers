@@ -107,7 +107,7 @@ class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::clas
 
     private fun bindProduct(product: Product) {
         with(binding) {
-            imageProduct.loadPhoto(product.img)
+            imageProduct.loadPhoto(product.gallery.first())
             nameProduct.text = product.name
             costProduct.text = getString(R.string.price, product.price.getPrice())
             descriptionProduct.text = product.info

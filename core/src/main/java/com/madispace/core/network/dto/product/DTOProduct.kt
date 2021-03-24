@@ -1,11 +1,10 @@
-package com.madispace.core.network.dto
+package com.madispace.core.network.dto.product
 
 import com.google.gson.annotations.SerializedName
 import com.madispace.domain.models.product.Product
 
 data class DTOProduct(
     val id: Int,
-    @SerializedName("user_id") val userId: Int,
     @SerializedName("category_id") val categoryId: Int,
     val name: String,
     val price: Double,
@@ -14,12 +13,12 @@ data class DTOProduct(
     val size: String,
     val status: String,
     val address: String,
-    val img: String
+    val gallery: List<String>,
+    val user: DTOSeller
 ) {
     fun mapToModel(): Product {
         return Product(
             id,
-            userId,
             categoryId,
             name,
             price,
@@ -28,7 +27,8 @@ data class DTOProduct(
             size,
             status,
             address,
-            img
+            gallery,
+            user.mapToModel()
         )
     }
 }

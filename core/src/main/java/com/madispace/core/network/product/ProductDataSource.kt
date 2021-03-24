@@ -3,13 +3,14 @@ package com.madispace.core.network.product
 import com.madispace.core.database.dao.ProductDao
 import com.madispace.core.database.entities.ProductEntity
 import com.madispace.core.network.common.Api
-import com.madispace.core.network.dto.DTOProduct
+import com.madispace.core.network.dto.product.DTOProduct
+import com.madispace.core.network.dto.product.DTOProductShort
 import com.madispace.domain.exceptions.PageNotFoundException
 import kotlinx.coroutines.flow.Flow
 
 interface ProductDataSource {
     @Throws(PageNotFoundException::class)
-    suspend fun getAllProductList(page: Int): List<DTOProduct>
+    suspend fun getAllProductList(page: Int): List<DTOProductShort>
     suspend fun getProductById(id: Int): DTOProduct
     suspend fun setFavoriteProduct(product: ProductEntity)
     suspend fun removeFavoriteProduct(id: Int)
@@ -24,7 +25,7 @@ class ProductDataSourceImpl constructor(
 
     private var maxCountPage = 1
 
-    override suspend fun getAllProductList(page: Int): List<DTOProduct> {
+    override suspend fun getAllProductList(page: Int): List<DTOProductShort> {
         if (page > maxCountPage) {
             throw PageNotFoundException()
         }

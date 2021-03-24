@@ -48,12 +48,12 @@ class GetCatalogModelUseCaseImpl constructor(
                 }
                 productRepository.getAllProductList(searchModel.page)
                     .zip(categoryFlow) { product, category ->
-                        CatalogModel(category, product.map { it.mapToShort() })
+                        CatalogModel(category, product)
                     }
             }
             SearchType.PAGINATION, SearchType.REFRESH -> {
                 productRepository.getAllProductList(searchModel.page)
-                    .map { CatalogModel(emptyList(), it.map { it.mapToShort() }) }
+                    .map { CatalogModel(emptyList(), it) }
             }
         }
 

@@ -4,6 +4,7 @@ import com.madispace.core.database.entities.ProductEntityMapper
 import com.madispace.core.database.entities.ProductMapper
 import com.madispace.core.network.product.ProductDataSource
 import com.madispace.domain.models.product.Product
+import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.repository.ProductRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -15,9 +16,9 @@ class ProductRepositoryImpl constructor(
     private val productDataSource: ProductDataSource
 ) : ProductRepository {
 
-    override fun getAllProductList(page: Int): Flow<List<Product>> {
+    override fun getAllProductList(page: Int): Flow<List<ProductShort>> {
         return flow {
-            emit(productDataSource.getAllProductList(page = page).map { it.mapToModel() })
+            emit(productDataSource.getAllProductList(page = page).map { it.mapToShort() })
         }.flowOn(Dispatchers.IO)
     }
 
