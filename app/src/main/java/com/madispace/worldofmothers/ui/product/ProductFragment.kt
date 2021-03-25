@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.madispace.domain.models.product.Product
-import com.madispace.domain.models.user.User
+import com.madispace.domain.models.product.Seller
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.*
 import com.madispace.worldofmothers.databinding.FragmentProductBinding
@@ -118,10 +118,11 @@ class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::clas
         }
     }
 
-    private fun bindSeller(seller: User) {
+    private fun bindSeller(seller: Seller) {
         with(binding) {
-            nameSeller.text = seller.name
-            countProduct.text = seller.countAnnouncement.toString()
+            nameSeller.text = "${seller.surname} ${seller.firstName}"
+            countProduct.text = getContext().resources.getQuantityString(R.plurals.advertisement, seller.itemsCount, seller.itemsCount)
+            imageSeller.loadPhoto(seller.image)
         }
     }
 

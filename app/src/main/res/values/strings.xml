@@ -45,4 +45,11 @@
     <string name="pass_not_valid">Пароль должен содержать минимум 8 знаков</string>
     <string name="repeate_pess_not_valid">Введенные вами пароли не совпадают</string>
     <string name="surname">Фамилия</string>
+    <plurals name="advertisement">
+        <item quantity="zero">%s объявлений</item>
+        <item quantity="one">%s объявление</item>
+        <item quantity="two">%s объявления</item>
+        <item quantity="few">%s объявлений</item>
+        <item quantity="other">%s объявлений</item>
+    </plurals>
 </resources>

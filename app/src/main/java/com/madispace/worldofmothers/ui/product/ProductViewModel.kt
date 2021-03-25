@@ -3,7 +3,7 @@ package com.madispace.worldofmothers.ui.product
 import androidx.lifecycle.viewModelScope
 import com.madispace.domain.models.product.Product
 import com.madispace.domain.models.product.ProductShort
-import com.madispace.domain.models.user.User
+import com.madispace.domain.models.product.Seller
 import com.madispace.domain.usecases.product.FavoriteProductEvent
 import com.madispace.domain.usecases.product.FavoriteProductUseCase
 import com.madispace.domain.usecases.product.GetProductModelUseCase
@@ -81,9 +81,9 @@ class ProductViewModel(
         object EnableFavorite : ProductState()
         object DisableFavorite : ProductState()
         data class ShowProduct(val product: Product) : ProductState()
-        data class ShowSeller(val seller: User) : ProductState()
+        data class ShowSeller(val seller: Seller) : ProductState()
         data class ShowAdditionallyProduct(val additionallyProduct: List<ProductShort>) :
-            ProductState()
+                ProductState()
     }
 
     sealed class ProductAction
