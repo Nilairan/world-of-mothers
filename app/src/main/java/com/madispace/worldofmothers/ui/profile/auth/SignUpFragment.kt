@@ -1,11 +1,10 @@
 package com.madispace.worldofmothers.ui.profile.auth
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.addPhoneMaskTextListener
@@ -14,22 +13,16 @@ import com.madispace.worldofmothers.routing.Screens
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class SignUpFragment : ObserveFragment<SignUpViewModel>(SignUpViewModel::class.java) {
+class SignUpFragment : ObserveFragment<SignUpViewModel>(
+    SignUpViewModel::class.java,
+    R.layout.fragment_sign_up
+) {
 
-    private lateinit var binding: FragmentSignUpBinding
-
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentSignUpBinding.inflate(inflater, container, false)
-        binding.appBar.toolbarName.text = getString(R.string.register)
-        return binding.root
-    }
+    private val binding: FragmentSignUpBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.appBar.toolbarName.text = getString(R.string.register)
         binding.existAccountButton.setOnClickListener { onBackPressed() }
         binding.loginButton.setOnClickListener {
             viewModel.obtainEvent(SignUpViewModel.SignUpEvent.ValidateFields)

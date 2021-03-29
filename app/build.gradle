@@ -59,6 +59,11 @@ dependencies {
     testImplementation "org.koin:koin-test:$koin_version"
 
     /**
+     * ViewBinding Delegate
+     */
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.4.4'
+
+    /**
      * Routing
      */
     implementation "com.github.terrakok:cicerone:$cicerone_version"

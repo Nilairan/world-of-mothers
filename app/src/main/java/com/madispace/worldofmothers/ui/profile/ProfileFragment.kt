@@ -1,11 +1,11 @@
 package com.madispace.worldofmothers.ui.profile
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.getContext
 import com.madispace.worldofmothers.databinding.FragmentProfileBinding
@@ -17,25 +17,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class ProfileFragment : ObserveFragment<ProfileViewModel>(ProfileViewModel::class.java),
+class ProfileFragment : ObserveFragment<ProfileViewModel>(
+    ProfileViewModel::class.java,
+    R.layout.fragment_profile
+),
     RouterProvider {
 
-    private lateinit var binding: FragmentProfileBinding
+    private val binding: FragmentProfileBinding by viewBinding()
     private val adapter = GroupAdapter<GroupieViewHolder>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
-        binding.root.visibility = View.GONE
-        binding.editProfile.setOnClickListener { router.navigateTo(Screens.ChangeProfileScreen()) }
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.root.visibility = View.GONE
+        binding.editProfile.setOnClickListener { router.navigateTo(Screens.ChangeProfileScreen()) }
         binding.floatingActionButton.setOnClickListener { router.navigateTo(Screens.NewProductScreen()) }
         binding.productList.layoutManager = GridLayoutManager(binding.getContext(), 2)
         binding.productList.adapter = adapter

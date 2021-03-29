@@ -1,25 +1,19 @@
 package com.madispace.worldofmothers.ui.profile.product
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.databinding.FragmentNewProductBinding
 
-class NewProductFragment : Fragment() {
+class NewProductFragment : Fragment(R.layout.fragment_new_product) {
 
-    private lateinit var binding: FragmentNewProductBinding
+    private val binding: FragmentNewProductBinding by viewBinding()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentNewProductBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.appBar.toolbarName.text = getString(R.string.add_product_title)
-        return binding.root
     }
 //
 //    override fun initObservers() {

@@ -1,14 +1,13 @@
 package com.madispace.worldofmothers.ui.product
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.madispace.domain.models.product.Product
 import com.madispace.domain.models.product.Seller
 import com.madispace.worldofmothers.R
@@ -21,25 +20,19 @@ import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::class.java) {
+class ProductFragment : ObserveFragment<ProductViewModel>(
+    ProductViewModel::class.java,
+    R.layout.fragment_product
+) {
 
-    private lateinit var binding: FragmentProductBinding
+    private val binding: FragmentProductBinding by viewBinding()
     private var productId: Int by args()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentProductBinding.inflate(inflater, container, false)
-        if (requireActivity() is AppCompatActivity) {
-            (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        }
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (requireActivity() is AppCompatActivity) {
+            (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        }
         binding.recommendedProductList.layoutManager =
             LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         viewModel.obtainEvent(ProductViewModel.ProductEvent.LoadProduct(productId))

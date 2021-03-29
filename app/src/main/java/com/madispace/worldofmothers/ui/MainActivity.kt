@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.github.terrakok.cicerone.Router
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.madispace.worldofmothers.R
@@ -17,16 +18,14 @@ import com.madispace.worldofmothers.ui.profile.ProfileFragment
 import org.koin.android.ext.android.inject
 import kotlin.reflect.jvm.jvmName
 
-class MainActivity : AppCompatActivity(), RouterProvider, BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(R.layout.activity_main),
+    RouterProvider, BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var binding: ActivityMainBinding
+    private val binding: ActivityMainBinding by viewBinding()
     override val router: Router by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         binding.bottomNavigationView.setOnNavigationItemSelectedListener(this)
         if (savedInstanceState == null) {
             binding.bottomNavigationView.selectedItemId = R.id.catalog
