@@ -44,6 +44,7 @@
     <string name="phone_not_valid">Проверьте правильность написания телефонного номера</string>
     <string name="pass_not_valid">Пароль должен содержать минимум 8 знаков</string>
     <string name="repeate_pess_not_valid">Введенные вами пароли не совпадают</string>
+    <string name="email_is_busy">Данный email уже используется</string>
     <string name="surname">Фамилия</string>
     <plurals name="advertisement">
         <item quantity="zero">%s объявлений</item>

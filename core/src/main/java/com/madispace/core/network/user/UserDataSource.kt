@@ -4,13 +4,13 @@ import com.madispace.core.network.common.Api
 import com.madispace.core.network.dto.user.RegisterUserRequest
 
 interface UserDataSource {
-    suspend fun registerUser(registerUserRequest: RegisterUserRequest): Any
+    suspend fun registerUser(registerUserRequest: RegisterUserRequest): String
 }
 
 class UserDataSourceImpl(
     private val api: Api
 ) : UserDataSource {
-    override suspend fun registerUser(registerUserRequest: RegisterUserRequest): Any {
-        return api.registerUser(registerUserRequest)
+    override suspend fun registerUser(registerUserRequest: RegisterUserRequest): String {
+        return api.registerUser(registerUserRequest).message
     }
 }

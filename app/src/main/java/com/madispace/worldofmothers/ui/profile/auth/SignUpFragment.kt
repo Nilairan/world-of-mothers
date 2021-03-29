@@ -8,10 +8,10 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.addPhoneMaskTextListener
+import com.madispace.worldofmothers.common.launchWhenStarted
 import com.madispace.worldofmothers.databinding.FragmentSignUpBinding
 import com.madispace.worldofmothers.routing.Screens
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.onEach
 
 class SignUpFragment : ObserveFragment<SignUpViewModel>(
     SignUpViewModel::class.java,
@@ -31,10 +31,13 @@ class SignUpFragment : ObserveFragment<SignUpViewModel>(
     }
 
     override fun initObservers() {
-        lifecycleScope.launch {
-            viewModel.viewActions().collect { action -> action?.let { bindAction(it) } }
-            viewModel.viewStates().collect { action -> action?.let { bindStates(it) } }
-        }
+        viewModel.viewActions().onEach { action ->
+            action?.let { bindAction(it) }
+        }.launchWhenStarted(lifecycleScope)
+
+        viewModel.viewStates().onEach { action ->
+            action?.let { bindStates(it) }
+        }.launchWhenStarted(lifecycleScope)
     }
 
     private fun bindAction(action: SignUpViewModel.SignUpAction) {
@@ -52,6 +55,11 @@ class SignUpFragment : ObserveFragment<SignUpViewModel>(
                     getString(R.string.pass_not_valid)
                 is SignUpViewModel.SignUpAction.RepeatPasswordNotValid -> repeatPassLayout.error =
                     getString(R.string.repeate_pess_not_valid)
+                is SignUpViewModel.SignUpAction.EmailIsBusy -> emailLayout.error =
+                    getString(R.string.email_is_busy)
+                is SignUpViewModel.SignUpAction.UserDataNoValid -> {
+                    /*TODO use alert*/
+                }
                 is SignUpViewModel.SignUpAction.SuccessRegisterUser -> router.replaceScreen(Screens.ProfileScreen())
             }
         }

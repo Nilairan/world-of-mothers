@@ -1,12 +1,14 @@
 package com.madispace.worldofmothers.ui.profile.auth
 
 import androidx.lifecycle.viewModelScope
+import com.madispace.domain.exceptions.register.EmailIsBusy
+import com.madispace.domain.exceptions.register.InvalidUserData
 import com.madispace.domain.models.user.RegisterUser
 import com.madispace.domain.usecases.auth.*
 import com.madispace.domain.usecases.profile.RegisterUserUseCase
 import com.madispace.worldofmothers.common.BaseMviViewModel
+import com.madispace.worldofmothers.common.catchWithLog
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -35,7 +37,6 @@ class SignUpViewModel(
             is SignUpEvent.ValidateFields -> validFields()
         }
     }
-
 
     private fun validFields() {
         viewModelScope.launch(Dispatchers.Main) {
@@ -82,7 +83,15 @@ class SignUpViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             registerUserUseCase.invoke(RegisterUser(name, surname, phone, email, password))
                 .onStart { viewState = SignUpState.ShowLoading }
-                .catch { viewState = SignUpState.HideLoading }
+                .catchWithLog {
+                    viewState = SignUpState.HideLoading
+                    when (it) {
+                        is EmailIsBusy -> viewAction = SignUpAction.EmailIsBusy
+                        is InvalidUserData -> viewAction = SignUpAction.UserDataNoValid
+                        else -> {
+                        }
+                    }
+                }
                 .collect {
                     viewState = SignUpState.HideLoading
                     viewAction = SignUpAction.SuccessRegisterUser
@@ -103,6 +112,8 @@ class SignUpViewModel(
         object PhoneNotValid : SignUpAction()
         object PasswordNotValid : SignUpAction()
         object RepeatPasswordNotValid : SignUpAction()
+        object UserDataNoValid : SignUpAction()
+        object EmailIsBusy : SignUpAction()
         object SuccessRegisterUser : SignUpAction()
     }
 

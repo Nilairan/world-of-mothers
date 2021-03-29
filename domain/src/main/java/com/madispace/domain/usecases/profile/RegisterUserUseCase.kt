@@ -5,15 +5,14 @@ import com.madispace.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 
 interface RegisterUserUseCase {
-    operator fun invoke(registerUser: RegisterUser): Flow<Boolean>
+    operator fun invoke(registerUser: RegisterUser): Flow<String>
 }
 
 class RegisterUserUseCaseImpl(
         private val userRepository: UserRepository
 ) : RegisterUserUseCase {
 
-    override fun invoke(registerUser: RegisterUser): Flow<Boolean> {
+    override fun invoke(registerUser: RegisterUser): Flow<String> {
         return userRepository.register(registerUser)
     }
-
 }

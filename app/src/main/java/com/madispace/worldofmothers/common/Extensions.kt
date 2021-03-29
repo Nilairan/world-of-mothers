@@ -1,17 +1,15 @@
 package com.madispace.worldofmothers.common
 
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.redmadrobot.inputmask.MaskedTextChangedListener
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import java.text.NumberFormat
 import java.util.*
 
@@ -33,22 +31,6 @@ fun Double.getPrice(): String {
     return numberFormat.format(this)
 }
 
-fun EditText.collect(): Flow<CharSequence?> {
-    return callbackFlow<CharSequence?> {
-        val listener = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) = Unit
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
-                Unit
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                offer(s)
-            }
-        }
-        addTextChangedListener(listener)
-        awaitClose { removeTextChangedListener(listener) }
-    }.onStart { emit(text) }
-}
-
 fun EditText.addPhoneMaskTextListener(phoneListener: (String) -> Unit) {
     this.addTextChangedListener(
         MaskedTextChangedListener.installOn(
@@ -66,4 +48,17 @@ fun EditText.addPhoneMaskTextListener(phoneListener: (String) -> Unit) {
                 }
             }
         ))
+}
+
+fun <T> Flow<T>.launchWhenStarted(scope: LifecycleCoroutineScope) {
+    scope.launchWhenStarted {
+        this@launchWhenStarted.collect()
+    }
+}
+
+fun <T> Flow<T>.catchWithLog(throwableBlock: (Throwable) -> Unit): Flow<T> {
+    return this.catch {
+        it.printStackTrace()
+        throwableBlock.invoke(it)
+    }
 }

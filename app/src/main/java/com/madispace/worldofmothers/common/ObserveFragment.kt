@@ -11,8 +11,7 @@ import org.koin.android.viewmodel.compat.ViewModelCompat.viewModel
 abstract class ObserveFragment<VM : BaseViewModel>(
     viewModelClass: Class<VM>,
     @LayoutRes view: Int
-) :
-    Fragment(view), RouterProvider, BackButtonListener {
+) : Fragment(view), RouterProvider, BackButtonListener {
 
     val viewModel: VM by viewModel(this, viewModelClass)
 
@@ -34,5 +33,5 @@ abstract class ObserveFragment<VM : BaseViewModel>(
     override val router: Router
         get() = (parentFragment as RouterProvider).router
 
-    abstract fun initObservers()
+    protected abstract fun initObservers()
 }
