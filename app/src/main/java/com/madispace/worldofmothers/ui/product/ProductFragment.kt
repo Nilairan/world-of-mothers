@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.appbar.AppBarLayout
 import com.madispace.domain.models.product.Product
 import com.madispace.domain.models.product.Seller
 import com.madispace.worldofmothers.R
@@ -17,8 +18,7 @@ import com.madispace.worldofmothers.routing.Screens
 import com.madispace.worldofmothers.ui.catalog.items.ProductItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.onEach
 
 class ProductFragment : ObserveFragment<ProductViewModel>(
     ProductViewModel::class.java,
@@ -34,23 +34,43 @@ class ProductFragment : ObserveFragment<ProductViewModel>(
             (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
         }
         binding.recommendedProductList.layoutManager =
-            LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         viewModel.obtainEvent(ProductViewModel.ProductEvent.LoadProduct(productId))
-        binding.collapsingToolbar.isTitleEnabled = false
-        binding.toolbar.title = ""
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
-        binding.toolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
+        initToolbar()
         binding.fab.setOnClickListener {
             viewModel.obtainEvent(ProductViewModel.ProductEvent.OnFavoriteClick)
         }
     }
 
-    override fun initObservers() {
-        lifecycleScope.launch {
-            viewModel.viewStates().collect { state -> state?.let { bindViewState(state) } }
+    private fun initToolbar() {
+        with(binding) {
+            collapsingToolbar.isTitleEnabled = false
+            toolbar.title = ""
+            toolbar.setNavigationIcon(R.drawable.ic_back)
+            toolbar.setNavigationOnClickListener {
+                onBackPressed()
+            }
+            appBar.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
+                override fun onStateChanged(appBarLayout: AppBarLayout?, state: State?) {
+                    when (state) {
+                        State.COLLAPSED -> {
+                            toolbar.setNavigationIcon(R.drawable.ic_back)
+                        }
+                        State.EXPANDED -> {
+                            toolbar.setNavigationIcon(R.drawable.ic_back_white)
+                        }
+                        else -> {
+                        }
+                    }
+                }
+            })
         }
+    }
+
+    override fun initObservers() {
+        viewModel.viewStates().onEach { state ->
+            state?.let { bindViewState(state) }
+        }.launchWhenStarted(lifecycleScope)
     }
 
     private fun bindViewState(state: ProductViewModel.ProductState) {
