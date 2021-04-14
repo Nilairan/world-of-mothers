@@ -1,3 +1,3 @@
-package com.madispace.domain.exceptions
+package com.madispace.domain.exceptions.paging
 
 class PageNotFoundException : RuntimeException()

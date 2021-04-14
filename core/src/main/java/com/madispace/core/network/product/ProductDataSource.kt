@@ -5,7 +5,7 @@ import com.madispace.core.database.entities.ProductEntity
 import com.madispace.core.network.common.Api
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
-import com.madispace.domain.exceptions.PageNotFoundException
+import com.madispace.domain.exceptions.paging.PageNotFoundException
 import kotlinx.coroutines.flow.Flow
 
 interface ProductDataSource {

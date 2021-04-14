@@ -1,7 +1,7 @@
 package com.madispace.worldofmothers.ui.catalog
 
 import androidx.lifecycle.viewModelScope
-import com.madispace.domain.exceptions.PageNotFoundException
+import com.madispace.domain.exceptions.paging.PageNotFoundException
 import com.madispace.domain.models.category.Category
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase

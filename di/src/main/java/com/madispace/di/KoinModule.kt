@@ -14,10 +14,7 @@ import com.madispace.core.repository.UserRepositoryImpl
 import com.madispace.di.routing.LocalCiceroneHolder
 import com.madispace.domain.repository.ProductRepository
 import com.madispace.domain.repository.UserRepository
-import com.madispace.domain.usecases.auth.AuthUseCase
-import com.madispace.domain.usecases.auth.AuthUseCaseImpl
-import com.madispace.domain.usecases.auth.ValidUseCase
-import com.madispace.domain.usecases.auth.ValidUseCaseImpl
+import com.madispace.domain.usecases.auth.*
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCaseImpl
 import com.madispace.domain.usecases.product.*
@@ -38,15 +35,16 @@ val useCasesModule = module {
     single<RegisterUserUseCase> { RegisterUserUseCaseImpl(get()) }
     single<GetUserProductUseCase> { GetUserProductUseCaseImpl() }
     single<ValidUseCase> { ValidUseCaseImpl() }
-    single<AuthUseCase> { AuthUseCaseImpl(get()) }
+    single<AuthUseCase> { AuthUseCaseImpl(get(), get()) }
     single<GetProductModelUseCase> { GetProductModelUseCaseImpl(get()) }
     single<FavoriteProductUseCase> { FavoriteProductUseCaseImpl(get()) }
+    single<EncodeUserDataUseCase> { EncodeUserDataUseCaseImpl() }
 }
 
 val apiModule = module {
     single { ApiFactory().getApi() }
     single<ProductDataSource> { ProductDataSourceImpl(get(), get()) }
-    single<UserDataSource> { UserDataSourceImpl(get()) }
+    single<UserDataSource> { UserDataSourceImpl(get(), get()) }
 }
 
 val repositoryModule = module {
@@ -57,4 +55,5 @@ val repositoryModule = module {
 val databaseModule = module {
     single { AppDatabase.getInstance(get()) }
     single { get<AppDatabase>().productDao }
+    single { get<AppDatabase>().userTokenDao }
 }

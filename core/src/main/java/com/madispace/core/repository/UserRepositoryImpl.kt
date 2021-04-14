@@ -3,6 +3,7 @@ package com.madispace.core.repository
 import com.madispace.core.network.common.getApiError
 import com.madispace.core.network.dto.user.RegisterUserRequest
 import com.madispace.core.network.user.UserDataSource
+import com.madispace.domain.exceptions.auth.AuthBadFields
 import com.madispace.domain.exceptions.register.EmailIsBusy
 import com.madispace.domain.exceptions.register.InvalidUserData
 import com.madispace.domain.models.user.RegisterUser
@@ -18,14 +19,23 @@ class UserRepositoryImpl(
     private val userDataSource: UserDataSource
 ) : UserRepository {
 
-    private var authUser: Boolean = false
-
     override fun isAuthorizedUser(): Boolean {
-        return authUser
+        return userDataSource.isAuthorizedUser()
     }
 
-    override fun auth() {
-        authUser = true
+    override fun auth(value: String): Flow<Boolean> {
+        return flow {
+            val dtoAuth = userDataSource.authUser(value)
+            userDataSource.saveTokenByUserId(dtoAuth.token, dtoAuth.id)
+            emit(true)
+        }.catch {
+            if (it is HttpException && it.code() == 400) {
+                throw AuthBadFields()
+            } else {
+                throw it
+            }
+        }.flowOn(Dispatchers.IO)
+
     }
 
     override fun register(registerUser: RegisterUser): Flow<String> {

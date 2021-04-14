@@ -7,7 +7,7 @@ import com.madispace.core.common.Mapper
 import com.madispace.domain.models.product.Product
 import com.madispace.domain.models.product.Seller
 
-@Entity(tableName = "Product")
+@Entity(tableName = "product")
 data class ProductEntity(
     @PrimaryKey val id: Int,
     val categoryId: Int,

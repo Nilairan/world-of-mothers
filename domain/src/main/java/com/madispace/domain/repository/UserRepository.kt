@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     fun isAuthorizedUser(): Boolean
-    fun auth()
+    fun auth(value: String): Flow<Boolean>
     fun register(registerUser: RegisterUser): Flow<String>
 }

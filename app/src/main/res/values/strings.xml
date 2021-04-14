@@ -46,6 +46,7 @@
     <string name="repeate_pess_not_valid">Введенные вами пароли не совпадают</string>
     <string name="email_is_busy">Данный email уже используется</string>
     <string name="surname">Фамилия</string>
+    <string name="auth_bad_fields">Проверьте правильность вводимых данных</string>
     <plurals name="advertisement">
         <item quantity="zero">%s объявлений</item>
         <item quantity="one">%s объявление</item>

@@ -1,10 +1,7 @@
 package com.madispace.domain.usecases.auth
 
 import android.util.Patterns
-import com.madispace.domain.exceptions.EmailValidException
-import com.madispace.domain.exceptions.NotImplementCustomFunction
-import com.madispace.domain.exceptions.PassValidException
-import com.madispace.domain.exceptions.PhoneValidException
+import com.madispace.domain.exceptions.validation.NotImplementCustomFunction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.regex.Pattern
@@ -70,9 +67,6 @@ object CustomRule : Rule()
 
 interface ValidUseCase {
     /**
-     * @throws EmailValidException for not valid email
-     * @throws PassValidException for not valid password
-     * @throws PhoneValidException for not valid email
      * @throws NotImplementCustomFunction on custom function null or throw exception
      */
     operator fun invoke(fields: ValidData): Flow<Boolean>
