@@ -6,16 +6,17 @@ import com.madispace.core.network.common.Api
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
 import com.madispace.domain.exceptions.paging.PageNotFoundException
+import com.madispace.domain.models.product.ProductFilter
 import kotlinx.coroutines.flow.Flow
 
 interface ProductDataSource {
-    @Throws(PageNotFoundException::class)
     suspend fun getAllProductList(page: Int): List<DTOProductShort>
     suspend fun getProductById(id: Int): DTOProduct
     suspend fun setFavoriteProduct(product: ProductEntity)
     suspend fun removeFavoriteProduct(id: Int)
     suspend fun getFavoriteProduct(id: Int): ProductEntity?
     fun getFavoriteProductList(): Flow<List<ProductEntity>>
+    suspend fun filteredProductList(page: Int, filter: ProductFilter): List<DTOProductShort>
 }
 
 class ProductDataSourceImpl constructor(
@@ -26,9 +27,7 @@ class ProductDataSourceImpl constructor(
     private var maxCountPage = 1
 
     override suspend fun getAllProductList(page: Int): List<DTOProductShort> {
-        if (page > maxCountPage) {
-            throw PageNotFoundException()
-        }
+        checkMaxPage(page)
         val response = api.getAllProductList(page = page)
         maxCountPage = response.meta.pageCount
         return api.getAllProductList(page = page).items
@@ -52,5 +51,26 @@ class ProductDataSourceImpl constructor(
 
     override fun getFavoriteProductList(): Flow<List<ProductEntity>> {
         return productDao.getList()
+    }
+
+    override suspend fun filteredProductList(page: Int, filter: ProductFilter): List<DTOProductShort> {
+        checkMaxPage(page)
+        return when (filter) {
+            is ProductFilter.Category -> api.getAllProductList(page = page, categoryId = filter.id)
+            is ProductFilter.Min -> api.getAllProductList(page = page, min = filter.value)
+            is ProductFilter.Max -> api.getAllProductList(page = page, max = filter.value)
+            is ProductFilter.Desc -> api.getAllProductList(page = page, sort = "id")
+            is ProductFilter.Asc -> api.getAllProductList(page = page, sort = "-id")
+            is ProductFilter.Search -> api.getAllProductList(page = page, value = filter.value)
+        }.apply {
+            maxCountPage = meta.pageCount
+        }.items
+    }
+
+    @Throws(PageNotFoundException::class)
+    private fun checkMaxPage(page: Int) {
+        if (page > maxCountPage) {
+            throw PageNotFoundException()
+        }
     }
 }

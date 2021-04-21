@@ -39,6 +39,7 @@ val useCasesModule = module {
     single<GetProductModelUseCase> { GetProductModelUseCaseImpl(get()) }
     single<FavoriteProductUseCase> { FavoriteProductUseCaseImpl(get()) }
     single<EncodeUserDataUseCase> { EncodeUserDataUseCaseImpl() }
+    single<GetFilteredProductListUseCase> { GetFilteredProductListUseCaseImpl(get()) }
 }
 
 val apiModule = module {

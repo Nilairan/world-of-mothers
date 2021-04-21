@@ -1,6 +1,7 @@
 package com.madispace.core.network.common
 
 import com.madispace.core.common.PaginationResponse
+import com.madispace.core.network.dto.categories.CategoriesResponse
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
 import com.madispace.core.network.dto.user.DTOAuth
@@ -12,7 +13,12 @@ interface Api {
 
     @GET("${ApiFactory.VERSION}/items")
     suspend fun getAllProductList(
-        @Query("page") page: Int
+            @Query("page") page: Int,
+            @Query("category_id") categoryId: Int? = null,
+            @Query("min") min: Double? = null,
+            @Query("max") max: Double? = null,
+            @Query("search") value: String? = null,
+            @Query("sort") sort: String? = null
     ): PaginationResponse<DTOProductShort>
 
     @GET("${ApiFactory.VERSION}/items/{id}")
@@ -23,4 +29,7 @@ interface Api {
 
     @POST("${ApiFactory.VERSION}/auth")
     suspend fun auth(@Header("Authorization") value: String): DTOAuth
+
+    @GET("${ApiFactory.VERSION}/categories")
+    suspend fun getAllCategory(): CategoriesResponse
 }

@@ -4,6 +4,7 @@ import com.madispace.core.database.entities.ProductEntityMapper
 import com.madispace.core.database.entities.ProductMapper
 import com.madispace.core.network.product.ProductDataSource
 import com.madispace.domain.models.product.Product
+import com.madispace.domain.models.product.ProductFilter
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.repository.ProductRepository
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +26,12 @@ class ProductRepositoryImpl constructor(
     override fun getProductById(id: Int): Flow<Product> {
         return flow {
             emit(productDataSource.getProductById(id = id).mapToModel())
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getFilteredProductList(page: Int, filter: ProductFilter): Flow<List<ProductShort>> {
+        return flow {
+            emit(productDataSource.filteredProductList(page, filter).map { it.mapToShort() })
         }.flowOn(Dispatchers.IO)
     }
 

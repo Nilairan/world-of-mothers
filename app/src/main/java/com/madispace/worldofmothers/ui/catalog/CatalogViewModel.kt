@@ -7,6 +7,7 @@ import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
 import com.madispace.domain.usecases.catalog.SearchModel
 import com.madispace.domain.usecases.catalog.SearchType
+import com.madispace.domain.usecases.product.GetFilteredProductListUseCaseImpl
 import com.madispace.worldofmothers.common.BaseMviViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -14,7 +15,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class CatalogViewModel(
-    private val getCatalogModelUseCase: GetCatalogModelUseCase
+        private val getCatalogModelUseCase: GetCatalogModelUseCase,
+        private val getFilteredProductListUseCaseImpl: GetFilteredProductListUseCaseImpl
 ) : BaseMviViewModel<CatalogViewModel.CatalogState,
         CatalogViewModel.CatalogAction, CatalogViewModel.CatalogEvent>() {
 
@@ -41,6 +43,24 @@ class CatalogViewModel(
                 page = 1
                 onRefresh()
             }
+            is CatalogEvent.DescFilter -> {
+
+            }
+            is CatalogEvent.AscFilter -> {
+
+            }
+            is CatalogEvent.CategoryFilter -> {
+
+            }
+            is CatalogEvent.MinFilter -> {
+
+            }
+            is CatalogEvent.MaxFilter -> {
+
+            }
+            is CatalogEvent.SearchFilter -> {
+
+            }
         }
     }
 
@@ -54,9 +74,7 @@ class CatalogViewModel(
                 }
                 .collect {
                     viewState = CatalogState.HideLoading
-                    it.categories?.let { category ->
-                        viewState = CatalogState.ShowCategory(category)
-                    }
+                    viewState = CatalogState.ShowCategory(it.categories)
                     viewState = CatalogState.ShowProduct(it.productsShort)
                 }
         }
@@ -111,5 +129,11 @@ class CatalogViewModel(
         object Default : CatalogEvent()
         object LoadNextProductPage : CatalogEvent()
         object Refresh : CatalogEvent()
+        object DescFilter : CatalogEvent()
+        object AscFilter : CatalogEvent()
+        data class CategoryFilter(val categoryId: Int) : CatalogEvent()
+        data class MinFilter(val value: Double) : CatalogEvent()
+        data class MaxFilter(val value: Double) : CatalogEvent()
+        data class SearchFilter(val value: String) : CatalogEvent()
     }
 }
