@@ -4,13 +4,13 @@ import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Cicerone.Companion.create
 import com.github.terrakok.cicerone.Router
 import com.madispace.core.database.AppDatabase
-import com.madispace.core.network.category.CategoryDataSource
-import com.madispace.core.network.category.CategoryDataSourceImpl
 import com.madispace.core.network.common.ApiFactory
-import com.madispace.core.network.product.ProductDataSource
-import com.madispace.core.network.product.ProductDataSourceImpl
-import com.madispace.core.network.user.UserDataSource
-import com.madispace.core.network.user.UserDataSourceImpl
+import com.madispace.core.network.datasource.category.CategoryDataSource
+import com.madispace.core.network.datasource.category.CategoryDataSourceImpl
+import com.madispace.core.network.datasource.product.ProductDataSource
+import com.madispace.core.network.datasource.product.ProductDataSourceImpl
+import com.madispace.core.network.datasource.user.UserDataSource
+import com.madispace.core.network.datasource.user.UserDataSourceImpl
 import com.madispace.core.repository.CategoryRepositoryImpl
 import com.madispace.core.repository.ProductRepositoryImpl
 import com.madispace.core.repository.UserRepositoryImpl
@@ -22,7 +22,10 @@ import com.madispace.domain.usecases.auth.*
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCaseImpl
 import com.madispace.domain.usecases.product.*
-import com.madispace.domain.usecases.profile.*
+import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCase
+import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCaseImpl
+import com.madispace.domain.usecases.profile.RegisterUserUseCase
+import com.madispace.domain.usecases.profile.RegisterUserUseCaseImpl
 import org.koin.dsl.module
 
 val navigationModule = module {
@@ -36,8 +39,7 @@ val useCasesModule = module {
     single<GetCatalogModelUseCase> { GetCatalogModelUseCaseImpl(get(), get()) }
     single<GetFavoritesProductUseCase> { GetFavoritesProductUseCaseImpl(get()) }
     single<IsAuthorizedUserUseCase> { IsAuthorizedUserUseCaseImpl(get()) }
-    single<RegisterUserUseCase> { RegisterUserUseCaseImpl(get()) }
-    single<GetUserProductUseCase> { GetUserProductUseCaseImpl() }
+    single<RegisterUserUseCase> { RegisterUserUseCaseImpl(get(), get()) }
     single<ValidUseCase> { ValidUseCaseImpl() }
     single<AuthUseCase> { AuthUseCaseImpl(get(), get()) }
     single<GetProductModelUseCase> { GetProductModelUseCaseImpl(get()) }

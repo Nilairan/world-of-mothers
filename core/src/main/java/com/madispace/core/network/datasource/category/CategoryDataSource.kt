@@ -1,4 +1,4 @@
-package com.madispace.core.network.category
+package com.madispace.core.network.datasource.category
 
 import com.madispace.core.network.common.Api
 import com.madispace.core.network.dto.categories.DTOCategories

@@ -2,7 +2,7 @@ package com.madispace.core.repository
 
 import com.madispace.core.database.entities.ProductEntityMapper
 import com.madispace.core.database.entities.ProductMapper
-import com.madispace.core.network.product.ProductDataSource
+import com.madispace.core.network.datasource.product.ProductDataSource
 import com.madispace.domain.models.product.Product
 import com.madispace.domain.models.product.ProductFilter
 import com.madispace.domain.models.product.ProductShort

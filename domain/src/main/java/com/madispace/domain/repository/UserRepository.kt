@@ -1,5 +1,7 @@
 package com.madispace.domain.repository
 
+import com.madispace.domain.models.product.ProductShort
+import com.madispace.domain.models.user.Profile
 import com.madispace.domain.models.user.RegisterUser
 import kotlinx.coroutines.flow.Flow
 
@@ -7,4 +9,6 @@ interface UserRepository {
     fun isAuthorizedUser(): Boolean
     fun auth(value: String): Flow<Boolean>
     fun register(registerUser: RegisterUser): Flow<String>
+    fun getUserProfile(): Flow<Profile>
+    fun getUserProduct(): Flow<List<ProductShort>>
 }

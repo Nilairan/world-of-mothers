@@ -1,9 +1,12 @@
-package com.madispace.core.network.user
+package com.madispace.core.network.datasource.user
 
+import android.util.Base64
 import com.madispace.core.database.dao.UserTokenDao
 import com.madispace.core.database.entities.TokenEntity
 import com.madispace.core.network.common.Api
+import com.madispace.core.network.dto.product.DTOProductShort
 import com.madispace.core.network.dto.user.DTOAuth
+import com.madispace.core.network.dto.user.DTOProfile
 import com.madispace.core.network.dto.user.RegisterUserRequest
 
 interface UserDataSource {
@@ -11,6 +14,8 @@ interface UserDataSource {
     suspend fun authUser(value: String): DTOAuth
     suspend fun saveTokenByUserId(token: String, id: Int)
     fun isAuthorizedUser(): Boolean
+    suspend fun getProfile(): DTOProfile
+    suspend fun getProductList(): List<DTOProductShort>
 }
 
 class UserDataSourceImpl(
@@ -32,5 +37,22 @@ class UserDataSourceImpl(
 
     override fun isAuthorizedUser(): Boolean {
         return userTokenDao.getToken() != null
+    }
+
+    override suspend fun getProfile(): DTOProfile {
+        return api.getUserProfile(getToken())
+    }
+
+    override suspend fun getProductList(): List<DTOProductShort> {
+        return api.getUserProductList(getToken()).items
+    }
+
+    private fun getToken(): String {
+        val token = "$BASIC ${userTokenDao.getToken()?.token ?: ""}:".toByteArray()
+        return Base64.encodeToString(token, Base64.DEFAULT)
+    }
+
+    companion object {
+        private const val BASIC = "Basic"
     }
 }

@@ -1,4 +1,4 @@
-package com.madispace.core.network.product
+package com.madispace.core.network.datasource.product
 
 import com.madispace.core.database.dao.ProductDao
 import com.madispace.core.database.entities.ProductEntity

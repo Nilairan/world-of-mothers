@@ -1,6 +1,6 @@
 package com.madispace.core.repository
 
-import com.madispace.core.network.category.CategoryDataSource
+import com.madispace.core.network.datasource.category.CategoryDataSource
 import com.madispace.domain.models.category.Category
 import com.madispace.domain.repository.CategoryRepository
 import kotlinx.coroutines.Dispatchers

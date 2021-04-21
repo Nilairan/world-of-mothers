@@ -28,11 +28,13 @@ class ProfileFragment : ObserveFragment<ProfileViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.root.visibility = View.GONE
-        binding.editProfile.setOnClickListener { router.navigateTo(Screens.ChangeProfileScreen()) }
-        binding.floatingActionButton.setOnClickListener { router.navigateTo(Screens.NewProductScreen()) }
-        binding.productList.layoutManager = GridLayoutManager(binding.getContext(), 2)
-        binding.productList.adapter = adapter
+        with(binding) {
+            root.visibility = View.GONE
+            editProfile.setOnClickListener { router.navigateTo(Screens.ChangeProfileScreen()) }
+            floatingActionButton.setOnClickListener { router.navigateTo(Screens.NewProductScreen()) }
+            productList.layoutManager = GridLayoutManager(binding.getContext(), 2)
+            productList.adapter = adapter
+        }
     }
 
     override fun initObservers() {

@@ -1,11 +1,13 @@
 package com.madispace.core.repository
 
 import com.madispace.core.network.common.getApiError
+import com.madispace.core.network.datasource.user.UserDataSource
 import com.madispace.core.network.dto.user.RegisterUserRequest
-import com.madispace.core.network.user.UserDataSource
 import com.madispace.domain.exceptions.auth.AuthBadFields
 import com.madispace.domain.exceptions.register.EmailIsBusy
 import com.madispace.domain.exceptions.register.InvalidUserData
+import com.madispace.domain.models.product.ProductShort
+import com.madispace.domain.models.user.Profile
 import com.madispace.domain.models.user.RegisterUser
 import com.madispace.domain.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
@@ -61,6 +63,18 @@ class UserRepositoryImpl(
             } else {
                 throw it
             }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getUserProfile(): Flow<Profile> {
+        return flow {
+            emit(userDataSource.getProfile().mapToModel())
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getUserProduct(): Flow<List<ProductShort>> {
+        return flow {
+            emit(userDataSource.getProductList().map { it.mapToShort() })
         }.flowOn(Dispatchers.IO)
     }
 

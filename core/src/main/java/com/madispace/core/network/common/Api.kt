@@ -5,6 +5,7 @@ import com.madispace.core.network.dto.categories.CategoriesResponse
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
 import com.madispace.core.network.dto.user.DTOAuth
+import com.madispace.core.network.dto.user.DTOProfile
 import com.madispace.core.network.dto.user.DTOResultRegister
 import com.madispace.core.network.dto.user.RegisterUserRequest
 import retrofit2.http.*
@@ -32,4 +33,10 @@ interface Api {
 
     @GET("${ApiFactory.VERSION}/categories")
     suspend fun getAllCategory(): CategoriesResponse
+
+    @POST("${ApiFactory.VERSION}/profile")
+    suspend fun getUserProfile(@Header("Authorization") token: String): DTOProfile
+
+    @POST("${ApiFactory.VERSION}/profile/items")
+    suspend fun getUserProductList(@Header("Authorization") token: String): PaginationResponse<DTOProductShort>
 }

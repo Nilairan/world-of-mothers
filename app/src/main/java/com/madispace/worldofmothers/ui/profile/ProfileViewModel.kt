@@ -1,12 +1,10 @@
 package com.madispace.worldofmothers.ui.profile
 
-import com.madispace.domain.usecases.profile.GetUserProductUseCase
 import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCase
 import com.madispace.worldofmothers.common.BaseMviViewModel
 
 class ProfileViewModel(
         private val isAuthorizedUserUseCase: IsAuthorizedUserUseCase,
-        private val getUserProductUseCase: GetUserProductUseCase
 ) : BaseMviViewModel<ProfileViewModel.ProfileState,
         ProfileViewModel.ProfileAction, ProfileViewModel.ProfileEvent>() {
 
@@ -22,20 +20,14 @@ class ProfileViewModel(
 
     private fun isAuthUser() {
         if (isAuthorizedUserUseCase.invoke()) {
-            getProduct()
+            getProfileModel()
         } else {
             viewState = ProfileState.OpenSignInScreen
         }
     }
 
-    private fun getProduct() {
-//        getUserProductUseCase.invoke()
-//                .doOnSubscribe { _userProductLiveData.postValue(Loading()) }
-//                .subscribeBy(
-//                        onNext = { _userProductLiveData.postValue(Success(it)) },
-//                        onError = { _userProductLiveData.postValue(Error()) }
-//                )
-//                .addTo(compositeDisposable)
+    private fun getProfileModel() {
+
     }
 
     sealed class ProfileState {
