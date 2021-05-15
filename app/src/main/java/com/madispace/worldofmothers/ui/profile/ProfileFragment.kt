@@ -1,27 +1,35 @@
 package com.madispace.worldofmothers.ui.profile
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.work.*
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.madispace.domain.models.product.ProductShort
+import com.madispace.domain.models.user.Profile
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.getContext
+import com.madispace.worldofmothers.common.launchWhenStarted
+import com.madispace.worldofmothers.common.loadPhoto
 import com.madispace.worldofmothers.databinding.FragmentProfileBinding
 import com.madispace.worldofmothers.routing.RouterProvider
 import com.madispace.worldofmothers.routing.Screens
+import com.madispace.worldofmothers.ui.catalog.items.ProductItem
+import com.madispace.worldofmothers.ui.loadphoto.dialog.ChooseLoadPhotoDialog
+import com.madispace.worldofmothers.worker.UploadPhotoWorker
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.onEach
 
 class ProfileFragment : ObserveFragment<ProfileViewModel>(
     ProfileViewModel::class.java,
     R.layout.fragment_profile
-),
-    RouterProvider {
+), RouterProvider {
 
     private val binding: FragmentProfileBinding by viewBinding()
     private val adapter = GroupAdapter<GroupieViewHolder>()
@@ -34,31 +42,92 @@ class ProfileFragment : ObserveFragment<ProfileViewModel>(
             floatingActionButton.setOnClickListener { router.navigateTo(Screens.NewProductScreen()) }
             productList.layoutManager = GridLayoutManager(binding.getContext(), 2)
             productList.adapter = adapter
+            photoProfile.setOnClickListener {
+                ChooseLoadPhotoDialog.newInstance().show(childFragmentManager, null)
+            }
+            initFragmentListener()
+        }
+    }
+
+    private fun initFragmentListener() {
+        childFragmentManager.setFragmentResultListener(
+            ChooseLoadPhotoDialog.LOAD_MEDIA,
+            viewLifecycleOwner
+        ) { _, result ->
+            (result.get(ChooseLoadPhotoDialog.URI) as Uri?)?.let { uri ->
+                context?.let {
+                    val file = DocumentFile.fromSingleUri(it, uri)
+                    file?.let { documentFile ->
+                        startWorker(documentFile, uri)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun startWorker(file: DocumentFile, uri: Uri) {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val uploadWorkRequest: OneTimeWorkRequest =
+            OneTimeWorkRequestBuilder<UploadPhotoWorker>()
+                .setInputData(
+                    workDataOf(
+                        UploadPhotoWorker.URI to uri.toString(),
+                        UploadPhotoWorker.FILE_NAME to file.name,
+                    )
+                )
+                .setConstraints(constraints)
+                .build()
+
+        context?.let {
+            WorkManager.getInstance(it)
+                .enqueue(uploadWorkRequest)
         }
     }
 
     override fun initObservers() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            viewModel.viewStates().collect { state -> state?.let { bindState(state) } }
-        }
-//        viewModel.userProductLiveData.observe(
-//            viewLifecycleOwner,
-//            object : SimpleObserver<List<ProductShort>>() {
-//                override fun onSuccess(data: List<ProductShort>) {
-//                    adapter.clear()
-////                adapter.addAll(data.map { ProductItem(it) { router.navigateTo(Screens.ProductScreen()) } })
-//                }
-//
-//                override fun onLoading(loading: Boolean) {
-//                    binding.progressCircular.visibility = if (loading) View.VISIBLE else View.GONE
-//                }
-//            })
+        viewModel.viewStates()
+            .onEach { state -> state?.let { bindState(state) } }
+            .launchWhenStarted(lifecycleScope)
+        viewModel.viewActions()
+            .onEach { action -> action?.let { bindAction(action) } }
+            .launchWhenStarted(lifecycleScope)
     }
 
     private fun bindState(state: ProfileViewModel.ProfileState) {
         when (state) {
             is ProfileViewModel.ProfileState.OpenSignInScreen -> router.navigateTo(Screens.SignInScreen())
+            is ProfileViewModel.ProfileState.ShowLoading -> binding.progressCircular.isVisible =
+                true
+            is ProfileViewModel.ProfileState.HideLoading -> binding.progressCircular.isVisible =
+                false
         }
+    }
+
+    private fun bindAction(action: ProfileViewModel.ProfileAction) {
+        when (action) {
+            is ProfileViewModel.ProfileAction.ShowProfile -> showProfile(action.profile)
+            is ProfileViewModel.ProfileAction.ShowProfileProduct -> showProduct(action.product)
+        }
+    }
+
+    private fun showProfile(profile: Profile) {
+        with(binding) {
+            root.isVisible = true
+            profileName.text = profile.getName()
+            profileDescription.text = profile.getDescription()
+            photoProfile.loadPhoto(profile.image)
+        }
+    }
+
+    private fun showProduct(products: List<ProductShort>) {
+        binding.emptyText.isVisible = products.isEmpty()
+        adapter.clear()
+        adapter.addAll(products.map {
+            ProductItem(it) { router.navigateTo(Screens.ProductScreen(it.id)) }
+        })
     }
 
     companion object {

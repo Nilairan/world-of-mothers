@@ -1,8 +1,11 @@
-package com.madispace.worldofmothers.ui.profile.auth
+package com.madispace.worldofmothers.ui.auth
 
 import androidx.lifecycle.viewModelScope
 import com.madispace.domain.exceptions.auth.AuthBadFields
-import com.madispace.domain.usecases.auth.*
+import com.madispace.domain.usecases.auth.AuthUseCase
+import com.madispace.domain.usecases.auth.EmailRule
+import com.madispace.domain.usecases.auth.ValidData
+import com.madispace.domain.usecases.auth.ValidUseCase
 import com.madispace.worldofmothers.common.BaseMviViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch

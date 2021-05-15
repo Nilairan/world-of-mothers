@@ -1,4 +1,4 @@
-package com.madispace.worldofmothers.ui.profile.auth
+package com.madispace.worldofmothers.ui.auth
 
 import android.os.Bundle
 import android.view.View

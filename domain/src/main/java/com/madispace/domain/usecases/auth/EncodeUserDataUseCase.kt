@@ -9,6 +9,6 @@ interface EncodeUserDataUseCase {
 class EncodeUserDataUseCaseImpl : EncodeUserDataUseCase {
     override fun invoke(email: String, password: String): String {
         val value = "$email:$password".toByteArray()
-        return Base64.encodeToString(value, Base64.DEFAULT)
+        return Base64.encodeToString(value, Base64.NO_WRAP)
     }
 }

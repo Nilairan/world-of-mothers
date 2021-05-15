@@ -1,6 +1,7 @@
 package com.madispace.core.network.common
 
 import com.madispace.core.common.PaginationResponse
+import com.madispace.core.network.dto.ApiError
 import com.madispace.core.network.dto.categories.CategoriesResponse
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
@@ -8,6 +9,7 @@ import com.madispace.core.network.dto.user.DTOAuth
 import com.madispace.core.network.dto.user.DTOProfile
 import com.madispace.core.network.dto.user.DTOResultRegister
 import com.madispace.core.network.dto.user.RegisterUserRequest
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface Api {
@@ -39,4 +41,11 @@ interface Api {
 
     @POST("${ApiFactory.VERSION}/profile/items")
     suspend fun getUserProductList(@Header("Authorization") token: String): PaginationResponse<DTOProductShort>
+
+    @Multipart
+    @POST("${ApiFactory.VERSION}/profile/avatar")
+    suspend fun uploadAvatar(
+        @Header("Authorization") token: String,
+        @Part file: MultipartBody.Part
+    ): ApiError
 }

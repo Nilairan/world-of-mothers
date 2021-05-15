@@ -15,14 +15,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 
 class UserRepositoryImpl(
     private val userDataSource: UserDataSource
 ) : UserRepository {
 
-    override fun isAuthorizedUser(): Boolean {
-        return userDataSource.isAuthorizedUser()
+    override fun isAuthorizedUser(): Flow<Boolean> {
+        return flow {
+            emit(userDataSource.isAuthorizedUser())
+        }.flowOn(Dispatchers.IO)
     }
 
     override fun auth(value: String): Flow<Boolean> {
@@ -78,7 +83,24 @@ class UserRepositoryImpl(
         }.flowOn(Dispatchers.IO)
     }
 
+    override suspend fun uploadFile(file: ByteArray, mediaType: String, fileName: String): Boolean {
+        return try {
+            val part = MultipartBody.Part.createFormData(
+                name = FILE,
+                filename = fileName,
+                body = file.toRequestBody(mediaType.toMediaTypeOrNull())
+            )
+            val response = userDataSource.uploadAvatar(part)
+            response.code == 200
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
     companion object {
         private const val EMAIL_IS_BUSY = 1000
+
+        private const val FILE = "file"
     }
 }

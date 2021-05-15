@@ -1,7 +1,8 @@
-package com.madispace.worldofmothers.ui.profile.auth
+package com.madispace.worldofmothers.ui.auth
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -58,7 +59,8 @@ class SignUpFragment : ObserveFragment<SignUpViewModel>(
                 is SignUpViewModel.SignUpAction.EmailIsBusy -> emailLayout.error =
                     getString(R.string.email_is_busy)
                 is SignUpViewModel.SignUpAction.UserDataNoValid -> {
-                    /*TODO use alert*/
+                    Toast.makeText(context, getString(R.string.invalid_params), Toast.LENGTH_LONG)
+                        .show()
                 }
                 is SignUpViewModel.SignUpAction.SuccessRegisterUser -> router.replaceScreen(Screens.ProfileScreen())
             }

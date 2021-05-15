@@ -47,6 +47,9 @@
     <string name="email_is_busy">Данный email уже используется</string>
     <string name="surname">Фамилия</string>
     <string name="auth_bad_fields">Проверьте правильность вводимых данных</string>
+    <string name="invalid_params">Неверные параметры</string>
+    <string name="empty_my_product">В списке ваших товаров пусто</string>
+    <string name="choose_load_photo">Выберете способ загрузки фото</string>
     <plurals name="advertisement">
         <item quantity="zero">%s объявлений</item>
         <item quantity="one">%s объявление</item>

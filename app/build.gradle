@@ -92,6 +92,12 @@ dependencies {
     implementation 'com.redmadrobot:input-mask-android:6.0.0'
 
     /**
+     * Work
+     */
+    def work_version = "2.5.0"
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
+    /**
      * Test
      */
     testImplementation 'junit:junit:4.13.2'

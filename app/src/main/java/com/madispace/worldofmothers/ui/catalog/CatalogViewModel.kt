@@ -7,7 +7,6 @@ import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
 import com.madispace.domain.usecases.catalog.SearchModel
 import com.madispace.domain.usecases.catalog.SearchType
-import com.madispace.domain.usecases.product.GetFilteredProductListUseCaseImpl
 import com.madispace.worldofmothers.common.BaseMviViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -15,8 +14,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class CatalogViewModel(
-        private val getCatalogModelUseCase: GetCatalogModelUseCase,
-        private val getFilteredProductListUseCaseImpl: GetFilteredProductListUseCaseImpl
+    private val getCatalogModelUseCase: GetCatalogModelUseCase
 ) : BaseMviViewModel<CatalogViewModel.CatalogState,
         CatalogViewModel.CatalogAction, CatalogViewModel.CatalogEvent>() {
 

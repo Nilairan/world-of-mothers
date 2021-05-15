@@ -23,7 +23,8 @@
                     android:id="@+id/photoProfile"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@mipmap/ic_launcher"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_photo_placeholder"
                     android:layout_marginTop="20dp"
                     android:layout_marginStart="20dp"
                     app:layout_constraintTop_toTopOf="parent"
@@ -84,6 +85,17 @@
         android:paddingEnd="20dp"
         android:paddingBottom="20dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <TextView
+        android:id="@+id/emptyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.MaterialComponents.Body2"
+        android:textColor="@color/black"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/empty_my_product" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"

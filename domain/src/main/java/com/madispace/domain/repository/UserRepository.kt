@@ -6,9 +6,10 @@ import com.madispace.domain.models.user.RegisterUser
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
-    fun isAuthorizedUser(): Boolean
+    fun isAuthorizedUser(): Flow<Boolean>
     fun auth(value: String): Flow<Boolean>
     fun register(registerUser: RegisterUser): Flow<String>
     fun getUserProfile(): Flow<Profile>
     fun getUserProduct(): Flow<List<ProductShort>>
+    suspend fun uploadFile(file: ByteArray, mediaType: String, fileName: String): Boolean
 }

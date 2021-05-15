@@ -1,4 +1,4 @@
-package com.madispace.worldofmothers.ui.profile.auth
+package com.madispace.worldofmothers.ui.auth
 
 import androidx.lifecycle.viewModelScope
 import com.madispace.domain.exceptions.register.EmailIsBusy

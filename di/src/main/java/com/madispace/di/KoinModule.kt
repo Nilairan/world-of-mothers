@@ -22,10 +22,7 @@ import com.madispace.domain.usecases.auth.*
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCaseImpl
 import com.madispace.domain.usecases.product.*
-import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCase
-import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCaseImpl
-import com.madispace.domain.usecases.profile.RegisterUserUseCase
-import com.madispace.domain.usecases.profile.RegisterUserUseCaseImpl
+import com.madispace.domain.usecases.profile.*
 import org.koin.dsl.module
 
 val navigationModule = module {
@@ -46,6 +43,7 @@ val useCasesModule = module {
     single<FavoriteProductUseCase> { FavoriteProductUseCaseImpl(get()) }
     single<EncodeUserDataUseCase> { EncodeUserDataUseCaseImpl() }
     single<GetFilteredProductListUseCase> { GetFilteredProductListUseCaseImpl(get()) }
+    single<GetProfileModelUseCase> { GetProfileModelUseCaseImpl(get()) }
 }
 
 val apiModule = module {

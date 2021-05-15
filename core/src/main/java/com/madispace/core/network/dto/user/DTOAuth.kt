@@ -1,6 +1,8 @@
 package com.madispace.core.network.dto.user
 
+import com.google.gson.annotations.SerializedName
+
 data class DTOAuth(
     val id: Int,
-    val token: String
+    @SerializedName("access_token") val token: String
 )

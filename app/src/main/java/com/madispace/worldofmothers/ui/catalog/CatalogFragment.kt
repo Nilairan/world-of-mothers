@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -57,7 +58,7 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
         binding.productList.layoutManager = productLayoutManager
         binding.productList.addOnScrollListener(
             PagingScrollListener(layoutManager = productLayoutManager,
-                isLoading = { binding.progressCircular.visibility == View.VISIBLE },
+                isLoading = { binding.progressCircular.isVisible },
                 runLoadingBlock = { viewModel.obtainEvent(CatalogViewModel.CatalogEvent.LoadNextProductPage) })
         )
         binding.productList.adapter = productListAdapter
