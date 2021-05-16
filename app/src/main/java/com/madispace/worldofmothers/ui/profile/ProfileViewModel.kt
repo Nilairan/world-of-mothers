@@ -6,6 +6,7 @@ import com.madispace.domain.models.user.Profile
 import com.madispace.domain.usecases.profile.GetProfileModelUseCase
 import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCase
 import com.madispace.worldofmothers.common.BaseMviViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -24,6 +25,7 @@ class ProfileViewModel(
     override fun obtainEvent(viewEvent: ProfileEvent) {
         when (viewEvent) {
             is ProfileEvent.IsAuthUser -> isAuthUser()
+            is ProfileEvent.Reload -> getProfileModel()
         }
     }
 
@@ -41,7 +43,7 @@ class ProfileViewModel(
     }
 
     private fun getProfileModel() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             viewState = ProfileState.ShowLoading
             getProfileModelUseCase.invoke()
                 .onEach { viewState = ProfileState.HideLoading }
@@ -69,5 +71,6 @@ class ProfileViewModel(
 
     sealed class ProfileEvent {
         object IsAuthUser : ProfileEvent()
+        object Reload : ProfileEvent()
     }
 }

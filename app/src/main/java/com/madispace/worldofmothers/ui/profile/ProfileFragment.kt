@@ -3,6 +3,7 @@ package com.madispace.worldofmothers.ui.profile
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
@@ -84,6 +85,20 @@ class ProfileFragment : ObserveFragment<ProfileViewModel>(
         context?.let {
             WorkManager.getInstance(it)
                 .enqueue(uploadWorkRequest)
+
+            WorkManager.getInstance(it)
+                .getWorkInfoByIdLiveData(uploadWorkRequest.id)
+                .observe(viewLifecycleOwner, { info ->
+                    when (info.state) {
+                        WorkInfo.State.FAILED -> Toast.makeText(
+                            it,
+                            getString(R.string.no_upload_photo),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        WorkInfo.State.SUCCEEDED -> viewModel.obtainEvent(ProfileViewModel.ProfileEvent.Reload)
+                        else -> return@observe
+                    }
+                })
         }
     }
 
@@ -123,6 +138,7 @@ class ProfileFragment : ObserveFragment<ProfileViewModel>(
     }
 
     private fun showProduct(products: List<ProductShort>) {
+        binding.root.isVisible = true
         binding.emptyText.isVisible = products.isEmpty()
         adapter.clear()
         adapter.addAll(products.map {
