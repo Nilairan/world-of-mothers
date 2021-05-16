@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(
-        private val registerUserUseCase: RegisterUserUseCase,
-        private val validUseCase: ValidUseCase
+    private val registerUserUseCase: RegisterUserUseCase,
+    private val validUseCase: ValidUseCase
 ) : BaseMviViewModel<SignUpViewModel.SignUpState,
         SignUpViewModel.SignUpAction, SignUpViewModel.SignUpEvent>() {
 

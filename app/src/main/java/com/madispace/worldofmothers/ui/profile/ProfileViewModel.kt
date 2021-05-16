@@ -9,7 +9,6 @@ import com.madispace.worldofmothers.common.BaseMviViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
@@ -46,14 +45,13 @@ class ProfileViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             viewState = ProfileState.ShowLoading
             getProfileModelUseCase.invoke()
-                .onEach { viewState = ProfileState.HideLoading }
                 .catch {
                     viewState = ProfileState.HideLoading
                     it.printStackTrace()
                 }
                 .collect {
-                    viewAction = ProfileAction.ShowProfile(it.profile)
-                    viewAction = ProfileAction.ShowProfileProduct(it.products)
+                    viewState = ProfileState.HideLoading
+                    viewState = ProfileState.ShowProfileData(it.profile, it.products)
                 }
         }
     }
@@ -62,11 +60,11 @@ class ProfileViewModel(
         object OpenSignInScreen : ProfileState()
         object ShowLoading : ProfileState()
         object HideLoading : ProfileState()
+        data class ShowProfileData(val profile: Profile, val product: List<ProductShort>) :
+            ProfileState()
     }
 
     sealed class ProfileAction {
-        data class ShowProfile(val profile: Profile) : ProfileAction()
-        data class ShowProfileProduct(val product: List<ProductShort>) : ProfileAction()
     }
 
     sealed class ProfileEvent {

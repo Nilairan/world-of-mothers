@@ -118,14 +118,14 @@ class ProfileFragment : ObserveFragment<ProfileViewModel>(
                 true
             is ProfileViewModel.ProfileState.HideLoading -> binding.progressCircular.isVisible =
                 false
+            is ProfileViewModel.ProfileState.ShowProfileData -> {
+                showProfile(state.profile)
+                showProduct(state.product)
+            }
         }
     }
 
     private fun bindAction(action: ProfileViewModel.ProfileAction) {
-        when (action) {
-            is ProfileViewModel.ProfileAction.ShowProfile -> showProfile(action.profile)
-            is ProfileViewModel.ProfileAction.ShowProfileProduct -> showProduct(action.product)
-        }
     }
 
     private fun showProfile(profile: Profile) {

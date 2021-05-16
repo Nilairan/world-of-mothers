@@ -5,10 +5,7 @@ import com.madispace.core.network.dto.ApiError
 import com.madispace.core.network.dto.categories.CategoriesResponse
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
-import com.madispace.core.network.dto.user.DTOAuth
-import com.madispace.core.network.dto.user.DTOProfile
-import com.madispace.core.network.dto.user.DTOResultRegister
-import com.madispace.core.network.dto.user.RegisterUserRequest
+import com.madispace.core.network.dto.user.*
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
@@ -47,5 +44,11 @@ interface Api {
     suspend fun uploadAvatar(
         @Header("Authorization") token: String,
         @Part file: MultipartBody.Part
+    ): ApiError
+
+    @POST("${ApiFactory.VERSION}/profile/edit")
+    suspend fun editProfile(
+        @Header("Authorization") token: String,
+        @Body request: ChangeProfileRequest
     ): ApiError
 }

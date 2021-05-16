@@ -2,6 +2,7 @@ package com.madispace.core.repository
 
 import com.madispace.core.network.common.getApiError
 import com.madispace.core.network.datasource.user.UserDataSource
+import com.madispace.core.network.dto.user.ChangeProfileRequest
 import com.madispace.core.network.dto.user.RegisterUserRequest
 import com.madispace.domain.exceptions.auth.AuthBadFields
 import com.madispace.domain.exceptions.register.EmailIsBusy
@@ -91,11 +92,18 @@ class UserRepositoryImpl(
                 body = file.toRequestBody(mediaType.toMediaTypeOrNull())
             )
             val response = userDataSource.uploadAvatar(part)
-            response.code == 200
+            response.status == 200
         } catch (e: Exception) {
             e.printStackTrace()
             false
         }
+    }
+
+    override fun editProfile(firstName: String, surname: String, tel: String): Flow<Profile> {
+        return flow {
+            val request = ChangeProfileRequest(firstName = firstName, surname = surname, tel = tel)
+            emit(userDataSource.editProfile(request).mapToModel())
+        }.flowOn(Dispatchers.IO)
     }
 
     companion object {

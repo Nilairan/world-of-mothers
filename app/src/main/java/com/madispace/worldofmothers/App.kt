@@ -8,6 +8,7 @@ import com.madispace.worldofmothers.ui.catalog.CatalogViewModel
 import com.madispace.worldofmothers.ui.favorites.FavoritesViewModel
 import com.madispace.worldofmothers.ui.product.ProductViewModel
 import com.madispace.worldofmothers.ui.profile.ProfileViewModel
+import com.madispace.worldofmothers.ui.profile.change.ChangeProfileViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -39,5 +40,6 @@ class App : Application() {
         viewModel { ProfileViewModel(get(), get()) }
         viewModel { SignInViewModel(get(), get()) }
         viewModel { SignUpViewModel(get(), get()) }
+        viewModel { ChangeProfileViewModel(get(), get()) }
     }
 }

@@ -6,6 +6,7 @@ import com.madispace.core.database.entities.TokenEntity
 import com.madispace.core.network.common.Api
 import com.madispace.core.network.dto.ApiError
 import com.madispace.core.network.dto.product.DTOProductShort
+import com.madispace.core.network.dto.user.ChangeProfileRequest
 import com.madispace.core.network.dto.user.DTOAuth
 import com.madispace.core.network.dto.user.DTOProfile
 import com.madispace.core.network.dto.user.RegisterUserRequest
@@ -19,12 +20,16 @@ interface UserDataSource {
     suspend fun getProfile(): DTOProfile
     suspend fun getProductList(): List<DTOProductShort>
     suspend fun uploadAvatar(file: MultipartBody.Part): ApiError
+    suspend fun editProfile(changeProfileRequest: ChangeProfileRequest): DTOProfile
 }
 
 class UserDataSourceImpl(
     private val api: Api,
     private val userTokenDao: UserTokenDao
 ) : UserDataSource {
+
+    private var profileCache: DTOProfile? = null
+
     override suspend fun registerUser(registerUserRequest: RegisterUserRequest): String {
         return api.registerUser(registerUserRequest).message
     }
@@ -43,7 +48,10 @@ class UserDataSourceImpl(
     }
 
     override suspend fun getProfile(): DTOProfile {
-        return api.getUserProfile(getToken())
+        return profileCache ?: run {
+            profileCache = api.getUserProfile(getToken())
+            profileCache!!
+        }
     }
 
     override suspend fun getProductList(): List<DTOProductShort> {
@@ -52,6 +60,16 @@ class UserDataSourceImpl(
 
     override suspend fun uploadAvatar(file: MultipartBody.Part): ApiError {
         return api.uploadAvatar(getToken(), file)
+    }
+
+    override suspend fun editProfile(changeProfileRequest: ChangeProfileRequest): DTOProfile {
+        val result = api.editProfile(getToken(), changeProfileRequest)
+        if (result.status == 200) {
+            profileCache = api.getUserProfile(getToken())
+            return profileCache!!
+        } else {
+            throw RuntimeException("Не удалось сохранить данные")
+        }
     }
 
     private fun getToken(): String {

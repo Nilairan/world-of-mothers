@@ -12,4 +12,9 @@ interface UserRepository {
     fun getUserProfile(): Flow<Profile>
     fun getUserProduct(): Flow<List<ProductShort>>
     suspend fun uploadFile(file: ByteArray, mediaType: String, fileName: String): Boolean
+    fun editProfile(
+        firstName: String,
+        surname: String,
+        tel: String,
+    ): Flow<Profile>
 }
