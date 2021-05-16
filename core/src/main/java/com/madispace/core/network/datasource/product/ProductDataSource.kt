@@ -1,8 +1,11 @@
 package com.madispace.core.network.datasource.product
 
+import com.madispace.core.common.TokenManager
 import com.madispace.core.database.dao.ProductDao
 import com.madispace.core.database.entities.ProductEntity
 import com.madispace.core.network.common.Api
+import com.madispace.core.network.dto.ApiError
+import com.madispace.core.network.dto.product.AddNewProductRequest
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
 import com.madispace.domain.exceptions.paging.PageNotFoundException
@@ -17,11 +20,13 @@ interface ProductDataSource {
     suspend fun getFavoriteProduct(id: Int): ProductEntity?
     fun getFavoriteProductList(): Flow<List<ProductEntity>>
     suspend fun filteredProductList(page: Int, filter: ProductFilter): List<DTOProductShort>
+    suspend fun addNewProduct(request: AddNewProductRequest): ApiError
 }
 
 class ProductDataSourceImpl constructor(
     private val api: Api,
-    private val productDao: ProductDao
+    private val productDao: ProductDao,
+    private val tokenManager: TokenManager
 ) : ProductDataSource {
 
     private var maxCountPage = 1
@@ -65,6 +70,10 @@ class ProductDataSourceImpl constructor(
         }.apply {
             maxCountPage = meta.pageCount
         }.items
+    }
+
+    override suspend fun addNewProduct(request: AddNewProductRequest): ApiError {
+        return api.addNewProduct(tokenManager.getToken(), request)
     }
 
     @Throws(PageNotFoundException::class)

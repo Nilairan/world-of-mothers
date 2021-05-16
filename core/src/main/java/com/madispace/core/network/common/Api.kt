@@ -3,6 +3,7 @@ package com.madispace.core.network.common
 import com.madispace.core.common.PaginationResponse
 import com.madispace.core.network.dto.ApiError
 import com.madispace.core.network.dto.categories.CategoriesResponse
+import com.madispace.core.network.dto.product.AddNewProductRequest
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
 import com.madispace.core.network.dto.user.*
@@ -51,4 +52,11 @@ interface Api {
         @Header("Authorization") token: String,
         @Body request: ChangeProfileRequest
     ): ApiError
+
+    @POST("${ApiFactory.VERSION}/profile/new")
+    suspend fun addNewProduct(
+        @Header("Authorization") token: String,
+        @Body request: AddNewProductRequest
+    ): ApiError
+
 }

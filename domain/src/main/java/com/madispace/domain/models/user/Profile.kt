@@ -12,9 +12,11 @@ data class Profile(
         return "$firstName $surname"
     }
 
+    fun getPhone(): String {
+        return "+7$tel"
+    }
+
     fun getDescription() = StringBuilder().apply {
-        append(tel)
-        append("\n")
         append(username)
     }.toString()
 }

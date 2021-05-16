@@ -2,6 +2,7 @@ package com.madispace.worldofmothers.ui.profile
 
 import android.net.Uri
 import android.os.Bundle
+import android.telephony.PhoneNumberUtils
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -40,7 +41,7 @@ class ProfileFragment : ObserveFragment<ProfileViewModel>(
         with(binding) {
             root.visibility = View.GONE
             editProfile.setOnClickListener { router.navigateTo(Screens.ChangeProfileScreen()) }
-            floatingActionButton.setOnClickListener { router.navigateTo(Screens.NewProductScreen()) }
+            floatingActionButton.setOnClickListener { router.navigateTo(Screens.CreateProductScreen()) }
             productList.layoutManager = GridLayoutManager(binding.getContext(), 2)
             productList.adapter = adapter
             photoProfile.setOnClickListener {
@@ -132,6 +133,7 @@ class ProfileFragment : ObserveFragment<ProfileViewModel>(
         with(binding) {
             root.isVisible = true
             profileName.text = profile.getName()
+            profilePhone.text = PhoneNumberUtils.formatNumber(profile.getPhone(), "RU")
             profileDescription.text = profile.getDescription()
             photoProfile.loadPhoto(profile.image)
         }

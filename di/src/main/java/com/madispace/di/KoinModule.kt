@@ -3,6 +3,8 @@ package com.madispace.di
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Cicerone.Companion.create
 import com.github.terrakok.cicerone.Router
+import com.madispace.core.common.TokenManager
+import com.madispace.core.common.TokenManagerImpl
 import com.madispace.core.database.AppDatabase
 import com.madispace.core.network.common.ApiFactory
 import com.madispace.core.network.datasource.category.CategoryDataSource
@@ -48,9 +50,10 @@ val useCasesModule = module {
 
 val apiModule = module {
     single { ApiFactory().getApi() }
-    single<ProductDataSource> { ProductDataSourceImpl(get(), get()) }
-    single<UserDataSource> { UserDataSourceImpl(get(), get()) }
+    single<ProductDataSource> { ProductDataSourceImpl(get(), get(), get()) }
+    single<UserDataSource> { UserDataSourceImpl(get(), get(), get()) }
     single<CategoryDataSource> { CategoryDataSourceImpl(get()) }
+    single<TokenManager> { TokenManagerImpl(get()) }
 }
 
 val repositoryModule = module {

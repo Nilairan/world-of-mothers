@@ -3,6 +3,8 @@ package com.madispace.core.repository
 import com.madispace.core.database.entities.ProductEntityMapper
 import com.madispace.core.database.entities.ProductMapper
 import com.madispace.core.network.datasource.product.ProductDataSource
+import com.madispace.core.network.dto.product.AddNewProductRequest
+import com.madispace.domain.models.image.PhotoModel
 import com.madispace.domain.models.product.Product
 import com.madispace.domain.models.product.ProductFilter
 import com.madispace.domain.models.product.ProductShort
@@ -12,6 +14,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class ProductRepositoryImpl constructor(
     private val productDataSource: ProductDataSource
@@ -65,5 +70,39 @@ class ProductRepositoryImpl constructor(
 
     override fun getFavoriteProductList(): Flow<List<Product>> {
         return productDataSource.getFavoriteProductList().map { it.map { ProductMapper.map(it)!! } }
+    }
+
+    override fun addNewProduct(
+        name: String,
+        price: Int,
+        info: String,
+        material: String,
+        size: String,
+        status: String,
+        address: String,
+        categoryId: Int,
+        upfile: List<PhotoModel>
+    ): Flow<Boolean> {
+        return flow {
+            val result = productDataSource.addNewProduct(
+                AddNewProductRequest(
+                    name,
+                    price,
+                    info,
+                    material,
+                    size,
+                    status,
+                    address,
+                    categoryId,
+                    upfile.map { model ->
+                        MultipartBody.Part.createFormData(
+                            name = "file",
+                            filename = model.fileName,
+                            body = model.file.toRequestBody(model.mediaType.toMediaTypeOrNull())
+                        )
+                    })
+            )
+            emit(result.status == 200)
+        }.flowOn(Dispatchers.IO)
     }
 }

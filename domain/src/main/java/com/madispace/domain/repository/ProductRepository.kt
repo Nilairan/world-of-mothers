@@ -1,5 +1,6 @@
 package com.madispace.domain.repository
 
+import com.madispace.domain.models.image.PhotoModel
 import com.madispace.domain.models.product.Product
 import com.madispace.domain.models.product.ProductFilter
 import com.madispace.domain.models.product.ProductShort
@@ -14,4 +15,15 @@ interface ProductRepository {
     fun removeFavoriteProduct(id: Int): Flow<Boolean>
     fun getFavoriteProduct(id: Int): Flow<Product?>
     fun getFavoriteProductList(): Flow<List<Product>>
+    fun addNewProduct(
+        name: String,
+        price: Int,
+        info: String,
+        material: String,
+        size: String,
+        status: String,
+        address: String,
+        categoryId: Int,
+        upfile: List<PhotoModel>
+    ): Flow<Boolean>
 }

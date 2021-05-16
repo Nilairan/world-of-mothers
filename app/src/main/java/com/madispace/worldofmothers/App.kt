@@ -5,6 +5,7 @@ import com.madispace.di.*
 import com.madispace.worldofmothers.ui.auth.SignInViewModel
 import com.madispace.worldofmothers.ui.auth.SignUpViewModel
 import com.madispace.worldofmothers.ui.catalog.CatalogViewModel
+import com.madispace.worldofmothers.ui.createproduct.CreateProductViewModel
 import com.madispace.worldofmothers.ui.favorites.FavoritesViewModel
 import com.madispace.worldofmothers.ui.product.ProductViewModel
 import com.madispace.worldofmothers.ui.profile.ProfileViewModel
@@ -41,5 +42,6 @@ class App : Application() {
         viewModel { SignInViewModel(get(), get()) }
         viewModel { SignUpViewModel(get(), get()) }
         viewModel { ChangeProfileViewModel(get(), get()) }
+        viewModel { CreateProductViewModel(get(), get()) }
     }
 }

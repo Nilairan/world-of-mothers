@@ -1,8 +1,7 @@
 package com.madispace.core.network.datasource.user
 
-import android.util.Base64
+import com.madispace.core.common.TokenManager
 import com.madispace.core.database.dao.UserTokenDao
-import com.madispace.core.database.entities.TokenEntity
 import com.madispace.core.network.common.Api
 import com.madispace.core.network.dto.ApiError
 import com.madispace.core.network.dto.product.DTOProductShort
@@ -25,7 +24,8 @@ interface UserDataSource {
 
 class UserDataSourceImpl(
     private val api: Api,
-    private val userTokenDao: UserTokenDao
+    private val userTokenDao: UserTokenDao,
+    private val tokenManager: TokenManager
 ) : UserDataSource {
 
     private var profileCache: DTOProfile? = null
@@ -39,8 +39,7 @@ class UserDataSourceImpl(
     }
 
     override suspend fun saveTokenByUserId(token: String, id: Int) {
-        userTokenDao.clearTable()
-        userTokenDao.insertToken(TokenEntity(id, token))
+        tokenManager.saveTokenByUserId(token, id)
     }
 
     override suspend fun isAuthorizedUser(): Boolean {
@@ -49,35 +48,26 @@ class UserDataSourceImpl(
 
     override suspend fun getProfile(): DTOProfile {
         return profileCache ?: run {
-            profileCache = api.getUserProfile(getToken())
+            profileCache = api.getUserProfile(tokenManager.getToken())
             profileCache!!
         }
     }
 
     override suspend fun getProductList(): List<DTOProductShort> {
-        return api.getUserProductList(getToken()).items
+        return api.getUserProductList(tokenManager.getToken()).items
     }
 
     override suspend fun uploadAvatar(file: MultipartBody.Part): ApiError {
-        return api.uploadAvatar(getToken(), file)
+        return api.uploadAvatar(tokenManager.getToken(), file)
     }
 
     override suspend fun editProfile(changeProfileRequest: ChangeProfileRequest): DTOProfile {
-        val result = api.editProfile(getToken(), changeProfileRequest)
+        val result = api.editProfile(tokenManager.getToken(), changeProfileRequest)
         if (result.status == 200) {
-            profileCache = api.getUserProfile(getToken())
+            profileCache = api.getUserProfile(tokenManager.getToken())
             return profileCache!!
         } else {
             throw RuntimeException("Не удалось сохранить данные")
         }
-    }
-
-    private fun getToken(): String {
-        val token = "${userTokenDao.getToken()?.token ?: ""}:".toByteArray()
-        return "$BASIC ${Base64.encodeToString(token, Base64.NO_WRAP)}"
-    }
-
-    companion object {
-        private const val BASIC = "Basic"
     }
 }

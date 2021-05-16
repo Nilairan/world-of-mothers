@@ -10,7 +10,13 @@ interface CategoryDataSource {
 class CategoryDataSourceImpl(
         private val api: Api
 ) : CategoryDataSource {
+
+    private var categories: List<DTOCategories>? = null
+
     override suspend fun getAllCategory(): List<DTOCategories> {
-        return api.getAllCategory().categories
+        return categories ?: run {
+            categories = api.getAllCategory().categories
+            categories!!
+        }
     }
 }

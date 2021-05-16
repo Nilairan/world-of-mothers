@@ -5,11 +5,11 @@ import com.madispace.worldofmothers.ui.auth.SignInFragment
 import com.madispace.worldofmothers.ui.auth.SignUpFragment
 import com.madispace.worldofmothers.ui.catalog.CatalogFragment
 import com.madispace.worldofmothers.ui.common.TabContainerFragment
+import com.madispace.worldofmothers.ui.createproduct.CreateProductFragment
 import com.madispace.worldofmothers.ui.favorites.FavoritesFragment
 import com.madispace.worldofmothers.ui.product.ProductFragment
 import com.madispace.worldofmothers.ui.profile.ProfileFragment
 import com.madispace.worldofmothers.ui.profile.change.ChangeProfileFragment
-import com.madispace.worldofmothers.ui.profile.product.NewProductFragment
 
 object Screens {
 
@@ -28,7 +28,7 @@ object Screens {
 
     fun ChangeProfileScreen() = FragmentScreen { ChangeProfileFragment.newInstance() }
 
-    fun NewProductScreen() = FragmentScreen { NewProductFragment.newInstance() }
+    fun CreateProductScreen() = FragmentScreen { CreateProductFragment.newInstance() }
 
     fun ProductScreen(productId: Int) = FragmentScreen { ProductFragment.newInstance(productId) }
 }
