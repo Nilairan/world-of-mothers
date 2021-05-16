@@ -2,16 +2,16 @@ package com.madispace.worldofmothers.ui.catalog
 
 import android.os.Bundle
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
@@ -25,20 +25,14 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.flow.collect
 
-class CatalogFragment : ObserveFragment<CatalogViewModel>(CatalogViewModel::class.java) {
+class CatalogFragment : ObserveFragment<CatalogViewModel>(
+    CatalogViewModel::class.java,
+    R.layout.fragment_catalog
+) {
 
-    private lateinit var binding: FragmentCatalogBinding
+    private val binding: FragmentCatalogBinding by viewBinding()
     private val categoryListAdapter = GroupAdapter<GroupieViewHolder>()
     private val productListAdapter = GroupAdapter<GroupieViewHolder>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentCatalogBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,7 +58,7 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(CatalogViewModel::clas
         binding.productList.layoutManager = productLayoutManager
         binding.productList.addOnScrollListener(
             PagingScrollListener(layoutManager = productLayoutManager,
-                isLoading = { binding.progressCircular.visibility == View.VISIBLE },
+                isLoading = { binding.progressCircular.isVisible },
                 runLoadingBlock = { viewModel.obtainEvent(CatalogViewModel.CatalogEvent.LoadNextProductPage) })
         )
         binding.productList.adapter = productListAdapter

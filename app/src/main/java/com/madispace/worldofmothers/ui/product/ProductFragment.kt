@@ -1,16 +1,16 @@
 package com.madispace.worldofmothers.ui.product
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.appbar.AppBarLayout
 import com.madispace.domain.models.product.Product
-import com.madispace.domain.models.user.User
+import com.madispace.domain.models.product.Seller
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.*
 import com.madispace.worldofmothers.databinding.FragmentProductBinding
@@ -18,46 +18,59 @@ import com.madispace.worldofmothers.routing.Screens
 import com.madispace.worldofmothers.ui.catalog.items.ProductItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.onEach
 
-class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::class.java) {
+class ProductFragment : ObserveFragment<ProductViewModel>(
+    ProductViewModel::class.java,
+    R.layout.fragment_product
+) {
 
-    private lateinit var binding: FragmentProductBinding
+    private val binding: FragmentProductBinding by viewBinding()
     private var productId: Int by args()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentProductBinding.inflate(inflater, container, false)
-        if (requireActivity() is AppCompatActivity) {
-            (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        }
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recommendedProductList.layoutManager =
-            LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        viewModel.obtainEvent(ProductViewModel.ProductEvent.LoadProduct(productId))
-        binding.collapsingToolbar.isTitleEnabled = false
-        binding.toolbar.title = ""
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
-        binding.toolbar.setNavigationOnClickListener {
-            onBackPressed()
+        if (requireActivity() is AppCompatActivity) {
+            (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
         }
+        binding.recommendedProductList.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        viewModel.obtainEvent(ProductViewModel.ProductEvent.LoadProduct(productId))
+        initToolbar()
         binding.fab.setOnClickListener {
             viewModel.obtainEvent(ProductViewModel.ProductEvent.OnFavoriteClick)
         }
     }
 
-    override fun initObservers() {
-        lifecycleScope.launch {
-            viewModel.viewStates().collect { state -> state?.let { bindViewState(state) } }
+    private fun initToolbar() {
+        with(binding) {
+            collapsingToolbar.isTitleEnabled = false
+            toolbar.title = ""
+            toolbar.setNavigationIcon(R.drawable.ic_back)
+            toolbar.setNavigationOnClickListener {
+                onBackPressed()
+            }
+            appBar.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
+                override fun onStateChanged(appBarLayout: AppBarLayout?, state: State?) {
+                    when (state) {
+                        State.COLLAPSED -> {
+                            toolbar.setNavigationIcon(R.drawable.ic_back)
+                        }
+                        State.EXPANDED -> {
+                            toolbar.setNavigationIcon(R.drawable.ic_back_white)
+                        }
+                        else -> {
+                        }
+                    }
+                }
+            })
         }
+    }
+
+    override fun initObservers() {
+        viewModel.viewStates().onEach { state ->
+            state?.let { bindViewState(state) }
+        }.launchWhenStarted(lifecycleScope)
     }
 
     private fun bindViewState(state: ProductViewModel.ProductState) {
@@ -107,7 +120,7 @@ class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::clas
 
     private fun bindProduct(product: Product) {
         with(binding) {
-            imageProduct.loadPhoto(product.img)
+            imageProduct.loadPhoto(product.gallery.first())
             nameProduct.text = product.name
             costProduct.text = getString(R.string.price, product.price.getPrice())
             descriptionProduct.text = product.info
@@ -118,10 +131,11 @@ class ProductFragment : ObserveFragment<ProductViewModel>(ProductViewModel::clas
         }
     }
 
-    private fun bindSeller(seller: User) {
+    private fun bindSeller(seller: Seller) {
         with(binding) {
-            nameSeller.text = seller.name
-            countProduct.text = seller.countAnnouncement.toString()
+            nameSeller.text = "${seller.surname} ${seller.firstName}"
+            countProduct.text = getContext().resources.getQuantityString(R.plurals.advertisement, seller.itemsCount, seller.itemsCount)
+            imageSeller.loadPhoto(seller.image)
         }
     }
 

@@ -44,5 +44,18 @@
     <string name="phone_not_valid">Проверьте правильность написания телефонного номера</string>
     <string name="pass_not_valid">Пароль должен содержать минимум 8 знаков</string>
     <string name="repeate_pess_not_valid">Введенные вами пароли не совпадают</string>
+    <string name="email_is_busy">Данный email уже используется</string>
     <string name="surname">Фамилия</string>
+    <string name="auth_bad_fields">Проверьте правильность вводимых данных</string>
+    <string name="invalid_params">Неверные параметры</string>
+    <string name="empty_my_product">В списке ваших товаров пусто</string>
+    <string name="choose_load_photo">Выберете способ загрузки фото</string>
+    <string name="no_upload_photo">Не удалось загрузить изображение</string>
+    <plurals name="advertisement">
+        <item quantity="zero">%s объявлений</item>
+        <item quantity="one">%s объявление</item>
+        <item quantity="two">%s объявления</item>
+        <item quantity="few">%s объявлений</item>
+        <item quantity="other">%s объявлений</item>
+    </plurals>
 </resources>

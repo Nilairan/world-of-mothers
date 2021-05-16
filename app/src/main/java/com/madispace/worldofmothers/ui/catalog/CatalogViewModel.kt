@@ -1,7 +1,7 @@
 package com.madispace.worldofmothers.ui.catalog
 
 import androidx.lifecycle.viewModelScope
-import com.madispace.domain.exceptions.PageNotFoundException
+import com.madispace.domain.exceptions.paging.PageNotFoundException
 import com.madispace.domain.models.category.Category
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
@@ -41,6 +41,24 @@ class CatalogViewModel(
                 page = 1
                 onRefresh()
             }
+            is CatalogEvent.DescFilter -> {
+
+            }
+            is CatalogEvent.AscFilter -> {
+
+            }
+            is CatalogEvent.CategoryFilter -> {
+
+            }
+            is CatalogEvent.MinFilter -> {
+
+            }
+            is CatalogEvent.MaxFilter -> {
+
+            }
+            is CatalogEvent.SearchFilter -> {
+
+            }
         }
     }
 
@@ -49,13 +67,12 @@ class CatalogViewModel(
             getCatalogModelUseCase(SearchModel())
                 .onStart { viewState = CatalogState.ShowLoading }
                 .catch {
+                    it.printStackTrace()
                     viewState = CatalogState.HideLoading
                 }
                 .collect {
                     viewState = CatalogState.HideLoading
-                    it.categories?.let { category ->
-                        viewState = CatalogState.ShowCategory(category)
-                    }
+                    viewState = CatalogState.ShowCategory(it.categories)
                     viewState = CatalogState.ShowProduct(it.productsShort)
                 }
         }
@@ -110,5 +127,11 @@ class CatalogViewModel(
         object Default : CatalogEvent()
         object LoadNextProductPage : CatalogEvent()
         object Refresh : CatalogEvent()
+        object DescFilter : CatalogEvent()
+        object AscFilter : CatalogEvent()
+        data class CategoryFilter(val categoryId: Int) : CatalogEvent()
+        data class MinFilter(val value: Double) : CatalogEvent()
+        data class MaxFilter(val value: Double) : CatalogEvent()
+        data class SearchFilter(val value: String) : CatalogEvent()
     }
 }
