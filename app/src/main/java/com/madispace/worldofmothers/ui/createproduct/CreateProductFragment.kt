@@ -2,6 +2,9 @@ package com.madispace.worldofmothers.ui.createproduct
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -39,9 +42,28 @@ class CreateProductFragment : ObserveFragment<CreateProductViewModel>(
         }
     }
 
-    private fun bindAction(state: CreateProductViewModel.CreateProductAction) {
-        when (state) {
+    private fun bindAction(action: CreateProductViewModel.CreateProductAction) {
+        when (action) {
+            is CreateProductViewModel.CreateProductAction.ShowError -> showError(action.error)
+            is CreateProductViewModel.CreateProductAction.ShowCategories -> showCategories(action.categories)
+        }
+    }
 
+    private fun showCategories(categories: List<String>) {
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_list, categories)
+        (binding.categoryLayout.editText as? AutoCompleteTextView)?.setAdapter(adapter)
+        (binding.categoryLayout.editText as? AutoCompleteTextView)?.setOnItemClickListener { _, _, position, _ ->
+            viewModel.obtainEvent(
+                CreateProductViewModel.CreateProductEvent.SelectCategory(
+                    categories[position]
+                )
+            )
+        }
+    }
+
+    private fun showError(error: String) {
+        context?.let {
+            Toast.makeText(it, error, Toast.LENGTH_SHORT).show()
         }
     }
 

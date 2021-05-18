@@ -16,7 +16,8 @@ class CreateProductViewModel(
 ) : BaseMviViewModel<CreateProductViewModel.CreateProductState,
         CreateProductViewModel.CreateProductAction, CreateProductViewModel.CreateProductEvent>() {
 
-    private var category: ArrayList<Category> = arrayListOf()
+    private var categories: ArrayList<Category> = arrayListOf()
+    private var selectCategory: Category? = null
 
     override fun onCreate() {
         obtainEvent(CreateProductEvent.GetCategories)
@@ -25,7 +26,12 @@ class CreateProductViewModel(
     override fun obtainEvent(viewEvent: CreateProductEvent) {
         when (viewEvent) {
             is CreateProductEvent.GetCategories -> getCategories()
+            is CreateProductEvent.SelectCategory -> selectCategory(viewEvent.category)
         }
+    }
+
+    private fun selectCategory(category: String) {
+        selectCategory = categories.find { it.name == category }
     }
 
     private fun getCategories() {
@@ -39,27 +45,28 @@ class CreateProductViewModel(
                 }
                 .collect {
                     viewState = CreateProductState.Loading(false)
-                    category.apply {
+                    categories.apply {
                         clear()
                         addAll(it)
                     }
-                    viewState =
-                        CreateProductState.ShowCategories(it.map { category -> category.name })
+                    viewAction =
+                        CreateProductAction.ShowCategories(it.map { category -> category.name })
                 }
         }
     }
 
     sealed class CreateProductState {
         data class Loading(val loading: Boolean) : CreateProductState()
-        data class ShowCategories(val categories: List<String>) : CreateProductState()
     }
 
     sealed class CreateProductAction {
         data class ShowError(val error: String) : CreateProductAction()
+        data class ShowCategories(val categories: List<String>) : CreateProductAction()
     }
 
     sealed class CreateProductEvent {
         object GetCategories : CreateProductEvent()
+        data class SelectCategory(val category: String) : CreateProductEvent()
 
     }
 }

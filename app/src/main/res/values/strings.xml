@@ -51,6 +51,8 @@
     <string name="empty_my_product">В списке ваших товаров пусто</string>
     <string name="choose_load_photo">Выберете способ загрузки фото</string>
     <string name="no_upload_photo">Не удалось загрузить изображение</string>
+    <string name="upload_photo">Загрузка фото</string>
+    <string name="cancel">Отмена</string>
     <plurals name="advertisement">
         <item quantity="zero">%s объявлений</item>
         <item quantity="one">%s объявление</item>

@@ -44,7 +44,7 @@ interface Api {
     @POST("${ApiFactory.VERSION}/profile/avatar")
     suspend fun uploadAvatar(
         @Header("Authorization") token: String,
-        @Part file: MultipartBody.Part
+        @Part upfile: MultipartBody.Part
     ): ApiError
 
     @POST("${ApiFactory.VERSION}/profile/edit")
