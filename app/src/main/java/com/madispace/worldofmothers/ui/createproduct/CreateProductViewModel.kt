@@ -1,5 +1,6 @@
 package com.madispace.worldofmothers.ui.createproduct
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.madispace.domain.models.category.Category
 import com.madispace.domain.repository.CategoryRepository
@@ -18,6 +19,14 @@ class CreateProductViewModel(
 
     private var categories: ArrayList<Category> = arrayListOf()
     private var selectCategory: Category? = null
+    private var name: String = ""
+    private var status: String = ""
+    private var material: String = ""
+    private var size: String = ""
+    private var price: Int = 0
+    private var address: String = ""
+    private var description: String = ""
+    private val photoList: MutableList<Uri> = mutableListOf()
 
     override fun onCreate() {
         obtainEvent(CreateProductEvent.GetCategories)
@@ -27,7 +36,19 @@ class CreateProductViewModel(
         when (viewEvent) {
             is CreateProductEvent.GetCategories -> getCategories()
             is CreateProductEvent.SelectCategory -> selectCategory(viewEvent.category)
+            is CreateProductEvent.AddPhoto -> addUri(viewEvent.uri)
+            is CreateProductEvent.RemovePhoto -> removeUri(viewEvent.uri)
         }
+    }
+
+    private fun addUri(uri: Uri) {
+        photoList.add(uri)
+        viewState = CreateProductState.ShowPhotos(photoList)
+    }
+
+    private fun removeUri(uri: Uri) {
+        photoList.remove(uri)
+        viewState = CreateProductState.ShowPhotos(photoList)
     }
 
     private fun selectCategory(category: String) {
@@ -57,6 +78,7 @@ class CreateProductViewModel(
 
     sealed class CreateProductState {
         data class Loading(val loading: Boolean) : CreateProductState()
+        data class ShowPhotos(val listUri: List<Uri>) : CreateProductState()
     }
 
     sealed class CreateProductAction {
@@ -67,6 +89,7 @@ class CreateProductViewModel(
     sealed class CreateProductEvent {
         object GetCategories : CreateProductEvent()
         data class SelectCategory(val category: String) : CreateProductEvent()
-
+        data class AddPhoto(val uri: Uri) : CreateProductEvent()
+        data class RemovePhoto(val uri: Uri) : CreateProductEvent()
     }
 }

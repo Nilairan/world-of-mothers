@@ -1,6 +1,10 @@
 package com.madispace.worldofmothers.ui.createproduct
 
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -12,6 +16,10 @@ import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.launchWhenStarted
 import com.madispace.worldofmothers.databinding.FragmentNewProductBinding
+import com.madispace.worldofmothers.ui.createproduct.item.PhotoViewHolder
+import com.madispace.worldofmothers.ui.loadphoto.dialog.ChooseLoadPhotoDialog
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.flow.onEach
 
 class CreateProductFragment : ObserveFragment<CreateProductViewModel>(
@@ -20,10 +28,29 @@ class CreateProductFragment : ObserveFragment<CreateProductViewModel>(
 ) {
 
     private val binding: FragmentNewProductBinding by viewBinding()
+    private val photoAdapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.appBar.toolbarName.text = getString(R.string.add_product_title)
+        with(binding) {
+            appBar.toolbarName.text = getString(R.string.add_product_title)
+            addPhotoButton.setOnClickListener {
+                ChooseLoadPhotoDialog.newInstance().show(childFragmentManager, null)
+            }
+            imageContainer.adapter = photoAdapter
+        }
+        initFragmentListener()
+    }
+
+    private fun initFragmentListener() {
+        childFragmentManager.setFragmentResultListener(
+            ChooseLoadPhotoDialog.LOAD_MEDIA,
+            viewLifecycleOwner
+        ) { _, result ->
+            (result.get(ChooseLoadPhotoDialog.URI) as Uri?)?.let { uri ->
+                viewModel.obtainEvent(CreateProductViewModel.CreateProductEvent.AddPhoto(uri))
+            }
+        }
     }
 
     override fun initObservers() {
@@ -39,6 +66,7 @@ class CreateProductFragment : ObserveFragment<CreateProductViewModel>(
         when (state) {
             is CreateProductViewModel.CreateProductState.Loading -> binding.progressBar.root.isVisible =
                 state.loading
+            is CreateProductViewModel.CreateProductState.ShowPhotos -> showPhotos(state.listUri)
         }
     }
 
@@ -58,6 +86,28 @@ class CreateProductFragment : ObserveFragment<CreateProductViewModel>(
                     categories[position]
                 )
             )
+        }
+    }
+
+    private fun showPhotos(list: List<Uri>) {
+        context?.let { context ->
+            photoAdapter.clear()
+            photoAdapter.addAll(list.map {
+                PhotoViewHolder(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        it to ImageDecoder.decodeBitmap(
+                            ImageDecoder.createSource(
+                                context.contentResolver,
+                                it
+                            )
+                        )
+                    } else {
+                        it to MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+                    }
+                ) {
+                    viewModel.obtainEvent(CreateProductViewModel.CreateProductEvent.RemovePhoto(it))
+                }
+            })
         }
     }
 
