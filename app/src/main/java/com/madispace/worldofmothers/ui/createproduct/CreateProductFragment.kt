@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
+import com.madispace.worldofmothers.common.doAfterTextChanged
 import com.madispace.worldofmothers.common.launchWhenStarted
 import com.madispace.worldofmothers.databinding.FragmentNewProductBinding
 import com.madispace.worldofmothers.ui.createproduct.item.PhotoViewHolder
@@ -37,9 +38,14 @@ class CreateProductFragment : ObserveFragment<CreateProductViewModel>(
             addPhotoButton.setOnClickListener {
                 ChooseLoadPhotoDialog.newInstance().show(childFragmentManager, null)
             }
+            addProduct.setOnClickListener {
+                viewModel.obtainEvent(CreateProductViewModel.CreateProductEvent.AddProduct)
+            }
             imageContainer.adapter = photoAdapter
+
         }
         initFragmentListener()
+        addInputListeners()
     }
 
     private fun initFragmentListener() {
@@ -49,6 +55,33 @@ class CreateProductFragment : ObserveFragment<CreateProductViewModel>(
         ) { _, result ->
             (result.get(ChooseLoadPhotoDialog.URI) as Uri?)?.let { uri ->
                 viewModel.obtainEvent(CreateProductViewModel.CreateProductEvent.AddPhoto(uri))
+            }
+        }
+    }
+
+    private fun addInputListeners() {
+        with(binding) {
+            nameLayout.doAfterTextChanged {
+                viewModel.obtainEvent(CreateProductViewModel.CreateProductEvent.SetName(it))
+            }
+            stateLayout.doAfterTextChanged {
+                viewModel.obtainEvent(CreateProductViewModel.CreateProductEvent.SetStatus(it))
+            }
+            materialLayout.doAfterTextChanged {
+                viewModel.obtainEvent(CreateProductViewModel.CreateProductEvent.SetMaterial(it))
+            }
+            sizeLayout.doAfterTextChanged {
+                viewModel.obtainEvent(CreateProductViewModel.CreateProductEvent.SetSize(it))
+            }
+            costLayout.doAfterTextChanged {
+                val price = it.toIntOrNull() ?: 0
+                viewModel.obtainEvent(CreateProductViewModel.CreateProductEvent.SetPrice(price))
+            }
+            addressLayout.doAfterTextChanged {
+                viewModel.obtainEvent(CreateProductViewModel.CreateProductEvent.SetAddress(it))
+            }
+            descriptionLayout.doAfterTextChanged {
+                viewModel.obtainEvent(CreateProductViewModel.CreateProductEvent.SetDescription(it))
             }
         }
     }

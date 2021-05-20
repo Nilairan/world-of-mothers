@@ -6,9 +6,11 @@ import android.os.Environment
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.content.FileProvider
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
+import com.google.android.material.textfield.TextInputLayout
 import com.madispace.worldofmothers.R
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import kotlinx.coroutines.flow.Flow
@@ -81,4 +83,12 @@ fun Context.createFile(): File {
 
 fun Context.getUriByFile(file: File): Uri {
     return FileProvider.getUriForFile(this, "com.madispace.worldofmothers.fileprovider", file)
+}
+
+fun TextInputLayout.doAfterTextChanged(block: (String) -> Unit) {
+    error = null
+    isErrorEnabled = false
+    editText?.doAfterTextChanged {
+        block.invoke(it?.toString() ?: "")
+    }
 }

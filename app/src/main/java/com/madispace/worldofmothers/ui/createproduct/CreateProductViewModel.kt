@@ -38,6 +38,13 @@ class CreateProductViewModel(
             is CreateProductEvent.SelectCategory -> selectCategory(viewEvent.category)
             is CreateProductEvent.AddPhoto -> addUri(viewEvent.uri)
             is CreateProductEvent.RemovePhoto -> removeUri(viewEvent.uri)
+            is CreateProductEvent.SetName -> name = viewEvent.value
+            is CreateProductEvent.SetStatus -> status = viewEvent.value
+            is CreateProductEvent.SetMaterial -> material = viewEvent.value
+            is CreateProductEvent.SetSize -> size = viewEvent.value
+            is CreateProductEvent.SetPrice -> price = viewEvent.value
+            is CreateProductEvent.SetAddress -> address = viewEvent.value
+            is CreateProductEvent.SetDescription -> description = viewEvent.value
         }
     }
 
@@ -91,5 +98,13 @@ class CreateProductViewModel(
         data class SelectCategory(val category: String) : CreateProductEvent()
         data class AddPhoto(val uri: Uri) : CreateProductEvent()
         data class RemovePhoto(val uri: Uri) : CreateProductEvent()
+        data class SetName(val value: String) : CreateProductEvent()
+        data class SetStatus(val value: String) : CreateProductEvent()
+        data class SetMaterial(val value: String) : CreateProductEvent()
+        data class SetSize(val value: String) : CreateProductEvent()
+        data class SetPrice(val value: Int) : CreateProductEvent()
+        data class SetAddress(val value: String) : CreateProductEvent()
+        data class SetDescription(val value: String) : CreateProductEvent()
+        object AddProduct : CreateProductEvent()
     }
 }
