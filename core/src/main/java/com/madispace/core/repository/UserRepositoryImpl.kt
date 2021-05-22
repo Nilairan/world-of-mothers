@@ -7,6 +7,7 @@ import com.madispace.core.network.dto.user.RegisterUserRequest
 import com.madispace.domain.exceptions.auth.AuthBadFields
 import com.madispace.domain.exceptions.register.EmailIsBusy
 import com.madispace.domain.exceptions.register.InvalidUserData
+import com.madispace.domain.models.image.PhotoModel
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.models.user.Profile
 import com.madispace.domain.models.user.RegisterUser
@@ -84,12 +85,12 @@ class UserRepositoryImpl(
         }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun uploadFile(file: ByteArray, mediaType: String, fileName: String): Boolean {
+    override suspend fun uploadFile(model: PhotoModel): Boolean {
         return try {
             val part = MultipartBody.Part.createFormData(
                 name = FILE,
-                filename = fileName,
-                body = file.toRequestBody(mediaType.toMediaTypeOrNull())
+                filename = model.fileName,
+                body = model.file.toRequestBody(model.mediaType.toMediaTypeOrNull())
             )
             val response = userDataSource.uploadAvatar(part)
             response.status == 200

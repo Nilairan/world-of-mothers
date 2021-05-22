@@ -42,6 +42,6 @@ class App : Application() {
         viewModel { SignInViewModel(get(), get()) }
         viewModel { SignUpViewModel(get(), get()) }
         viewModel { ChangeProfileViewModel(get(), get()) }
-        viewModel { CreateProductViewModel(get(), get()) }
+        viewModel { CreateProductViewModel(get(), get(), get()) }
     }
 }

@@ -17,7 +17,7 @@ class ProfileViewModel(
 ) : BaseMviViewModel<ProfileViewModel.ProfileState,
         ProfileViewModel.ProfileAction, ProfileViewModel.ProfileEvent>() {
 
-    override fun onCreate() {
+    override fun onStart() {
         obtainEvent(ProfileEvent.IsAuthUser)
     }
 
@@ -64,8 +64,7 @@ class ProfileViewModel(
             ProfileState()
     }
 
-    sealed class ProfileAction {
-    }
+    sealed class ProfileAction
 
     sealed class ProfileEvent {
         object IsAuthUser : ProfileEvent()

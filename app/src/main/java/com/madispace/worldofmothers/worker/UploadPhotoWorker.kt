@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.madispace.domain.models.image.PhotoModel
 import com.madispace.domain.repository.UserRepository
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.ui.common.NotificationFactory
@@ -29,9 +30,11 @@ class UploadPhotoWorker(
             val file = context.contentResolver.openInputStream(uri)?.readBytes()
             file?.let { safeFile ->
                 val result = userRepository.uploadFile(
-                    file = safeFile,
-                    mediaType = mediaType,
-                    fileName = fileName
+                    PhotoModel(
+                        file = safeFile,
+                        mediaType = mediaType,
+                        fileName = fileName
+                    )
                 )
                 return if (result) {
                     Result.success()

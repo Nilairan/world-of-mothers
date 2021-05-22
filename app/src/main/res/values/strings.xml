@@ -53,6 +53,9 @@
     <string name="no_upload_photo">Не удалось загрузить изображение</string>
     <string name="upload_photo">Загрузка фото</string>
     <string name="cancel">Отмена</string>
+    <string name="success_add_product">Товар успешно добавлен</string>
+    <string name="price_not_valid">Введите целую сумму</string>
+    <string name="photo_not_valid">Добавтьте хотя бы одно фото</string>
     <plurals name="advertisement">
         <item quantity="zero">%s объявлений</item>
         <item quantity="one">%s объявление</item>

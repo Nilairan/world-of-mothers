@@ -3,7 +3,6 @@ package com.madispace.core.network.common
 import com.madispace.core.common.PaginationResponse
 import com.madispace.core.network.dto.ApiError
 import com.madispace.core.network.dto.categories.CategoriesResponse
-import com.madispace.core.network.dto.product.AddNewProductRequest
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
 import com.madispace.core.network.dto.user.*
@@ -53,10 +52,19 @@ interface Api {
         @Body request: ChangeProfileRequest
     ): ApiError
 
+    @Multipart
     @POST("${ApiFactory.VERSION}/profile/new")
     suspend fun addNewProduct(
         @Header("Authorization") token: String,
-        @Body request: AddNewProductRequest
+        @Part("name") name: String,
+        @Part("price") price: Int,
+        @Part("info") info: String,
+        @Part("material") material: String,
+        @Part("size") size: String,
+        @Part("status") status: String,
+        @Part("address") address: String,
+        @Part("category_id") categoryId: Int,
+        @Part upfile: List<MultipartBody.Part>
     ): ApiError
 
 }

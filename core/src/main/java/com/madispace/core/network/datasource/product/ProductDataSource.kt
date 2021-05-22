@@ -5,12 +5,12 @@ import com.madispace.core.database.dao.ProductDao
 import com.madispace.core.database.entities.ProductEntity
 import com.madispace.core.network.common.Api
 import com.madispace.core.network.dto.ApiError
-import com.madispace.core.network.dto.product.AddNewProductRequest
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
 import com.madispace.domain.exceptions.paging.PageNotFoundException
 import com.madispace.domain.models.product.ProductFilter
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
 
 interface ProductDataSource {
     suspend fun getAllProductList(page: Int): List<DTOProductShort>
@@ -20,7 +20,17 @@ interface ProductDataSource {
     suspend fun getFavoriteProduct(id: Int): ProductEntity?
     fun getFavoriteProductList(): Flow<List<ProductEntity>>
     suspend fun filteredProductList(page: Int, filter: ProductFilter): List<DTOProductShort>
-    suspend fun addNewProduct(request: AddNewProductRequest): ApiError
+    suspend fun addNewProduct(
+        name: String,
+        price: Int,
+        info: String,
+        material: String,
+        size: String,
+        status: String,
+        address: String,
+        categoryId: Int,
+        upfile: List<MultipartBody.Part>
+    ): ApiError
 }
 
 class ProductDataSourceImpl constructor(
@@ -72,8 +82,29 @@ class ProductDataSourceImpl constructor(
         }.items
     }
 
-    override suspend fun addNewProduct(request: AddNewProductRequest): ApiError {
-        return api.addNewProduct(tokenManager.getToken(), request)
+    override suspend fun addNewProduct(
+        name: String,
+        price: Int,
+        info: String,
+        material: String,
+        size: String,
+        status: String,
+        address: String,
+        categoryId: Int,
+        upfile: List<MultipartBody.Part>
+    ): ApiError {
+        return api.addNewProduct(
+            tokenManager.getToken(),
+            name,
+            price,
+            info,
+            material,
+            size,
+            status,
+            address,
+            categoryId,
+            upfile
+        )
     }
 
     @Throws(PageNotFoundException::class)
