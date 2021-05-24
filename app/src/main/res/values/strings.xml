@@ -56,6 +56,16 @@
     <string name="success_add_product">Товар успешно добавлен</string>
     <string name="price_not_valid">Введите целую сумму</string>
     <string name="photo_not_valid">Добавтьте хотя бы одно фото</string>
+    <string name="new_item">Новые</string>
+    <string name="asc">По убыванию</string>
+    <string name="desc">По возрастанию</string>
+    <string name="delete">Удалить</string>
+    <string name="babes">Младенцы</string>
+    <string name="before_3">До 3-х лет</string>
+    <string name="before_7">3 - 7 лет</string>
+    <string name="before_18">Подростки</string>
+    <string name="pregnant">Беременные</string>
+    <string name="back">Назад</string>
     <plurals name="advertisement">
         <item quantity="zero">%s объявлений</item>
         <item quantity="one">%s объявление</item>

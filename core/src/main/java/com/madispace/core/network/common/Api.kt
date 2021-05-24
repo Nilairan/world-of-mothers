@@ -67,4 +67,10 @@ interface Api {
         @Part upfile: List<MultipartBody.Part>
     ): ApiError
 
+    @POST("${ApiFactory.VERSION}/profile/delete")
+    @FormUrlEncoded
+    suspend fun removeProduct(
+        @Header("Authorization") token: String,
+        @Field("id") id: Int
+    ): ApiError
 }

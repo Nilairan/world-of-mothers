@@ -94,7 +94,9 @@ class ProductFragment : ObserveFragment<ProductViewModel>(
                     binding.recommendedProductList.adapter =
                         GroupAdapter<GroupieViewHolder>().apply {
                             addAll(state.additionallyProduct.map {
-                                ProductItem(it) { router.replaceScreen(Screens.ProductScreen(it.id)) }
+                                ProductItem(
+                                    it,
+                                    { router.replaceScreen(Screens.ProductScreen(it.id)) })
                             })
                         }
                 }

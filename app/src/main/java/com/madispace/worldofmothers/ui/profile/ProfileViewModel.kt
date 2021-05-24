@@ -3,6 +3,7 @@ package com.madispace.worldofmothers.ui.profile
 import androidx.lifecycle.viewModelScope
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.models.user.Profile
+import com.madispace.domain.repository.ProductRepository
 import com.madispace.domain.usecases.profile.GetProfileModelUseCase
 import com.madispace.domain.usecases.profile.IsAuthorizedUserUseCase
 import com.madispace.worldofmothers.common.BaseMviViewModel
@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val isAuthorizedUserUseCase: IsAuthorizedUserUseCase,
-    private val getProfileModelUseCase: GetProfileModelUseCase
+    private val getProfileModelUseCase: GetProfileModelUseCase,
+    private val productRepository: ProductRepository
 ) : BaseMviViewModel<ProfileViewModel.ProfileState,
         ProfileViewModel.ProfileAction, ProfileViewModel.ProfileEvent>() {
 
@@ -25,6 +27,7 @@ class ProfileViewModel(
         when (viewEvent) {
             is ProfileEvent.IsAuthUser -> isAuthUser()
             is ProfileEvent.Reload -> getProfileModel()
+            is ProfileEvent.DeleteProduct -> deleteProduct(viewEvent.id)
         }
     }
 
@@ -56,6 +59,21 @@ class ProfileViewModel(
         }
     }
 
+    private fun deleteProduct(id: Int) {
+        viewModelScope.launch {
+            viewState = ProfileState.ShowLoading
+            productRepository.removeProduct(id)
+                .catch {
+                    viewState = ProfileState.HideLoading
+                    it.printStackTrace()
+                }
+                .collect {
+                    viewState = ProfileState.HideLoading
+                    getProfileModel()
+                }
+        }
+    }
+
     sealed class ProfileState {
         object OpenSignInScreen : ProfileState()
         object ShowLoading : ProfileState()
@@ -69,5 +87,6 @@ class ProfileViewModel(
     sealed class ProfileEvent {
         object IsAuthUser : ProfileEvent()
         object Reload : ProfileEvent()
+        data class DeleteProduct(val id: Int) : ProfileEvent()
     }
 }

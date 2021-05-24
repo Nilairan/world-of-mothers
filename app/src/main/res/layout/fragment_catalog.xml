@@ -39,6 +39,27 @@
                         android:clipToPadding="false"
                         app:layout_constraintTop_toBottomOf="@id/searchItem" />
 
+                    <HorizontalScrollView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:clipToPadding="false"
+                        android:clipChildren="false"
+                        app:layout_constraintTop_toBottomOf="@id/searchItem"
+                        app:layout_constraintBottom_toBottomOf="parent">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chipGroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:singleSelection="true"
+                            app:singleLine="true">
+
+                        </com.google.android.material.chip.ChipGroup>
+
+                    </HorizontalScrollView>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>

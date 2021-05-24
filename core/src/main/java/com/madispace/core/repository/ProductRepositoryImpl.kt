@@ -104,6 +104,13 @@ class ProductRepositoryImpl constructor(
         }.flowOn(Dispatchers.IO)
     }
 
+    override fun removeProduct(id: Int): Flow<Boolean> {
+        return flow {
+            val result = productDataSource.removeProduct(id)
+            emit(result.status == 200)
+        }.flowOn(Dispatchers.IO)
+    }
+
     companion object {
         private const val FILE = "upfile"
     }

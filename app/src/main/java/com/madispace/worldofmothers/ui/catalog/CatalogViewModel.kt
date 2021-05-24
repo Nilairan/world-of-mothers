@@ -3,11 +3,13 @@ package com.madispace.worldofmothers.ui.catalog
 import androidx.lifecycle.viewModelScope
 import com.madispace.domain.exceptions.paging.PageNotFoundException
 import com.madispace.domain.models.category.Category
+import com.madispace.domain.models.category.Subcategories
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.usecases.catalog.GetCatalogModelUseCase
 import com.madispace.domain.usecases.catalog.SearchModel
 import com.madispace.domain.usecases.catalog.SearchType
 import com.madispace.worldofmothers.common.BaseMviViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
@@ -59,11 +61,15 @@ class CatalogViewModel(
             is CatalogEvent.SearchFilter -> {
 
             }
+            is CatalogEvent.SelectCategory -> {
+                page = 1
+                getProductByCategory(viewEvent.category)
+            }
         }
     }
 
     private fun getCatalogModel() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             getCatalogModelUseCase(SearchModel())
                 .onStart { viewState = CatalogState.ShowLoading }
                 .catch {
@@ -99,6 +105,26 @@ class CatalogViewModel(
         }
     }
 
+    private fun getProductByCategory(category: Category) {
+        viewModelScope.launch {
+            viewAction = CatalogAction.ShowSubCategories(category = category.subcategories)
+            getCatalogModelUseCase.invoke(
+                SearchModel(
+                    page,
+                    category = category.id,
+                    type = SearchType.CATEGORIES
+                )
+            )
+                .catch {
+                    viewState = CatalogState.HideLoading
+                }
+                .collect {
+                    viewState = CatalogState.HideLoading
+                    // TODO implement
+                }
+        }
+    }
+
     private fun onRefresh() {
         viewModelScope.launch {
             getCatalogModelUseCase.invoke(SearchModel(page = page, type = SearchType.REFRESH))
@@ -117,10 +143,12 @@ class CatalogViewModel(
         data class ShowRefreshProduct(val products: List<ProductShort>) : CatalogState()
         data class ShowCategory(val category: List<Category>) : CatalogState()
         data class ShowProduct(val products: List<ProductShort>) : CatalogState()
+        data class ShowFilteredProduct(val products: List<ProductShort>) : CatalogState()
     }
 
     sealed class CatalogAction {
         object ShowErrorMessage : CatalogAction()
+        data class ShowSubCategories(val category: List<Subcategories>) : CatalogAction()
     }
 
     sealed class CatalogEvent {
@@ -133,5 +161,6 @@ class CatalogViewModel(
         data class MinFilter(val value: Double) : CatalogEvent()
         data class MaxFilter(val value: Double) : CatalogEvent()
         data class SearchFilter(val value: String) : CatalogEvent()
+        data class SelectCategory(val category: Category) : CatalogEvent()
     }
 }

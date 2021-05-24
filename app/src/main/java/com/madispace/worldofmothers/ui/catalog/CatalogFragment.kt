@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.chip.Chip
+import com.madispace.domain.models.category.Subcategories
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
@@ -36,32 +38,47 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.swipeRefreshLayout.setColorSchemeColors(
-            ContextCompat.getColor(
-                binding.getContext(),
-                R.color.green
+        with(binding) {
+            swipeRefreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(
+                    binding.getContext(),
+                    R.color.green
+                )
             )
-        )
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.obtainEvent(CatalogViewModel.CatalogEvent.Refresh)
-        }
-        binding.searchItem.filterImage.setOnClickListener { binding.root.openDrawer(Gravity.RIGHT) }
-        val items = listOf("По популярности", "Новые", "По убыванию", "По возрастанию")
-        val adapter = ArrayAdapter(requireContext(), R.layout.item_autocomplite, items)
-        binding.filterSheet.filterAutoComplete.setText(items[0])
-        binding.filterSheet.filterAutoComplete.setAdapter(adapter)
+            swipeRefreshLayout.setOnRefreshListener {
+                viewModel.obtainEvent(CatalogViewModel.CatalogEvent.Refresh)
+            }
+            categoryList.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            categoryList.adapter = categoryListAdapter
+            val productLayoutManager = GridLayoutManager(context, 2)
+            productList.layoutManager = productLayoutManager
+            productList.addOnScrollListener(
+                PagingScrollListener(layoutManager = productLayoutManager,
+                    isLoading = { binding.progressCircular.isVisible },
+                    runLoadingBlock = { viewModel.obtainEvent(CatalogViewModel.CatalogEvent.LoadNextProductPage) })
+            )
+            productList.adapter = productListAdapter
+            chipGroup.setOnCheckedChangeListener { group, _ ->
+                when (group.tag) {
 
-        binding.categoryList.layoutManager =
-            LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        binding.categoryList.adapter = categoryListAdapter
-        val productLayoutManager = GridLayoutManager(context, 2)
-        binding.productList.layoutManager = productLayoutManager
-        binding.productList.addOnScrollListener(
-            PagingScrollListener(layoutManager = productLayoutManager,
-                isLoading = { binding.progressCircular.isVisible },
-                runLoadingBlock = { viewModel.obtainEvent(CatalogViewModel.CatalogEvent.LoadNextProductPage) })
-        )
-        binding.productList.adapter = productListAdapter
+                }
+            }
+        }
+        initFilter()
+    }
+
+    private fun initFilter() {
+        with(binding) {
+            searchItem.filterImage.setOnClickListener { binding.root.openDrawer(Gravity.RIGHT) }
+            val items = listOf(
+                getString(R.string.new_item),
+                getString(R.string.asc),
+                getString(R.string.desc)
+            )
+            val adapter = ArrayAdapter(requireContext(), R.layout.item_autocomplite, items)
+            filterSheet.filterAutoComplete.setAdapter(adapter)
+        }
     }
 
     override fun initObservers() {
@@ -81,7 +98,9 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
                 is CatalogViewModel.CatalogState.HideLoading -> progressCircular.visibility =
                     View.GONE
                 is CatalogViewModel.CatalogState.ShowCategory -> categoryListAdapter.addAll(state.category.map {
-                    CategoryItem(it) { /* TODO click to category */ }
+                    CategoryItem(it) {
+                        viewModel.obtainEvent(CatalogViewModel.CatalogEvent.SelectCategory(it))
+                    }
                 })
                 is CatalogViewModel.CatalogState.ShowProduct -> productListAdapter.addAll(state.products.map {
                     createProductItem(it)
@@ -97,7 +116,7 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
     }
 
     private fun createProductItem(product: ProductShort): ProductItem {
-        return ProductItem(product) { router.navigateTo(Screens.ProductScreen(product.id)) }
+        return ProductItem(product, { router.navigateTo(Screens.ProductScreen(product.id)) })
     }
 
     private fun bindViewAction(action: CatalogViewModel.CatalogAction) {
@@ -107,6 +126,33 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
                 "Error",
                 Toast.LENGTH_LONG
             ).show()
+            is CatalogViewModel.CatalogAction.ShowSubCategories -> showSubcategory(action.category)
+        }
+    }
+
+    private fun showSubcategory(category: List<Subcategories>) {
+        with(binding) {
+            chipGroup.clearCheck()
+            chipGroup.removeAllViews()
+            categoryList.isVisible = false
+            chipGroup.isVisible = true
+            val backChips = Chip(getContext())
+            backChips.text = getString(R.string.back)
+            backChips.tag = getString(R.string.back)
+            backChips.isCheckable = true
+            backChips.setOnClickListener {
+                chipGroup.isVisible = false
+                categoryList.isVisible = true
+            }
+            chipGroup.addView(backChips)
+            category.forEach { sub ->
+                val chips = Chip(getContext())
+
+                chips.tag = sub
+                chips.text = sub.name
+                chips.isCheckable = true
+                chipGroup.addView(chips)
+            }
         }
     }
 

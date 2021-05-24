@@ -38,7 +38,7 @@ class App : Application() {
         viewModel { CatalogViewModel(get()) }
         viewModel { FavoritesViewModel(get(), get()) }
         viewModel { ProductViewModel(get(), get()) }
-        viewModel { ProfileViewModel(get(), get()) }
+        viewModel { ProfileViewModel(get(), get(), get()) }
         viewModel { SignInViewModel(get(), get()) }
         viewModel { SignUpViewModel(get(), get()) }
         viewModel { ChangeProfileViewModel(get(), get()) }

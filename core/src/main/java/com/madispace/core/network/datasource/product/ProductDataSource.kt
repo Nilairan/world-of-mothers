@@ -31,6 +31,8 @@ interface ProductDataSource {
         categoryId: Int,
         upfile: List<MultipartBody.Part>
     ): ApiError
+
+    suspend fun removeProduct(id: Int): ApiError
 }
 
 class ProductDataSourceImpl constructor(
@@ -105,6 +107,10 @@ class ProductDataSourceImpl constructor(
             categoryId,
             upfile
         )
+    }
+
+    override suspend fun removeProduct(id: Int): ApiError {
+        return api.removeProduct(tokenManager.getToken(), id)
     }
 
     @Throws(PageNotFoundException::class)

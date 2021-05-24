@@ -26,4 +26,6 @@ interface ProductRepository {
         categoryId: Int,
         upfile: List<PhotoModel>
     ): Flow<Boolean>
+
+    fun removeProduct(id: Int): Flow<Boolean>
 }
