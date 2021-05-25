@@ -66,6 +66,8 @@
     <string name="before_18">Подростки</string>
     <string name="pregnant">Беременные</string>
     <string name="back">Назад</string>
+    <string name="empty_product_list">Список товаров пуст</string>
+    <string name="old">Старые</string>
     <plurals name="advertisement">
         <item quantity="zero">%s объявлений</item>
         <item quantity="one">%s объявление</item>

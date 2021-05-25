@@ -44,7 +44,9 @@ class ProductDataSourceImpl constructor(
     private var maxCountPage = 1
 
     override suspend fun getAllProductList(page: Int): List<DTOProductShort> {
-        checkMaxPage(page)
+        if (page > 1) {
+            checkMaxPage(page)
+        }
         val response = api.getAllProductList(page = page)
         maxCountPage = response.meta.pageCount
         return api.getAllProductList(page = page).items
@@ -71,7 +73,9 @@ class ProductDataSourceImpl constructor(
     }
 
     override suspend fun filteredProductList(page: Int, filter: ProductFilter): List<DTOProductShort> {
-        checkMaxPage(page)
+        if (page > 1) {
+            checkMaxPage(page)
+        }
         return when (filter) {
             is ProductFilter.Category -> api.getAllProductList(page = page, categoryId = filter.id)
             is ProductFilter.Min -> api.getAllProductList(page = page, min = filter.value)
@@ -79,6 +83,7 @@ class ProductDataSourceImpl constructor(
             is ProductFilter.Desc -> api.getAllProductList(page = page, sort = "id")
             is ProductFilter.Asc -> api.getAllProductList(page = page, sort = "-id")
             is ProductFilter.Search -> api.getAllProductList(page = page, value = filter.value)
+            is ProductFilter.Default -> api.getAllProductList(page)
         }.apply {
             maxCountPage = meta.pageCount
         }.items

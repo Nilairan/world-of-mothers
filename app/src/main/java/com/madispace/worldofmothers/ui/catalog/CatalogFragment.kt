@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -32,6 +33,7 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
     R.layout.fragment_catalog
 ) {
 
+    private lateinit var backChips: Chip
     private val binding: FragmentCatalogBinding by viewBinding()
     private val categoryListAdapter = GroupAdapter<GroupieViewHolder>()
     private val productListAdapter = GroupAdapter<GroupieViewHolder>()
@@ -39,6 +41,17 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
+            backChips = Chip(getContext()).apply {
+                text = getString(R.string.back)
+                tag = getString(R.string.back)
+                isCheckable = true
+                setOnClickListener {
+                    binding.chipGroup.isVisible = false
+                    binding.categoryList.isVisible = true
+                    productListAdapter.clear()
+                    viewModel.obtainEvent(CatalogViewModel.CatalogEvent.GetDefaultProducts)
+                }
+            }
             swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(
                     binding.getContext(),
@@ -59,11 +72,6 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
                     runLoadingBlock = { viewModel.obtainEvent(CatalogViewModel.CatalogEvent.LoadNextProductPage) })
             )
             productList.adapter = productListAdapter
-            chipGroup.setOnCheckedChangeListener { group, _ ->
-                when (group.tag) {
-
-                }
-            }
         }
         initFilter()
     }
@@ -73,6 +81,7 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
             searchItem.filterImage.setOnClickListener { binding.root.openDrawer(Gravity.RIGHT) }
             val items = listOf(
                 getString(R.string.new_item),
+                getString(R.string.old),
                 getString(R.string.asc),
                 getString(R.string.desc)
             )
@@ -111,6 +120,13 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
                 }
                 is CatalogViewModel.CatalogState.StopRefresh -> swipeRefreshLayout.isRefreshing =
                     false
+                is CatalogViewModel.CatalogState.ShowFilteredProduct -> {
+                    emptyText.isVisible = state.products.isEmpty()
+                    productListAdapter.clear()
+                    productListAdapter.addAll(state.products.map {
+                        createProductItem(it)
+                    })
+                }
             }
         }
     }
@@ -136,21 +152,21 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
             chipGroup.removeAllViews()
             categoryList.isVisible = false
             chipGroup.isVisible = true
-            val backChips = Chip(getContext())
-            backChips.text = getString(R.string.back)
-            backChips.tag = getString(R.string.back)
-            backChips.isCheckable = true
-            backChips.setOnClickListener {
-                chipGroup.isVisible = false
-                categoryList.isVisible = true
-            }
             chipGroup.addView(backChips)
             category.forEach { sub ->
                 val chips = Chip(getContext())
-
+                chips.id = ViewCompat.generateViewId()
                 chips.tag = sub
                 chips.text = sub.name
                 chips.isCheckable = true
+                chips.setOnClickListener {
+                    viewModel.obtainEvent(
+                        CatalogViewModel.CatalogEvent.SelectSubcategory(
+                            sub.id,
+                            chips.isChecked
+                        )
+                    )
+                }
                 chipGroup.addView(chips)
             }
         }
