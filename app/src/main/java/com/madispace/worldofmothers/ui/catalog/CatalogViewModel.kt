@@ -51,8 +51,17 @@ class CatalogViewModel(
                 page = 1
                 onRefresh()
             }
+            is CatalogEvent.SetFilter -> {
+                productFilter = ProductFilter.Filtered(
+                    viewEvent.min,
+                    viewEvent.max,
+                    viewEvent.isNew,
+                )
+                getProductByFilter()
+            }
             is CatalogEvent.SearchFilter -> {
-
+                productFilter = ProductFilter.Search(viewEvent.value)
+                getProductByFilter()
             }
             is CatalogEvent.SelectCategory -> {
                 page = 1
@@ -172,7 +181,7 @@ class CatalogViewModel(
         object Default : CatalogEvent()
         object LoadNextProductPage : CatalogEvent()
         object Refresh : CatalogEvent()
-        data class SetFilter(val min: Int, val max: Int, val isDesc: Boolean?) : CatalogEvent()
+        data class SetFilter(val min: Int?, val max: Int?, val isNew: Boolean?) : CatalogEvent()
         data class SearchFilter(val value: String) : CatalogEvent()
         data class SelectCategory(val category: Category) : CatalogEvent()
         data class SelectSubcategory(val id: Int, val isChecked: Boolean) : CatalogEvent()

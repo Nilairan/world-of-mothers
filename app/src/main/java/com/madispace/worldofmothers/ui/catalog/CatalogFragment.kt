@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -17,16 +18,15 @@ import com.google.android.material.chip.Chip
 import com.madispace.domain.models.category.Subcategories
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.worldofmothers.R
-import com.madispace.worldofmothers.common.ObserveFragment
-import com.madispace.worldofmothers.common.PagingScrollListener
-import com.madispace.worldofmothers.common.getContext
+import com.madispace.worldofmothers.common.*
 import com.madispace.worldofmothers.databinding.FragmentCatalogBinding
 import com.madispace.worldofmothers.routing.Screens
 import com.madispace.worldofmothers.ui.catalog.items.CategoryItem
 import com.madispace.worldofmothers.ui.catalog.items.ProductItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.onEach
 
 class CatalogFragment : ObserveFragment<CatalogViewModel>(
     CatalogViewModel::class.java,
@@ -79,24 +79,60 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
     private fun initFilter() {
         with(binding) {
             searchItem.filterImage.setOnClickListener { binding.root.openDrawer(Gravity.RIGHT) }
+            searchItem.inputSearch.textChanges()
+                .debounce(300)
+                .onEach {
+                    viewModel.obtainEvent(CatalogViewModel.CatalogEvent.SearchFilter(it.toString()))
+                }
+                .launchWhenStarted(lifecycleScope)
             val items = listOf(
                 getString(R.string.new_item),
                 getString(R.string.old),
-                getString(R.string.asc),
-                getString(R.string.desc)
             )
+            var filterTemp: String? = null
             val adapter = ArrayAdapter(requireContext(), R.layout.item_autocomplite, items)
-            filterSheet.filterAutoComplete.setAdapter(adapter)
+            (filterSheet.filterLayout.editText as AutoCompleteTextView).setAdapter(adapter)
+            (filterSheet.filterLayout.editText as AutoCompleteTextView)
+                .setOnItemClickListener { _, _, position, _ ->
+                    filterTemp = items[position]
+                }
+            filterSheet.saveFilterButton.setOnClickListener {
+                searchItem.inputSearch.clearFocus()
+                binding.root.closeDrawer(Gravity.RIGHT)
+                binding.chipGroup.isVisible = false
+                binding.categoryList.isVisible = true
+                productListAdapter.clear()
+                viewModel.obtainEvent(CatalogViewModel.CatalogEvent.SetFilter(
+                    min = when (filterSheet.fromCostEditText.text.isNullOrEmpty()) {
+                        true -> null
+                        else -> filterSheet.fromCostEditText.text?.toString()?.toInt()
+                    },
+                    max = when (filterSheet.toCostEditText.text.isNullOrEmpty()) {
+                        true -> null
+                        else -> filterSheet.toCostEditText.text?.toString()?.toInt()
+                    },
+                    isNew = filterTemp?.let {
+                        when (filterTemp) {
+                            getString(R.string.new_item) -> true
+                            getString(R.string.old) -> false
+                            else -> null
+                        }
+                    } ?: run {
+                        null
+                    },
+                )
+                )
+            }
         }
     }
 
     override fun initObservers() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.viewStates().collect { state -> state?.let { bindViewState(state) } }
-        }
-        lifecycleScope.launchWhenStarted {
-            viewModel.viewActions().collect { action -> action?.let { bindViewAction(action) } }
-        }
+        viewModel.viewStates().onEach { state ->
+            state?.let { bindViewState(state) }
+        }.launchWhenStarted(lifecycleScope)
+        viewModel.viewActions().onEach { action ->
+            action?.let { bindViewAction(action) }
+        }.launchWhenStarted(lifecycleScope)
     }
 
     private fun bindViewState(state: CatalogViewModel.CatalogState) {
@@ -148,6 +184,10 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
 
     private fun showSubcategory(category: List<Subcategories>) {
         with(binding) {
+            filterSheet.toCostEditText.text = null
+            filterSheet.fromCostEditText.text = null
+            filterSheet.filterLayout.editText?.text = null
+            searchItem.inputSearch.clearFocus()
             chipGroup.clearCheck()
             chipGroup.removeAllViews()
             categoryList.isVisible = false

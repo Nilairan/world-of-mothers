@@ -3,8 +3,11 @@ package com.madispace.worldofmothers.common
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.annotation.CheckResult
 import androidx.core.content.FileProvider
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -13,9 +16,8 @@ import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputLayout
 import com.madispace.worldofmothers.R
 import com.redmadrobot.inputmask.MaskedTextChangedListener
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
 import java.io.File
 import java.text.NumberFormat
 import java.util.*
@@ -91,4 +93,22 @@ fun TextInputLayout.doAfterTextChanged(block: (String) -> Unit) {
     editText?.doAfterTextChanged {
         block.invoke(it?.toString() ?: "")
     }
+}
+
+@CheckResult
+fun EditText.textChanges(): Flow<CharSequence> {
+    return callbackFlow {
+        val listener = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                offer(s ?: "")
+
+            }
+        }
+        addTextChangedListener(listener)
+        awaitClose { removeTextChangedListener(listener) }
+    }.onStart { emit(text ?: "") }
 }

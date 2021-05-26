@@ -78,10 +78,16 @@ class ProductDataSourceImpl constructor(
         }
         return when (filter) {
             is ProductFilter.Category -> api.getAllProductList(page = page, categoryId = filter.id)
-            is ProductFilter.Min -> api.getAllProductList(page = page, min = filter.value)
-            is ProductFilter.Max -> api.getAllProductList(page = page, max = filter.value)
-            is ProductFilter.Desc -> api.getAllProductList(page = page, sort = "id")
-            is ProductFilter.Asc -> api.getAllProductList(page = page, sort = "-id")
+            is ProductFilter.Filtered -> api.getAllProductList(
+                page = page,
+                min = filter.min,
+                max = filter.max,
+                sort = filter.isNew?.let {
+                    if (it) "-id" else "id"
+                } ?: run {
+                    null
+                }
+            )
             is ProductFilter.Search -> api.getAllProductList(page = page, value = filter.value)
             is ProductFilter.Default -> api.getAllProductList(page)
         }.apply {

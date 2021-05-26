@@ -13,12 +13,12 @@ interface Api {
 
     @GET("${ApiFactory.VERSION}/items")
     suspend fun getAllProductList(
-            @Query("page") page: Int,
-            @Query("category_id") categoryId: Int? = null,
-            @Query("min") min: Double? = null,
-            @Query("max") max: Double? = null,
-            @Query("search") value: String? = null,
-            @Query("sort") sort: String? = null
+        @Query("page") page: Int,
+        @Query("category_id") categoryId: Int? = null,
+        @Query("min") min: Int? = null,
+        @Query("max") max: Int? = null,
+        @Query("search") value: String? = null,
+        @Query("sort") sort: String? = null
     ): PaginationResponse<DTOProductShort>
 
     @GET("${ApiFactory.VERSION}/items/{id}")

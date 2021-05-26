@@ -57,8 +57,8 @@
     <string name="price_not_valid">Введите целую сумму</string>
     <string name="photo_not_valid">Добавтьте хотя бы одно фото</string>
     <string name="new_item">Новые</string>
-    <string name="asc">По убыванию</string>
-    <string name="desc">По возрастанию</string>
+    <string name="desc">По убыванию</string>
+    <string name="asc">По возрастанию</string>
     <string name="delete">Удалить</string>
     <string name="babes">Младенцы</string>
     <string name="before_3">До 3-х лет</string>
@@ -68,6 +68,9 @@
     <string name="back">Назад</string>
     <string name="empty_product_list">Список товаров пуст</string>
     <string name="old">Старые</string>
+    <string name="filter">Фильтр</string>
+    <string name="clear">Сбросить</string>
+    <string name="search_in_app">Искать в МирМамочек...</string>
     <plurals name="advertisement">
         <item quantity="zero">%s объявлений</item>
         <item quantity="one">%s объявление</item>
