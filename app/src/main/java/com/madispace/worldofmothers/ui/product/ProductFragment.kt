@@ -1,6 +1,9 @@
 package com.madispace.worldofmothers.ui.product
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.telephony.PhoneNumberUtils
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,6 +22,7 @@ import com.madispace.worldofmothers.ui.catalog.items.ProductItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.flow.onEach
+
 
 class ProductFragment : ObserveFragment<ProductViewModel>(
     ProductViewModel::class.java,
@@ -122,7 +126,11 @@ class ProductFragment : ObserveFragment<ProductViewModel>(
 
     private fun bindProduct(product: Product) {
         with(binding) {
-            imageProduct.loadPhoto(product.gallery.first())
+            activity?.let {
+                val imageAdapter = ScreenSlidePagerAdapter(it, product.gallery)
+                imageProductViewPager.adapter = imageAdapter
+                indicator.attachToPager(imageProductViewPager)
+            }
             nameProduct.text = product.name
             costProduct.text = getString(R.string.price, product.price.getPrice())
             descriptionProduct.text = product.info
@@ -136,8 +144,19 @@ class ProductFragment : ObserveFragment<ProductViewModel>(
     private fun bindSeller(seller: Seller) {
         with(binding) {
             nameSeller.text = "${seller.surname} ${seller.firstName}"
-            countProduct.text = getContext().resources.getQuantityString(R.plurals.advertisement, seller.itemsCount, seller.itemsCount)
+            countProduct.text = getContext().resources.getQuantityString(
+                R.plurals.advertisement,
+                seller.itemsCount,
+                seller.itemsCount
+            )
             imageSeller.loadPhoto(seller.image)
+            callButton.setOnClickListener {
+                val intent = Intent(
+                    Intent.ACTION_DIAL,
+                    Uri.parse("tel:" + PhoneNumberUtils.formatNumber(seller.getPhone(), "RU"))
+                )
+                startActivity(intent)
+            }
         }
     }
 

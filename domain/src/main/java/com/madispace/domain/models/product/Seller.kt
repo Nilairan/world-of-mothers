@@ -7,4 +7,6 @@ data class Seller(
     val tel: String,
     val image: String,
     val itemsCount: Int
-)
+) {
+    fun getPhone() = "+7$tel"
+}
