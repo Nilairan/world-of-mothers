@@ -13,5 +13,8 @@
         <!-- Status bar color. -->
         <item name="android:windowTranslucentNavigation">true</item>
         <!-- Customize your theme here. -->
+        <item name="chipStyle">@style/Widget.App.Chip</item>
     </style>
+
+    <style name="Widget.App.Chip" parent="@style/Widget.MaterialComponents.Chip.Choice"></style>
 </resources>

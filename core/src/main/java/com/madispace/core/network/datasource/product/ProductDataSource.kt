@@ -5,12 +5,12 @@ import com.madispace.core.database.dao.ProductDao
 import com.madispace.core.database.entities.ProductEntity
 import com.madispace.core.network.common.Api
 import com.madispace.core.network.dto.ApiError
-import com.madispace.core.network.dto.product.AddNewProductRequest
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
 import com.madispace.domain.exceptions.paging.PageNotFoundException
 import com.madispace.domain.models.product.ProductFilter
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
 
 interface ProductDataSource {
     suspend fun getAllProductList(page: Int): List<DTOProductShort>
@@ -20,7 +20,19 @@ interface ProductDataSource {
     suspend fun getFavoriteProduct(id: Int): ProductEntity?
     fun getFavoriteProductList(): Flow<List<ProductEntity>>
     suspend fun filteredProductList(page: Int, filter: ProductFilter): List<DTOProductShort>
-    suspend fun addNewProduct(request: AddNewProductRequest): ApiError
+    suspend fun addNewProduct(
+        name: String,
+        price: Int,
+        info: String,
+        material: String,
+        size: String,
+        status: String,
+        address: String,
+        categoryId: Int,
+        upfile: List<MultipartBody.Part>
+    ): ApiError
+
+    suspend fun removeProduct(id: Int): ApiError
 }
 
 class ProductDataSourceImpl constructor(
@@ -32,7 +44,9 @@ class ProductDataSourceImpl constructor(
     private var maxCountPage = 1
 
     override suspend fun getAllProductList(page: Int): List<DTOProductShort> {
-        checkMaxPage(page)
+        if (page > 1) {
+            checkMaxPage(page)
+        }
         val response = api.getAllProductList(page = page)
         maxCountPage = response.meta.pageCount
         return api.getAllProductList(page = page).items
@@ -59,21 +73,55 @@ class ProductDataSourceImpl constructor(
     }
 
     override suspend fun filteredProductList(page: Int, filter: ProductFilter): List<DTOProductShort> {
-        checkMaxPage(page)
+        if (page > 1) {
+            checkMaxPage(page)
+        }
         return when (filter) {
             is ProductFilter.Category -> api.getAllProductList(page = page, categoryId = filter.id)
-            is ProductFilter.Min -> api.getAllProductList(page = page, min = filter.value)
-            is ProductFilter.Max -> api.getAllProductList(page = page, max = filter.value)
-            is ProductFilter.Desc -> api.getAllProductList(page = page, sort = "id")
-            is ProductFilter.Asc -> api.getAllProductList(page = page, sort = "-id")
+            is ProductFilter.Filtered -> api.getAllProductList(
+                page = page,
+                min = filter.min,
+                max = filter.max,
+                sort = filter.isNew?.let {
+                    if (it) "-id" else "id"
+                } ?: run {
+                    null
+                }
+            )
             is ProductFilter.Search -> api.getAllProductList(page = page, value = filter.value)
+            is ProductFilter.Default -> api.getAllProductList(page)
         }.apply {
             maxCountPage = meta.pageCount
         }.items
     }
 
-    override suspend fun addNewProduct(request: AddNewProductRequest): ApiError {
-        return api.addNewProduct(tokenManager.getToken(), request)
+    override suspend fun addNewProduct(
+        name: String,
+        price: Int,
+        info: String,
+        material: String,
+        size: String,
+        status: String,
+        address: String,
+        categoryId: Int,
+        upfile: List<MultipartBody.Part>
+    ): ApiError {
+        return api.addNewProduct(
+            tokenManager.getToken(),
+            name,
+            price,
+            info,
+            material,
+            size,
+            status,
+            address,
+            categoryId,
+            upfile
+        )
+    }
+
+    override suspend fun removeProduct(id: Int): ApiError {
+        return api.removeProduct(tokenManager.getToken(), id)
     }
 
     @Throws(PageNotFoundException::class)

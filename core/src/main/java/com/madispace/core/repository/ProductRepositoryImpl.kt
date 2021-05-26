@@ -3,7 +3,6 @@ package com.madispace.core.repository
 import com.madispace.core.database.entities.ProductEntityMapper
 import com.madispace.core.database.entities.ProductMapper
 import com.madispace.core.network.datasource.product.ProductDataSource
-import com.madispace.core.network.dto.product.AddNewProductRequest
 import com.madispace.domain.models.image.PhotoModel
 import com.madispace.domain.models.product.Product
 import com.madispace.domain.models.product.ProductFilter
@@ -85,24 +84,34 @@ class ProductRepositoryImpl constructor(
     ): Flow<Boolean> {
         return flow {
             val result = productDataSource.addNewProduct(
-                AddNewProductRequest(
-                    name,
-                    price,
-                    info,
-                    material,
-                    size,
-                    status,
-                    address,
-                    categoryId,
-                    upfile.map { model ->
-                        MultipartBody.Part.createFormData(
-                            name = "file",
-                            filename = model.fileName,
-                            body = model.file.toRequestBody(model.mediaType.toMediaTypeOrNull())
-                        )
-                    })
+                name,
+                price,
+                info,
+                material,
+                size,
+                status,
+                address,
+                categoryId,
+                upfile.map { model ->
+                    MultipartBody.Part.createFormData(
+                        name = FILE,
+                        filename = model.fileName,
+                        body = model.file.toRequestBody(model.mediaType.toMediaTypeOrNull())
+                    )
+                }
             )
             emit(result.status == 200)
         }.flowOn(Dispatchers.IO)
+    }
+
+    override fun removeProduct(id: Int): Flow<Boolean> {
+        return flow {
+            val result = productDataSource.removeProduct(id)
+            emit(result.status == 200)
+        }.flowOn(Dispatchers.IO)
+    }
+
+    companion object {
+        private const val FILE = "upfile"
     }
 }

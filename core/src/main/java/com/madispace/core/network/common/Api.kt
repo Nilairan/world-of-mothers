@@ -3,7 +3,6 @@ package com.madispace.core.network.common
 import com.madispace.core.common.PaginationResponse
 import com.madispace.core.network.dto.ApiError
 import com.madispace.core.network.dto.categories.CategoriesResponse
-import com.madispace.core.network.dto.product.AddNewProductRequest
 import com.madispace.core.network.dto.product.DTOProduct
 import com.madispace.core.network.dto.product.DTOProductShort
 import com.madispace.core.network.dto.user.*
@@ -14,12 +13,12 @@ interface Api {
 
     @GET("${ApiFactory.VERSION}/items")
     suspend fun getAllProductList(
-            @Query("page") page: Int,
-            @Query("category_id") categoryId: Int? = null,
-            @Query("min") min: Double? = null,
-            @Query("max") max: Double? = null,
-            @Query("search") value: String? = null,
-            @Query("sort") sort: String? = null
+        @Query("page") page: Int,
+        @Query("category_id") categoryId: Int? = null,
+        @Query("min") min: Int? = null,
+        @Query("max") max: Int? = null,
+        @Query("search") value: String? = null,
+        @Query("sort") sort: String? = null
     ): PaginationResponse<DTOProductShort>
 
     @GET("${ApiFactory.VERSION}/items/{id}")
@@ -44,7 +43,7 @@ interface Api {
     @POST("${ApiFactory.VERSION}/profile/avatar")
     suspend fun uploadAvatar(
         @Header("Authorization") token: String,
-        @Part file: MultipartBody.Part
+        @Part upfile: MultipartBody.Part
     ): ApiError
 
     @POST("${ApiFactory.VERSION}/profile/edit")
@@ -53,10 +52,25 @@ interface Api {
         @Body request: ChangeProfileRequest
     ): ApiError
 
+    @Multipart
     @POST("${ApiFactory.VERSION}/profile/new")
     suspend fun addNewProduct(
         @Header("Authorization") token: String,
-        @Body request: AddNewProductRequest
+        @Part("name") name: String,
+        @Part("price") price: Int,
+        @Part("info") info: String,
+        @Part("material") material: String,
+        @Part("size") size: String,
+        @Part("status") status: String,
+        @Part("address") address: String,
+        @Part("category_id") categoryId: Int,
+        @Part upfile: List<MultipartBody.Part>
     ): ApiError
 
+    @POST("${ApiFactory.VERSION}/profile/delete")
+    @FormUrlEncoded
+    suspend fun removeProduct(
+        @Header("Authorization") token: String,
+        @Field("id") id: Int
+    ): ApiError
 }

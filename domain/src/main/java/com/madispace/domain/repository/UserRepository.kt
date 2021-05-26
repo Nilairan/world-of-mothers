@@ -1,5 +1,6 @@
 package com.madispace.domain.repository
 
+import com.madispace.domain.models.image.PhotoModel
 import com.madispace.domain.models.product.ProductShort
 import com.madispace.domain.models.user.Profile
 import com.madispace.domain.models.user.RegisterUser
@@ -9,9 +10,9 @@ interface UserRepository {
     fun isAuthorizedUser(): Flow<Boolean>
     fun auth(value: String): Flow<Boolean>
     fun register(registerUser: RegisterUser): Flow<String>
-    fun getUserProfile(): Flow<Profile>
+    fun getUserProfile(force: Boolean = false): Flow<Profile>
     fun getUserProduct(): Flow<List<ProductShort>>
-    suspend fun uploadFile(file: ByteArray, mediaType: String, fileName: String): Boolean
+    suspend fun uploadFile(model: PhotoModel): Boolean
     fun editProfile(
         firstName: String,
         surname: String,

@@ -144,7 +144,13 @@ class ProfileFragment : ObserveFragment<ProfileViewModel>(
         binding.emptyText.isVisible = products.isEmpty()
         adapter.clear()
         adapter.addAll(products.map {
-            ProductItem(it) { router.navigateTo(Screens.ProductScreen(it.id)) }
+            ProductItem(
+                it,
+                { router.navigateTo(Screens.ProductScreen(it.id)) },
+                isSelfItem = true,
+                { id ->
+                    viewModel.obtainEvent(ProfileViewModel.ProfileEvent.DeleteProduct(id))
+                })
         })
     }
 

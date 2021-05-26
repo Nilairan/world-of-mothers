@@ -13,8 +13,9 @@ class GetProfileModelUseCaseImpl(
         private val userRepository: UserRepository
 ) : GetProfileModelUseCase {
     override fun invoke(): Flow<ProfileModel> {
-        return userRepository.getUserProfile().zip(userRepository.getUserProduct()) { profile, product ->
-            ProfileModel(profile, product)
-        }
+        return userRepository.getUserProfile(true)
+            .zip(userRepository.getUserProduct()) { profile, product ->
+                ProfileModel(profile, product)
+            }
     }
 }

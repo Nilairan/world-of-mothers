@@ -16,7 +16,7 @@ interface UserDataSource {
     suspend fun authUser(value: String): DTOAuth
     suspend fun saveTokenByUserId(token: String, id: Int)
     suspend fun isAuthorizedUser(): Boolean
-    suspend fun getProfile(): DTOProfile
+    suspend fun getProfile(force: Boolean): DTOProfile
     suspend fun getProductList(): List<DTOProductShort>
     suspend fun uploadAvatar(file: MultipartBody.Part): ApiError
     suspend fun editProfile(changeProfileRequest: ChangeProfileRequest): DTOProfile
@@ -46,10 +46,16 @@ class UserDataSourceImpl(
         return userTokenDao.getToken() != null
     }
 
-    override suspend fun getProfile(): DTOProfile {
-        return profileCache ?: run {
-            profileCache = api.getUserProfile(tokenManager.getToken())
-            profileCache!!
+    override suspend fun getProfile(force: Boolean): DTOProfile {
+        return when (force) {
+            true -> {
+                profileCache = api.getUserProfile(tokenManager.getToken())
+                profileCache!!
+            }
+            else -> profileCache ?: run {
+                profileCache = api.getUserProfile(tokenManager.getToken())
+                profileCache!!
+            }
         }
     }
 

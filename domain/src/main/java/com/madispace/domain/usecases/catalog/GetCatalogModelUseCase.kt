@@ -1,5 +1,6 @@
 package com.madispace.domain.usecases.catalog
 
+import com.madispace.domain.models.product.ProductFilter
 import com.madispace.domain.models.ui.CatalogModel
 import com.madispace.domain.repository.CategoryRepository
 import com.madispace.domain.repository.ProductRepository
@@ -7,20 +8,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.zip
 
-enum class SearchType {
-    DEFAULT,
-    PAGINATION,
-    REFRESH
+sealed class SearchType {
+    object Default : SearchType()
+    data class Pagination(val page: Int, val filter: ProductFilter = ProductFilter.Default) :
+        SearchType()
 }
 
-data class SearchModel(
-    var page: Int = 1,
-    var searchValue: String = "",
-    var type: SearchType = SearchType.DEFAULT
-)
-
 interface GetCatalogModelUseCase {
-    operator fun invoke(searchModel: SearchModel): Flow<CatalogModel>
+    operator fun invoke(searchType: SearchType = SearchType.Default): Flow<CatalogModel>
 }
 
 class GetCatalogModelUseCaseImpl constructor(
@@ -28,19 +23,27 @@ class GetCatalogModelUseCaseImpl constructor(
         private val categoryRepository: CategoryRepository
 ) : GetCatalogModelUseCase {
 
-    override fun invoke(searchModel: SearchModel): Flow<CatalogModel> {
-        return when (searchModel.type) {
-            SearchType.DEFAULT -> {
-                productRepository.getAllProductList(searchModel.page)
-                        .zip(categoryRepository.getAllCategory()) { product, category ->
-                            CatalogModel(category, product)
-                        }
+    override fun invoke(searchType: SearchType): Flow<CatalogModel> {
+        return when (searchType) {
+            is SearchType.Default -> {
+                productRepository.getAllProductList(1)
+                    .zip(categoryRepository.getAllCategory()) { product, category ->
+                        CatalogModel(category, product)
+                    }
             }
-            SearchType.PAGINATION, SearchType.REFRESH -> {
-                productRepository.getAllProductList(searchModel.page)
-                    .map { CatalogModel(emptyList(), it) }
-            }
+            is SearchType.Pagination ->
+                when (searchType.filter) {
+                    is ProductFilter.Default -> {
+                        productRepository.getAllProductList(searchType.page)
+                            .map { CatalogModel(emptyList(), it) }
+                    }
+                    else -> {
+                        productRepository.getFilteredProductList(
+                            searchType.page,
+                            searchType.filter
+                        ).map { CatalogModel(emptyList(), it) }
+                    }
+                }
         }
-
     }
 }

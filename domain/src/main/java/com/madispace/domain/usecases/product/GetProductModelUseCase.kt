@@ -19,11 +19,15 @@ class GetProductModelUseCaseImpl(
         return productRepository.getProductById(productId)
                 .zip(productRepository.getAllProductList(page = 1)) { product, list -> product to list }
                 .zip(productRepository.getFavoriteProduct(productId)) { pair: Pair<Product, List<ProductShort>>, product: Product? ->
+                    val additionallyProduct: MutableList<ProductShort> = mutableListOf()
+                    additionallyProduct.addAll(pair.second)
+                    val currentItem = additionallyProduct.find { it.id == productId }
+                    additionallyProduct.remove(currentItem)
                     ProductModel(
-                            product = pair.first,
-                            seller = pair.first.user,
-                            isFavoriteProduct = product != null,
-                            additionallyProduct = pair.second
+                        product = pair.first,
+                        seller = pair.first.user,
+                        isFavoriteProduct = product != null,
+                        additionallyProduct = additionallyProduct
                     )
                 }
     }
