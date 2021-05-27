@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
+import com.madispace.worldofmothers.common.launchWhenStarted
 import com.madispace.worldofmothers.databinding.FragmentFavoritesBinding
 import com.madispace.worldofmothers.routing.Screens
 import com.madispace.worldofmothers.ui.favorites.items.FavoriteProductItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.onEach
 
 class FavoritesFragment : ObserveFragment<FavoritesViewModel>(
     FavoritesViewModel::class.java,
@@ -30,9 +30,9 @@ class FavoritesFragment : ObserveFragment<FavoritesViewModel>(
     }
 
     override fun initObservers() {
-        lifecycleScope.launch {
-            viewModel.viewStates().collect { state -> state?.let { bindViewState(state) } }
-        }
+        viewModel.viewStates().onEach { state ->
+            state?.let { bindViewState(state) }
+        }.launchWhenStarted(lifecycleScope)
     }
 
     private fun bindViewState(state: FavoritesViewModel.FavoriteState) {

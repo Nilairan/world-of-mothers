@@ -26,6 +26,7 @@ import com.madispace.worldofmothers.ui.catalog.items.ProductItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.onEach
 
 class CatalogFragment : ObserveFragment<CatalogViewModel>(
@@ -59,6 +60,11 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
                 )
             )
             swipeRefreshLayout.setOnRefreshListener {
+                filterSheet.toCostEditText.text = null
+                filterSheet.fromCostEditText.text = null
+                filterSheet.filterLayout.editText?.text = null
+                searchItem.inputSearch.clearFocus()
+                searchItem.inputSearch.text = null
                 viewModel.obtainEvent(CatalogViewModel.CatalogEvent.Refresh)
             }
             categoryList.layoutManager =
@@ -80,6 +86,7 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
         with(binding) {
             searchItem.filterImage.setOnClickListener { binding.root.openDrawer(Gravity.RIGHT) }
             searchItem.inputSearch.textChanges()
+                .drop(1)
                 .debounce(300)
                 .onEach {
                     viewModel.obtainEvent(CatalogViewModel.CatalogEvent.SearchFilter(it.toString()))
@@ -158,6 +165,12 @@ class CatalogFragment : ObserveFragment<CatalogViewModel>(
                     false
                 is CatalogViewModel.CatalogState.ShowFilteredProduct -> {
                     emptyText.isVisible = state.products.isEmpty()
+                    productListAdapter.clear()
+                    productListAdapter.addAll(state.products.map {
+                        createProductItem(it)
+                    })
+                }
+                is CatalogViewModel.CatalogState.ShowInitialProduct -> {
                     productListAdapter.clear()
                     productListAdapter.addAll(state.products.map {
                         createProductItem(it)

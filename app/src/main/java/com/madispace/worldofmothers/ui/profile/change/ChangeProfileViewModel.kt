@@ -10,6 +10,7 @@ import com.madispace.worldofmothers.common.BaseMviViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class ChangeProfileViewModel(
@@ -80,16 +81,15 @@ class ChangeProfileViewModel(
 
     private fun editProfile() {
         viewModelScope.launch {
-            viewState = ChangeProfileState.Loading(loading = true)
             userRepository.editProfile(name, surname, phone)
-                .onEach { viewState = ChangeProfileState.Loading(loading = false) }
+                .onStart { viewState = ChangeProfileState.Loading(loading = true) }
                 .catch {
                     it.printStackTrace()
                     viewState = ChangeProfileState.Loading(loading = false)
                     viewAction = ChangeProfileAction.ShowError(it.localizedMessage ?: "")
                 }
                 .collect {
-                    getProfile()
+                    viewState = ChangeProfileState.SuccessEditProfile
                 }
         }
     }
@@ -97,6 +97,7 @@ class ChangeProfileViewModel(
     sealed class ChangeProfileState {
         data class Loading(val loading: Boolean) : ChangeProfileState()
         data class ShowProfile(val profile: Profile) : ChangeProfileState()
+        object SuccessEditProfile : ChangeProfileState()
     }
 
     sealed class ChangeProfileAction {

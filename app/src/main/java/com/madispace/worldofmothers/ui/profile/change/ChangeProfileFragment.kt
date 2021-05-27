@@ -11,6 +11,7 @@ import com.madispace.domain.models.user.Profile
 import com.madispace.worldofmothers.R
 import com.madispace.worldofmothers.common.ObserveFragment
 import com.madispace.worldofmothers.common.addPhoneMaskTextListener
+import com.madispace.worldofmothers.common.getContext
 import com.madispace.worldofmothers.common.launchWhenStarted
 import com.madispace.worldofmothers.databinding.FragmentChangeProfileBinding
 import kotlinx.coroutines.flow.onEach
@@ -73,6 +74,11 @@ class ChangeProfileFragment : ObserveFragment<ChangeProfileViewModel>(
             is ChangeProfileViewModel.ChangeProfileState.Loading -> binding.progressBar.root.isVisible =
                 state.loading
             is ChangeProfileViewModel.ChangeProfileState.ShowProfile -> showProfile(state.profile)
+            is ChangeProfileViewModel.ChangeProfileState.SuccessEditProfile -> {
+                Toast.makeText(binding.getContext(), "Профиль усппешно изменен", Toast.LENGTH_LONG)
+                    .show()
+                router.exit()
+            }
         }
     }
 

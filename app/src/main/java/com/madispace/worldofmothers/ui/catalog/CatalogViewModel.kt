@@ -96,7 +96,7 @@ class CatalogViewModel(
                 .collect {
                     viewState = CatalogState.HideLoading
                     viewState = CatalogState.ShowCategory(it.categories)
-                    viewState = CatalogState.ShowProduct(it.productsShort)
+                    viewState = CatalogState.ShowInitialProduct(it.productsShort)
                 }
         }
     }
@@ -168,6 +168,7 @@ class CatalogViewModel(
         object StopRefresh : CatalogState()
         data class ShowRefreshProduct(val products: List<ProductShort>) : CatalogState()
         data class ShowCategory(val category: List<Category>) : CatalogState()
+        data class ShowInitialProduct(val products: List<ProductShort>) : CatalogState()
         data class ShowProduct(val products: List<ProductShort>) : CatalogState()
         data class ShowFilteredProduct(val products: List<ProductShort>) : CatalogState()
     }
